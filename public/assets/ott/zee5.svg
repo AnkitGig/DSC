@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <rect width="120" height="40" rx="8" fill="#1a0933"/>
+  <circle cx="28" cy="20" r="14" fill="#000" stroke="url(#zeeGrad)" stroke-width="2.5"/>
+  <defs>
+    <linearGradient id="zeeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff007a"/>
+      <stop offset="50%" stop-color="#ff9900"/>
+      <stop offset="100%" stop-color="#7928ca"/>
+    </linearGradient>
+  </defs>
+  <text x="22" y="25" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="14">Z</text>
+  <text x="50" y="26" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="16" letter-spacing="1">ZEE5</text>
+</svg>

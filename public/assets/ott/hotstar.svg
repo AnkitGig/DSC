@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <rect width="120" height="40" rx="8" fill="#0c111b"/>
+  <text x="14" y="25" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="14" letter-spacing="-0.5">Disney+</text>
+  <text x="70" y="25" fill="#13e8e9" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="12">hotstar</text>
+  <path d="M66 14 l1.5 3.5 l3.5 1.5 l-3.5 1.5 l-1.5 3.5 l-1.5 -3.5 l-3.5 -1.5 l3.5 -1.5 z" fill="#ffd700"/>
+</svg>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <rect width="120" height="40" rx="8" fill="#120224"/>
+  <rect x="10" y="8" width="5" height="24" fill="#00e5ff" rx="1"/>
+  <rect x="18" y="8" width="5" height="24" fill="#ff007f" rx="1"/>
+  <rect x="26" y="8" width="5" height="24" fill="#ffbb00" rx="1"/>
+  <text x="36" y="26" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="16" letter-spacing="1">SONY</text>
+  <text x="88" y="26" fill="#00e5ff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="15">LIV</text>
+</svg>

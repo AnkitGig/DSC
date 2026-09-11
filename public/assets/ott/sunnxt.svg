@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <rect width="120" height="40" rx="8" fill="#1f0900"/>
+  <circle cx="24" cy="20" r="12" fill="#ff6600"/>
+  <path d="M24 10 L26 18 L34 20 L26 22 L24 30 L22 22 L14 20 L22 18 Z" fill="#fff33b"/>
+  <text x="44" y="22" fill="#ff6600" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="13">SUN</text>
+  <text x="44" y="32" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="10" letter-spacing="1">NXT</text>
+</svg>

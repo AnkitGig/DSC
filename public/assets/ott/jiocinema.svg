@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <rect width="120" height="40" rx="8" fill="#1b002c"/>
+  <circle cx="22" cy="20" r="12" fill="#d80075"/>
+  <polygon points="19,15 27,20 19,25" fill="#ffffff"/>
+  <text x="40" y="22" fill="#ffffff" font-family="'Segoe UI', Roboto, sans-serif" font-weight="900" font-size="12">Jio</text>
+  <text x="40" y="32" fill="#d80075" font-family="'Segoe UI', Roboto, sans-serif" font-weight="800" font-size="10" letter-spacing="0.5">CINEMA</text>
+</svg>
