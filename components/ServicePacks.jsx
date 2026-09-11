@@ -146,12 +146,17 @@ const ServicePacks = () => {
         </div>
       </div>
 
-      {/* More Section */}
-      <div className="mt-8">
-        <h2 className="text-lg font-semibold mb-4 text-gray-800">More</h2>
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-          <RandomNoticeBoard />
+      {/* Notice Board & Offers Section */}
+      <div className="mt-8 mb-6">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-5 bg-blue-600 rounded-full"></div>
+            <h2 className="text-lg font-extrabold text-slate-800 tracking-tight">
+              Notice Board & Important Updates
+            </h2>
+          </div>
         </div>
+        <RandomNoticeBoard />
       </div>
     </div>
   );
