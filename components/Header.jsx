@@ -2,7 +2,22 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { FaSearch, FaBell, FaWallet, FaUserCircle, FaEnvelope, FaPhoneAlt, FaSuitcase } from "react-icons/fa";
+import {
+  FaSearch,
+  FaBell,
+  FaWallet,
+  FaUserCircle,
+  FaEnvelope,
+  FaPhoneAlt,
+  FaSuitcase,
+  FaExclamationTriangle,
+  FaTimes,
+  FaChevronDown,
+  FaSignOutAlt,
+  FaUser,
+  FaMoneyBillWave,
+  FaExchangeAlt,
+} from "react-icons/fa";
 
 const Header = () => {
   const [showProfile, setShowProfile] = useState(false);
@@ -30,7 +45,6 @@ const Header = () => {
           setUser(data.user);
           if (data.user && data.user.kyc_status === false) {
             setShowKycPopup(false);
-            router.push("/kyc-form");
           }
         }
       } catch (err) {
@@ -44,92 +58,140 @@ const Header = () => {
     function handleClickOutside(event) {
       if (profileRef.current && !profileRef.current.contains(event.target)) {
         setShowProfile(false);
+        setShowEmailDetails(false);
+        setShowCallDetails(false);
       }
     }
-    if (showProfile) {
-      document.addEventListener("mousedown", handleClickOutside);
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-    }
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [showProfile]);
+  }, []);
+
+  const handleLogout = () => {
+    if (typeof window !== "undefined") {
+      localStorage.clear();
+      document.cookie.split(";").forEach((c) => {
+        document.cookie = c
+          .replace(/^ +/, "")
+          .replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
+      });
+      router.push("/login");
+    }
+  };
+
+  const displayName = user
+    ? user.first_name || user.name || "User"
+    : "User";
+
+  const initials = displayName
+    .split(" ")
+    .map((n) => n[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase() || "U";
 
   return (
-    <header className="flex flex-col gap-3 md:flex-row justify-between items-center p-4 bg-gradient-to-r from-blue-500 via-blue-400 to-blue-600 shadow-2xl pl-0 md:pl-64 sticky top-0 z-40 transition-all duration-300 w-full font-sans">
-      <div className="flex flex-col w-full md:flex-row md:w-auto gap-2 md:gap-4 items-center ml-[20px] md:ml-9">
-        <div className="relative w-full md:w-64">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="border-none focus:ring-2 focus:ring-blue-200 px-4 py-2 rounded-full transition-all duration-200 w-full text-sm shadow-md bg-white/80 pl-10 text-gray-700 placeholder:text-gray-400"
-            style={{ boxShadow: "0 2px 8px 0 rgba(0,0,0,0.07)" }}
-          />
-          <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400 text-lg" />
-        </div>
-        <span className="hidden md:inline text-base font-bold text-white drop-shadow">
-          {user
-            ? `Hello ${user.first_name || user.name || "User"}!`
-            : "Hello User!"}
-        </span>
-      </div>
+    <header className="sticky top-0 z-40 w-full bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-xs pl-0 md:pl-64 transition-all duration-300 font-sans">
+      <div className="px-4 md:px-8 py-3 flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Left: Search Bar & Greeting */}
+        <div className="flex items-center gap-4 w-full md:w-auto justify-between md:justify-start pl-12 md:pl-0">
+          <div className="relative w-full sm:w-72">
+            <FaSearch className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
+            <input
+              type="text"
+              placeholder="Search services, recharge..."
+              className="w-full pl-10 pr-4 py-2 bg-slate-100/80 hover:bg-slate-100 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-full text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all shadow-xs"
+            />
+          </div>
 
-      <div className="flex items-center gap-2 md:gap-4 relative" ref={profileRef}>
-        {/* Email and Call Option */}
-        <div className="flex items-center gap-2">
-          <button
-            className="p-2 rounded-full hover:bg-white/20 transition relative text-white shadow"
-            onClick={() => setShowEmailDetails((prev) => !prev)}
-            title="Email"
-          >
-            <FaEnvelope className="text-lg" />
-          </button>
-          <button
-            className="p-2 rounded-full hover:bg-white/20 transition relative text-white shadow"
-            onClick={() => setShowCallDetails((prev) => !prev)}
-            title="Call"
-          >
-            <FaPhoneAlt className="text-lg" />
-          </button>
+          <div className="hidden lg:flex items-center gap-1.5 text-xs text-slate-500 font-medium">
+            <span>Welcome,</span>
+            <span className="font-extrabold text-slate-800">{displayName} 👋</span>
+          </div>
         </div>
 
-        {/* Email Details Popup */}
-        {showEmailDetails && (
-          <div className="absolute top-14 right-0 bg-white/90 border border-blue-200 rounded-xl shadow-2xl p-4 z-50 min-w-[220px] flex flex-col items-start backdrop-blur-md animate-fade-in">
-            <span className="font-semibold text-blue-700 mb-2">Contact Email</span>
-            <span className="text-blue-700 select-all text-sm">teamdigitalservicecenter@gmail.com</span>
-            <button className="mt-2 text-xs text-blue-600 hover:underline" onClick={() => setShowEmailDetails(false)}>Close</button>
+        {/* Right: Actions, Badges & Profile */}
+        <div className="flex items-center gap-2 sm:gap-3 relative" ref={profileRef}>
+          {/* Contact Support Shortcuts */}
+          <div className="flex items-center gap-1 bg-slate-100/90 border border-slate-200/80 p-1 rounded-full shadow-xs">
+            <button
+              className="p-1.5 rounded-full hover:bg-white text-slate-600 hover:text-blue-600 transition shadow-xs"
+              onClick={() => {
+                setShowEmailDetails((prev) => !prev);
+                setShowCallDetails(false);
+              }}
+              title="Support Email"
+            >
+              <FaEnvelope size={13} />
+            </button>
+            <button
+              className="p-1.5 rounded-full hover:bg-white text-slate-600 hover:text-blue-600 transition shadow-xs"
+              onClick={() => {
+                setShowCallDetails((prev) => !prev);
+                setShowEmailDetails(false);
+              }}
+              title="Helpline Number"
+            >
+              <FaPhoneAlt size={12} />
+            </button>
           </div>
-        )}
 
-        {/* Call Details Popup */}
-        {showCallDetails && (
-          <div className="absolute top-14 right-0 bg-white/90 border border-blue-200 rounded-xl shadow-2xl p-4 z-50 min-w-[220px] flex flex-col items-start backdrop-blur-md animate-fade-in">
-            <span className="font-semibold text-blue-700 mb-2">Contact Number</span>
-            <span className="text-blue-700 select-all text-sm">+91-9285356192</span>
-            <button className="mt-2 text-xs text-blue-600 hover:underline" onClick={() => setShowCallDetails(false)}>Close</button>
-          </div>
-        )}
+          {/* Email Popup */}
+          {showEmailDetails && (
+            <div className="absolute top-12 right-24 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50 min-w-[240px] animate-fade-in">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-extrabold text-xs text-slate-800">Support Email</span>
+                <button
+                  onClick={() => setShowEmailDetails(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <FaTimes size={12} />
+                </button>
+              </div>
+              <span className="text-xs text-blue-700 font-semibold select-all block bg-blue-50 p-2 rounded-lg border border-blue-100">
+                teamdigitalservicecenter@gmail.com
+              </span>
+            </div>
+          )}
 
-        {/* KYC Incomplete Option */}
-        {user && user.kyc_status === false && (
+          {/* Call Popup */}
+          {showCallDetails && (
+            <div className="absolute top-12 right-24 bg-white border border-slate-200 rounded-2xl shadow-xl p-4 z-50 min-w-[220px] animate-fade-in">
+              <div className="flex items-center justify-between mb-2">
+                <span className="font-extrabold text-xs text-slate-800">Helpline Number</span>
+                <button
+                  onClick={() => setShowCallDetails(false)}
+                  className="text-slate-400 hover:text-slate-600"
+                >
+                  <FaTimes size={12} />
+                </button>
+              </div>
+              <span className="text-xs text-blue-700 font-semibold select-all block bg-blue-50 p-2 rounded-lg border border-blue-100 font-mono">
+                +91-9285356192
+              </span>
+            </div>
+          )}
+
+          {/* KYC Status Badge */}
+          {user && user.kyc_status === false ? (
+            <button
+              onClick={() => router.push("/kyc-form")}
+              className="flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-800 px-3 py-1.5 rounded-full font-bold text-xs shadow-xs transition"
+              title="Click to complete your KYC"
+            >
+              <FaExclamationTriangle className="text-amber-500 animate-bounce text-xs" />
+              <span>KYC Incomplete</span>
+            </button>
+          ) : (
+            <span className="hidden sm:inline-flex items-center gap-1 bg-emerald-50 border border-emerald-300 text-emerald-800 px-2.5 py-1 rounded-full font-bold text-xs shadow-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Verified
+            </span>
+          )}
+
+          {/* Notification Bell */}
           <button
-            className="flex items-center gap-1 bg-orange-100 border border-orange-400 text-orange-700 px-3 py-1 rounded-full font-semibold text-sm hover:bg-orange-200 transition mr-2 shadow"
-            onClick={() => router.push("/kyc-form")}
-          >
-            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="inline-block align-middle">
-              <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" fill="none" />
-              <line x1="12" y1="8" x2="12" y2="12" stroke="currentColor" strokeWidth="2" />
-              <circle cx="12" cy="16" r="1" fill="currentColor" />
-            </svg>
-            <span>KYC Incomplete</span>
-          </button>
-        )}
-
-        <button className="relative p-2 rounded-full hover:bg-white/20 transition group text-white shadow">
-          <span
-            className="text-xl"
             onClick={() => {
               if (user && user.kyc_status === false) {
                 router.push("/kyc-form");
@@ -137,150 +199,132 @@ const Header = () => {
                 setShowKycPopup(true);
               }
             }}
+            className="relative p-2 rounded-full hover:bg-slate-100 text-slate-600 transition shadow-xs border border-slate-200"
+            title="Notifications"
           >
-            <FaBell className="inline-block" />
-          </span>
-          <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full px-1.5 py-0.5 group-hover:scale-110 transition-transform animate-pulse shadow">
-            1
-          </span>
-        </button>
+            <FaBell size={14} />
+            <span className="absolute -top-1 -right-1 bg-rose-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center shadow">
+              1
+            </span>
+          </button>
 
-        <span
-          className="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full text-white font-semibold text-sm cursor-pointer shadow hover:bg-white/30 transition"
-          onClick={() => {
-            if (user && user.kyc_status === false) {
-              router.push("/kyc-form");
-            } else {
-              setShowKycPopup(true);
-            }
-          }}
-        >
-          <FaWallet className="mr-1" />
-          <span>{user ? user.wallet_balance : 0}</span>
-        </span>
-
-        <span
-          className="flex items-center gap-1 bg-white/20 px-3 py-1 rounded-full text-white font-semibold text-sm cursor-pointer shadow hover:bg-white/30 transition"
-          onClick={() => {
-            if (user && user.kyc_status === false) {
-              router.push("/kyc-form");
-            } else {
-              setShowKycPopup(true);
-            }
-          }}
-        >
-          <FaSuitcase className="mr-1" /> <span>0</span>
-        </span>
-
-        {/* KYC Pending Popup */}
-        {showKycPopup && (
-          <div className="fixed top-0 left-0 w-screen h-screen z-[999] flex items-center justify-center bg-black bg-opacity-50 backdrop-blur-sm">
-            <div className="bg-white/90 rounded-2xl shadow-2xl p-8 flex flex-col items-center animate-fade-in">
-              <span className="text-2xl mb-2 text-blue-700 font-bold">Service inactive</span>
-              <button
-                className="mt-4 px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
-                onClick={() => setShowKycPopup(false)}
-              >
-                Close
-              </button>
-            </div>
-          </div>
-        )}
-
-        <div className="relative">
+          {/* Wallet Balance Pill */}
           <div
-            className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-5 py-2 rounded-full font-bold shadow-lg text-lg cursor-pointer hover:scale-105 transition-transform border-2 border-white/30 backdrop-blur-md"
-            onClick={() => setShowProfile((prev) => !prev)}
+            onClick={() => router.push("/")}
+            className="flex items-center gap-1.5 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 px-3 py-1.5 rounded-full text-blue-900 font-extrabold text-xs shadow-xs cursor-pointer hover:border-blue-300 hover:shadow-sm transition"
+            title="Available Wallet Balance"
           >
-            {user ? (
-              user.first_name ? (
-                user.first_name[0] + (user.last_name ? user.last_name[0] : "")
-              ) : user.name ? (
-                user.name[0]
-              ) : (
-                <FaUserCircle className="inline-block" />
-              )
-            ) : (
-              <FaUserCircle className="inline-block" />
-            )}
+            <FaWallet className="text-blue-600 text-xs" />
+            <span>₹{(Number(user?.wallet_balance) || 0).toLocaleString("en-IN")}</span>
           </div>
 
-          {showProfile && (
-            <div className="fixed md:absolute inset-0 md:inset-auto md:right-0 md:mt-2 flex md:block z-50 animate-fade-in">
-              <div className="flex-1 md:hidden" onClick={() => setShowProfile(false)}></div>
-              <div className="w-full max-w-xs md:w-96 bg-white/90 rounded-t-2xl md:rounded-2xl shadow-2xl p-6 animate-fade-in flex flex-col gap-2 mx-auto md:mx-0 md:ml-auto relative backdrop-blur-md border border-blue-100">
-                <button
-                  className="absolute top-2 right-2 md:hidden text-gray-500 hover:text-blue-700 text-2xl font-bold z-10"
-                  onClick={() => setShowProfile(false)}
-                  aria-label="Close profile"
-                >
-                  &times;
-                </button>
-                <div className="flex items-center gap-3 mb-2">
-                  <img
-                    src="/assets/boy.png"
-                    alt="Profile"
-                    className="h-14 w-14 rounded-full border-2 border-blue-400 shadow"
-                  />
-                  <div>
-                    <div className="font-bold text-blue-900 text-xl">
-                      {user ? user.first_name || user.name : "Welcome"}
+          {/* Profile Dropdown Trigger */}
+          <div className="relative">
+            <button
+              onClick={() => setShowProfile((prev) => !prev)}
+              className="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 transition focus:outline-none"
+            >
+              <div className="w-9 h-9 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-extrabold text-xs flex items-center justify-center shadow-sm border-2 border-white">
+                {initials}
+              </div>
+              <FaChevronDown size={10} className="text-slate-400 hidden sm:block" />
+            </button>
+
+            {/* Profile Dropdown Menu */}
+            {showProfile && (
+              <div className="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 p-4 z-50 animate-fade-in">
+                <div className="flex items-center gap-3 pb-3 mb-3 border-b border-slate-100">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-blue-600 to-cyan-500 text-white font-extrabold text-base flex items-center justify-center shadow-md">
+                    {initials}
+                  </div>
+                  <div className="overflow-hidden">
+                    <div className="font-extrabold text-slate-900 text-sm truncate">
+                      {displayName}
                     </div>
-                    <div className="text-sm text-gray-700">
-                      {user ? user.email : ""}
+                    <div className="text-xs text-slate-500 truncate">
+                      {user?.email || "user@dscpay.com"}
                     </div>
                   </div>
                 </div>
 
-                <div className="flex flex-col gap-2 mb-4">
+                <div className="space-y-1">
                   <button
-                    className="text-left px-4 py-2 rounded hover:bg-blue-100 font-medium text-blue-700 transition"
                     onClick={() => {
                       setShowProfile(false);
                       router.push("/profile");
                     }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition"
                   >
-                    Profile
+                    <FaUser size={12} className="text-slate-400" />
+                    <span>My Profile</span>
                   </button>
                   <button
-                    className="text-left px-4 py-2 rounded hover:bg-blue-100 font-medium text-blue-700 transition"
                     onClick={() => {
                       setShowProfile(false);
                       router.push("/");
                     }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition"
                   >
-                    Wallet
+                    <FaWallet size={12} className="text-slate-400" />
+                    <span>Wallet Details</span>
                   </button>
                   <button
-                    className="text-left px-4 py-2 rounded hover:bg-blue-100 font-medium text-blue-700 transition"
                     onClick={() => {
                       setShowProfile(false);
                       router.push("/withdrawal");
                     }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition"
                   >
-                    Withdrawal
+                    <FaMoneyBillWave size={12} className="text-slate-400" />
+                    <span>Withdrawal</span>
                   </button>
                   <button
-                    className="text-left px-4 py-2 rounded hover:bg-blue-100 font-medium text-blue-700 transition"
                     onClick={() => {
                       setShowProfile(false);
                       router.push("/transactions");
                     }}
+                    className="w-full flex items-center gap-3 px-3 py-2 text-xs font-semibold text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition"
                   >
-                    Transactions
+                    <FaExchangeAlt size={12} className="text-slate-400" />
+                    <span>Transaction History</span>
+                  </button>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-slate-100">
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-700 font-bold text-xs transition"
+                  >
+                    <FaSignOutAlt size={12} />
+                    <span>Sign Out</span>
                   </button>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
 
-      <span className="md:hidden block text-base font-bold text-white drop-shadow">
-        {user
-          ? `Hello ${user.first_name || user.name || "User"}!`
-          : "Hello User!"}
-      </span>
+      {/* KYC Alert Modal */}
+      {showKycPopup && (
+        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full text-center">
+            <div className="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mx-auto mb-3">
+              <FaBell size={24} />
+            </div>
+            <h3 className="text-lg font-extrabold text-slate-900 mb-1">No New Notifications</h3>
+            <p className="text-xs text-slate-500 mb-5">
+              All your services and accounts are up to date.
+            </p>
+            <button
+              onClick={() => setShowKycPopup(false)}
+              className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-md"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

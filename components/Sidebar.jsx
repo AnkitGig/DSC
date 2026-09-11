@@ -1,5 +1,8 @@
 "use client";
 
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   FaGift,
   FaMobileAlt,
@@ -8,12 +11,11 @@ import {
   FaPlus,
   FaBars,
   FaTimes,
+  FaSignOutAlt,
+  FaIdCard,
 } from "react-icons/fa";
 import { RiDashboardLine } from "react-icons/ri";
 import { MdKeyboardArrowRight, MdKeyboardArrowDown } from "react-icons/md";
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -21,10 +23,6 @@ const Sidebar = () => {
   const [rechargeOpen, setRechargeOpen] = useState(pathname.startsWith("/recharge"));
   const [open, setOpen] = useState(false);
   const [utilityOpen, setUtilityOpen] = useState(pathname.startsWith("/utility"));
-
-  const sidebarClasses = `bg-gradient-to-b from-blue-600 via-blue-500 to-blue-400 shadow-2xl h-full w-64 fixed left-0 top-0 z-50 flex flex-col justify-between animate-fade-in transition-transform duration-300
-    ${open ? "translate-x-0" : "-translate-x-full"}
-    md:translate-x-0`;
 
   const handleLogout = () => {
     if (typeof window !== "undefined") {
@@ -38,219 +36,281 @@ const Sidebar = () => {
     }
   };
 
+  const isRechargeActive = pathname.startsWith("/recharge");
+  const isUtilityActive = pathname.startsWith("/utility");
+
   return (
     <>
-      {/* Hamburger button for mobile */}
+      {/* Mobile Hamburger toggle button */}
       <button
-        className="fixed top-4 left-4 z-50 md:hidden bg-blue-600 text-white p-2 rounded-full shadow-lg focus:outline-none"
+        className="fixed top-3.5 left-3.5 z-50 md:hidden bg-blue-600 text-white p-2.5 rounded-xl shadow-lg focus:outline-none"
         onClick={() => setOpen(true)}
         aria-label="Open sidebar"
       >
-        <FaBars size={22} />
+        <FaBars size={18} />
       </button>
 
-      {/* Overlay for mobile when sidebar is open */}
+      {/* Mobile Backdrop Overlay */}
       {open && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"
+          className="fixed inset-0 bg-slate-900/60 z-40 backdrop-blur-xs md:hidden"
           onClick={() => setOpen(false)}
-        ></div>
+        />
       )}
 
-      <div className={sidebarClasses} style={{ minHeight: "100vh" }}>
-        <div>
-          {/* Close button for mobile */}
-          <div className="flex justify-end md:hidden p-4">
+      {/* Sidebar Container */}
+      <aside
+        className={`fixed left-0 top-0 h-screen w-64 bg-gradient-to-b from-[#0f2444] via-[#0d1d36] to-[#081426] text-white z-50 flex flex-col justify-between shadow-2xl transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
+      >
+        <div className="flex-1 overflow-y-auto">
+          {/* Logo Header */}
+          <div className="p-4 border-b border-white/10 flex items-center justify-between bg-black/10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white p-1.5 flex items-center justify-center shadow-md">
+                <img
+                  src="/assets/logo1.png"
+                  alt="DSC PAY"
+                  className="h-full w-full object-contain"
+                />
+              </div>
+              <div>
+                <h1 className="font-extrabold text-base tracking-wide text-white">
+                  DSC PAY
+                </h1>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-cyan-400">
+                  Digital Services
+                </span>
+              </div>
+            </div>
+
+            {/* Mobile Close Button */}
             <button
-              className="text-white bg-blue-700 p-2 rounded-full shadow"
+              className="text-white/70 hover:text-white md:hidden p-1.5 rounded-lg"
               onClick={() => setOpen(false)}
-              aria-label="Close sidebar"
             >
-              <FaTimes size={22} />
+              <FaTimes size={18} />
             </button>
           </div>
 
-          <div className="p-3 border-b border-blue-300 bg-white flex items-center justify-center">
-            <img
-              src="/assets/logo1.png"
-              alt="DSC PAY Logo"
-              className="h-12 w-auto object-contain"
-            />
-          </div>
+          {/* Navigation Links */}
+          <div className="p-3.5 space-y-1">
+            <div className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-2">
+              Menu & Services
+            </div>
 
-          <ul className="space-y-3 p-6">
-            <li
-              className={`transition-all duration-200 flex items-center gap-3 rounded-xl px-3 py-2 cursor-pointer ${
-                pathname === "/"
-                  ? "bg-white/20 text-white shadow-lg"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-              }`}
+            {/* Main Dashboard */}
+            <Link
+              href="/"
               onClick={() => setOpen(false)}
-            >
-              <Link href="/" className="flex items-center gap-3 w-full">
-                <RiDashboardLine size={22} />
-                <span className="font-medium">Dashboard</span>
-              </Link>
-            </li>
-
-            <li
-              className="transition-all duration-200 flex items-center gap-3 rounded-xl px-3 py-2 text-white/80 hover:bg-white/10 hover:text-white cursor-pointer"
-              onClick={() => setOpen(false)}
-            >
-              <FaGift size={20} /> <span className="font-medium">E-Gift Card</span>
-            </li>
-
-            <li className="flex flex-col select-none">
-              <div
-                className={`transition-all duration-200 flex items-center gap-3 rounded-xl px-3 py-2 cursor-pointer ${
-                  pathname.startsWith("/recharge")
-                    ? "bg-white/20 text-white shadow-lg"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${pathname === "/"
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
+            >
+              <RiDashboardLine size={19} />
+              <span>Dashboard</span>
+            </Link>
+
+            {/* E-Gift Card */}
+            <Link
+              href="/ott"
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${pathname.startsWith("/ott")
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
+            >
+              <FaGift size={18} />
+              <span>E-Gift Card</span>
+            </Link>
+
+            {/* Recharge Accordion */}
+            <div>
+              <div
                 onClick={() => setRechargeOpen((prev) => !prev)}
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all duration-200 select-none ${isRechargeActive
+                    ? "bg-white/15 text-white"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                  }`}
               >
-                <FaMobileAlt size={20} />
-                <span className="font-medium">Recharge</span>
-                {rechargeOpen ? (
-                  <MdKeyboardArrowDown size={22} />
-                ) : (
-                  <MdKeyboardArrowRight size={22} />
-                )}
+                <div className="flex items-center gap-3">
+                  <FaMobileAlt size={18} />
+                  <span>Recharge</span>
+                </div>
+                <div className="text-slate-400 transition-transform duration-200">
+                  {rechargeOpen ? (
+                    <MdKeyboardArrowDown size={20} />
+                  ) : (
+                    <MdKeyboardArrowRight size={20} />
+                  )}
+                </div>
               </div>
+
               {rechargeOpen && (
-                <ul className="ml-8 mt-2 space-y-1">
-                  <li>
-                    <Link
-                      href="/recharge/mobile"
-                      className={`block px-3 py-1.5 rounded-lg transition-all duration-150 text-sm font-semibold ${
-                        pathname === "/recharge/mobile"
-                          ? "bg-yellow-300/80 text-blue-900 shadow"
-                          : "hover:bg-yellow-100/80 hover:text-blue-700 text-white/80"
+                <div className="ml-5 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-2.5 animate-fade-in">
+                  <Link
+                    href="/recharge/mobile"
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${pathname === "/recharge/mobile"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                       }`}
-                      onClick={() => setOpen(false)}
-                    >
-                      Mobile
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/recharge/dth"
-                      className={`block px-3 py-1.5 rounded-lg transition-all duration-150 text-sm font-semibold ${
-                        pathname === "/recharge/dth"
-                          ? "bg-yellow-300/80 text-blue-900 shadow"
-                          : "hover:bg-yellow-100/80 hover:text-blue-700 text-white/80"
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${pathname === "/recharge/mobile"
+                          ? "bg-cyan-300 animate-pulse"
+                          : "bg-slate-500"
+                        }`}
+                    />
+                    <span>Mobile Recharge</span>
+                  </Link>
+
+                  <Link
+                    href="/recharge/dth"
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${pathname === "/recharge/dth"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                       }`}
-                      onClick={() => setOpen(false)}
-                    >
-                      DTH
-                    </Link>
-                  </li>
-                </ul>
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${pathname === "/recharge/dth"
+                          ? "bg-cyan-300 animate-pulse"
+                          : "bg-slate-500"
+                        }`}
+                    />
+                    <span>DTH Recharge</span>
+                  </Link>
+                </div>
               )}
-            </li>
+            </div>
 
-            <li
-              className={`transition-all duration-200 flex items-center gap-3 rounded-xl px-3 py-2 cursor-pointer ${
-                pathname === "/sell-earn"
-                  ? "bg-white/20 text-white shadow-lg"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-              }`}
+            {/* Sell & Earn */}
+            <Link
+              href="/sell-earn"
               onClick={() => setOpen(false)}
-            >
-              <Link href="/sell-earn" className="flex items-center gap-3 w-full">
-                <FaUsers size={20} /> <span className="font-medium">Sell & Earn</span>
-              </Link>
-            </li>
-
-            <li
-              className={`transition-all duration-200 flex items-center gap-3 rounded-xl px-3 py-2 cursor-pointer ${
-                pathname === "/aadhaar" || pathname === "/Aadhaar"
-                  ? "bg-white/20 text-white shadow-lg"
-                  : "text-white/80 hover:bg-white/10 hover:text-white"
-              }`}
-              onClick={() => setOpen(false)}
-            >
-              <Link href="/aadhaar" className="flex items-center gap-3 w-full">
-                <FaUsers size={20} /> <span className="font-medium">Aadhaar Services</span>
-              </Link>
-            </li>
-
-            <li className="flex flex-col select-none">
-              <div
-                className={`transition-all duration-200 flex items-center gap-3 rounded-xl px-3 py-2 cursor-pointer ${
-                  pathname.startsWith("/utility")
-                    ? "bg-white/20 text-white shadow-lg"
-                    : "text-white/80 hover:bg-white/10 hover:text-white"
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${pathname.startsWith("/sell-earn")
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
                 }`}
+            >
+              <FaUsers size={18} />
+              <span>Sell & Earn</span>
+            </Link>
+
+            {/* Aadhaar Services */}
+            <Link
+              href="/aadhaar"
+              onClick={() => setOpen(false)}
+              className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 ${pathname.startsWith("/aadhaar") || pathname.startsWith("/Aadhaar")
+                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/30"
+                  : "text-slate-300 hover:bg-white/10 hover:text-white"
+                }`}
+            >
+              <FaIdCard size={18} />
+              <span>Aadhaar Services</span>
+            </Link>
+
+            {/* Utility Services Accordion */}
+            <div>
+              <div
                 onClick={() => setUtilityOpen((prev) => !prev)}
+                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold cursor-pointer transition-all duration-200 select-none ${isUtilityActive
+                    ? "bg-white/15 text-white"
+                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                  }`}
               >
-                <FaTh size={20} />
-                <span className="font-medium">Utility Services</span>
-                {utilityOpen ? (
-                  <MdKeyboardArrowDown size={22} />
-                ) : (
-                  <MdKeyboardArrowRight size={22} />
-                )}
+                <div className="flex items-center gap-3">
+                  <FaTh size={18} />
+                  <span>Utility Services</span>
+                </div>
+                <div className="text-slate-400 transition-transform duration-200">
+                  {utilityOpen ? (
+                    <MdKeyboardArrowDown size={20} />
+                  ) : (
+                    <MdKeyboardArrowRight size={20} />
+                  )}
+                </div>
               </div>
+
               {utilityOpen && (
-                <ul className="ml-8 mt-2 space-y-1">
-                  <li>
-                    <Link
-                      href="/utility/cash-collection"
-                      className={`block px-3 py-1.5 rounded-lg transition-all duration-150 text-sm font-semibold ${
-                        pathname === "/utility/cash-collection"
-                          ? "bg-yellow-300/80 text-blue-900 shadow"
-                          : "hover:bg-yellow-100/80 hover:text-blue-700 text-white/80"
+                <div className="ml-5 mt-1 space-y-1 border-l-2 border-blue-500/30 pl-2.5 animate-fade-in">
+                  <Link
+                    href="/utility/cash-collection"
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${pathname === "/utility/cash-collection"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                       }`}
-                      onClick={() => setOpen(false)}
-                    >
-                      Cash Collection
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/utility/lic-premium"
-                      className={`block px-3 py-1.5 rounded-lg transition-all duration-150 text-sm font-semibold ${
-                        pathname === "/utility/lic-premium"
-                          ? "bg-yellow-300/80 text-blue-900 shadow"
-                          : "hover:bg-yellow-100/80 hover:text-blue-700 text-white/80"
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${pathname === "/utility/cash-collection"
+                          ? "bg-cyan-300 animate-pulse"
+                          : "bg-slate-500"
+                        }`}
+                    />
+                    <span>Cash Collection</span>
+                  </Link>
+
+                  <Link
+                    href="/utility/lic-premium"
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${pathname === "/utility/lic-premium"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                       }`}
-                      onClick={() => setOpen(false)}
-                    >
-                      LIC Premium
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/utility/credit-card"
-                      className={`block px-3 py-1.5 rounded-lg transition-all duration-150 text-sm font-semibold ${
-                        pathname === "/utility/credit-card"
-                          ? "bg-yellow-300/80 text-blue-900 shadow"
-                          : "hover:bg-yellow-100/80 hover:text-blue-700 text-white/80"
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${pathname === "/utility/lic-premium"
+                          ? "bg-cyan-300 animate-pulse"
+                          : "bg-slate-500"
+                        }`}
+                    />
+                    <span>LIC Premium</span>
+                  </Link>
+
+                  <Link
+                    href="/utility/credit-card"
+                    onClick={() => setOpen(false)}
+                    className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-200 ${pathname === "/utility/credit-card"
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/25"
+                        : "text-slate-300 hover:bg-white/10 hover:text-white"
                       }`}
-                      onClick={() => setOpen(false)}
-                    >
-                      Credit Card
-                    </Link>
-                  </li>
-                </ul>
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${pathname === "/utility/credit-card"
+                          ? "bg-cyan-300 animate-pulse"
+                          : "bg-slate-500"
+                        }`}
+                    />
+                    <span>Credit Card</span>
+                  </Link>
+                </div>
               )}
-            </li>
-          </ul>
+            </div>
+          </div>
         </div>
 
-        <div className="p-6 flex flex-col gap-3">
-          <div className="flex items-center gap-3 text-white bg-gradient-to-r from-yellow-400 to-yellow-500 px-4 py-2 rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-transform font-semibold">
-            <FaPlus size={18} /> <span>Add Service</span>
-          </div>
+        {/* Bottom Actions */}
+        <div className="p-4 border-t border-white/10 bg-black/20 space-y-2">
           <button
-            className="flex items-center justify-center gap-3 text-white bg-gradient-to-r from-red-400 to-red-600 px-4 py-2 rounded-xl shadow-lg cursor-pointer hover:scale-105 transition-transform font-semibold mt-2 border-none"
-            onClick={handleLogout}
+            onClick={() => router.push("/")}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-slate-950 font-extrabold text-xs shadow-md transition-all hover:scale-[1.02] active:scale-95"
           >
+            <FaPlus size={14} />
+            <span>Add Service</span>
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-red-500/20 hover:bg-red-600 text-red-300 hover:text-white font-bold text-xs border border-red-500/30 transition-all active:scale-95"
+          >
+            <FaSignOutAlt size={14} />
             <span>Logout</span>
           </button>
         </div>
-      </div>
+      </aside>
     </>
   );
 };
