@@ -15,11 +15,9 @@ import {
   FaCheck,
   FaTimes,
   FaHistory,
-  FaPlus,
-  FaQrcode,
+  FaBullhorn,
 } from "react-icons/fa";
-import { MdOutlineAccountBalance, MdSwapHoriz } from "react-icons/md";
-import { RiBankFill, RiQrCodeLine } from "react-icons/ri";
+import { RiBankFill } from "react-icons/ri";
 
 const initialSavedBeneficiaries = [
   {
@@ -29,8 +27,7 @@ const initialSavedBeneficiaries = [
     bank: "HDFC Bank",
     accountNumber: "50100492810291",
     ifsc: "HDFC0000128",
-    color: "text-[#6366f1] bg-[#eef2ff] border-[#c7d2fe]",
-    avatarBg: "bg-[#eef2ff] text-[#4f46e5]",
+    avatarBg: "bg-[#e9d8fd] text-[#7c3aed]",
   },
   {
     id: "b2",
@@ -39,8 +36,7 @@ const initialSavedBeneficiaries = [
     bank: "SBI Bank",
     accountNumber: "302918827102",
     ifsc: "SBIN0001244",
-    color: "text-[#3b82f6] bg-[#eff6ff] border-[#bfdbfe]",
-    avatarBg: "bg-[#eff6ff] text-[#2563eb]",
+    avatarBg: "bg-[#cbebfe] text-[#1d4ed8]",
   },
   {
     id: "b3",
@@ -49,8 +45,7 @@ const initialSavedBeneficiaries = [
     bank: "Axis Bank",
     accountNumber: "918020048192019",
     ifsc: "UTIB0000054",
-    color: "text-[#a855f7] bg-[#faf5ff] border-[#e9d5ff]",
-    avatarBg: "bg-[#faf5ff] text-[#9333ea]",
+    avatarBg: "bg-[#e0e7ff] text-[#4338ca]",
   },
   {
     id: "b4",
@@ -59,8 +54,7 @@ const initialSavedBeneficiaries = [
     bank: "PNB Bank",
     accountNumber: "0192002100829102",
     ifsc: "PUNB0019200",
-    color: "text-[#f43f5e] bg-[#fff1f2] border-[#fecdd3]",
-    avatarBg: "bg-[#fff1f2] text-[#e11d48]",
+    avatarBg: "bg-[#fed7d7] text-[#c53030]",
   },
 ];
 
@@ -75,7 +69,7 @@ const initialRecentTransfers = [
     amount: 2500,
     date: "12 Jan 2025, 10:24 AM",
     status: "Success",
-    color: "bg-[#eff6ff] text-[#2563eb]",
+    color: "bg-[#dbeafe] text-[#1d4ed8]",
   },
   {
     id: 2,
@@ -87,7 +81,7 @@ const initialRecentTransfers = [
     amount: 1000,
     date: "11 Jan 2025, 04:15 PM",
     status: "Success",
-    color: "bg-[#faf5ff] text-[#9333ea]",
+    color: "bg-[#ede9fe] text-[#7c3aed]",
   },
   {
     id: 3,
@@ -99,7 +93,7 @@ const initialRecentTransfers = [
     amount: 5000,
     date: "10 Jan 2025, 11:32 AM",
     status: "Success",
-    color: "bg-[#eef2ff] text-[#4f46e5]",
+    color: "bg-[#e0e7ff] text-[#4338ca]",
   },
   {
     id: 4,
@@ -111,7 +105,7 @@ const initialRecentTransfers = [
     amount: 3000,
     date: "09 Jan 2025, 09:18 AM",
     status: "Failed",
-    color: "bg-[#fff1f2] text-[#e11d48]",
+    color: "bg-[#fee2e2] text-[#dc2626]",
   },
 ];
 
@@ -209,7 +203,10 @@ export default function MoneyTransfer() {
         bank: bankName,
         account: form.accountNumber ? `•••• ${form.accountNumber.slice(-4)}` : form.mobileNumber || "Self",
         amount: amt,
-        date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) + ", " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        date:
+          new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) +
+          ", " +
+          new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
         status: "Success",
       };
 
@@ -227,7 +224,7 @@ export default function MoneyTransfer() {
         amount: amt,
         date: receipt.date,
         status: "Success",
-        color: "bg-[#eff6ff] text-[#2563eb]",
+        color: "bg-[#dbeafe] text-[#1d4ed8]",
       };
       setRecentTransfers([newTxn, ...recentTransfers]);
 
@@ -255,8 +252,7 @@ export default function MoneyTransfer() {
       bank: newBeneficiary.bank || "Bank Account",
       accountNumber: newBeneficiary.accountNumber,
       ifsc: newBeneficiary.ifsc || "SBIN0001000",
-      color: "text-[#2563eb] bg-[#eff6ff] border-[#bfdbfe]",
-      avatarBg: "bg-[#eff6ff] text-[#2563eb]",
+      avatarBg: "bg-[#e9d8fd] text-[#7c3aed]",
     };
 
     setSavedBeneficiaries([created, ...savedBeneficiaries]);
@@ -266,6 +262,7 @@ export default function MoneyTransfer() {
 
   return (
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans">
+
       {/* 2. BREADCRUMBS & PAGE HEADER SECTION */}
       <div className="mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
@@ -281,7 +278,7 @@ export default function MoneyTransfer() {
           {/* 3 Header Feature Stat Cards */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
             {/* Card 1: Instant Transfer */}
-            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[170px]">
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
               <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
                 <FaBolt />
               </div>
@@ -296,7 +293,7 @@ export default function MoneyTransfer() {
             </div>
 
             {/* Card 2: 100% Secure */}
-            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[170px]">
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
               <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
                 <FaShieldAlt />
               </div>
@@ -311,7 +308,7 @@ export default function MoneyTransfer() {
             </div>
 
             {/* Card 3: All Banks */}
-            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[170px]">
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
               <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
                 <FaUsers />
               </div>
@@ -577,73 +574,86 @@ export default function MoneyTransfer() {
             </form>
           </div>
 
-          {/* CARD: SUPPORTED BANKS */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="text-xs font-black text-[#0a1e4d] whitespace-nowrap">
-              Supported Banks
+          {/* CARD: SUPPORTED BANKS (Exact 6 Banks Row with authentic vector logos) */}
+          <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs">
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+              <div className="text-sm font-black text-[#0a1e4d]">
+                Supported Banks
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowFindIfscModal(true)}
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 transition flex items-center gap-1 cursor-pointer"
+              >
+                <span>View All Banks</span>
+                <span>&rarr;</span>
+              </button>
             </div>
 
-            {/* Bank Logos Strip */}
-            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+            {/* Bank Cards 6-Column Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-1.5 sm:gap-2">
               {/* SBI */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
-                <div className="w-5 h-5 rounded-full bg-[#0077c8] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
-                  S
-                </div>
-                <span className="text-[11px] font-bold text-slate-700">SBI</span>
+              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+                  <circle cx="12" cy="12" r="11" fill="#0077c8" />
+                  <circle cx="12" cy="10" r="3.6" fill="#ffffff" />
+                  <rect x="10.8" y="10" width="2.4" height="8.5" fill="#ffffff" />
+                </svg>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">SBI</span>
               </div>
 
               {/* HDFC Bank */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
-                <div className="w-5 h-5 rounded-md bg-[#004c8f] flex items-center justify-center p-0.5 shadow-2xs">
-                  <div className="w-3 h-3 bg-[#ed232a] rounded-2xs flex items-center justify-center text-[7px] font-black text-white">
-                    H
-                  </div>
-                </div>
-                <span className="text-[11px] font-bold text-slate-700">HDFC Bank</span>
+              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+                  <rect width="24" height="24" rx="3" fill="#004c8f" />
+                  <rect x="5" y="2" width="14" height="3" fill="#ed232a" />
+                  <rect x="5" y="19" width="14" height="3" fill="#ed232a" />
+                  <rect x="2" y="5" width="3" height="14" fill="#ed232a" />
+                  <rect x="19" y="5" width="3" height="14" fill="#ed232a" />
+                  <rect x="6" y="6" width="12" height="12" fill="#ffffff" />
+                  <rect x="9" y="9" width="6" height="6" fill="#004c8f" />
+                </svg>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">HDFC Bank</span>
               </div>
 
               {/* ICICI Bank */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
-                <div className="w-5 h-5 rounded-full bg-[#9c2415] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
-                  I
-                </div>
-                <span className="text-[11px] font-bold text-slate-700">ICICI Bank</span>
+              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+                  <circle cx="12" cy="12" r="11" fill="#a81c1d" />
+                  <circle cx="12" cy="7" r="1.8" fill="#f37023" />
+                  <path d="M10 10.5h4v6.5h-4z" fill="#ffffff" />
+                  <path d="M13.5 10.5C14.5 11.5 15 12.8 15 14.5c0 2.5-1.5 4.5-4 4.5-1.5 0-3-.8-3.8-2l1.6-1.1c.5.8 1.3 1.2 2.2 1.2 1.4 0 2.2-1.1 2.2-2.6 0-1.1-.4-2-1.2-2.7l1.5-1.3z" fill="#f37023" />
+                </svg>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">ICICI Bank</span>
               </div>
 
               {/* Axis Bank */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
-                <div className="w-5 h-5 rounded-md bg-[#861f41] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
-                  ▲
-                </div>
-                <span className="text-[11px] font-bold text-slate-700">Axis Bank</span>
+              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+                  <path d="M12 3 L3 20 L8.5 20 L12 13 L15.5 20 L21 20 Z" fill="#97144d" />
+                </svg>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">Axis Bank</span>
               </div>
 
               {/* PNB */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
-                <div className="w-5 h-5 rounded-md bg-[#9f1239] flex items-center justify-center text-amber-300 text-[9px] font-black shadow-2xs">
-                  P
-                </div>
-                <span className="text-[11px] font-bold text-slate-700">PNB</span>
+              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+                  <rect width="24" height="24" rx="4" fill="#a20a3a" />
+                  <path d="M7 6h6a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3v3H7V6zm3 3v4h3a2 2 0 0 0 0-4h-3z" fill="#fbbf24" />
+                  <circle cx="13" cy="11" r="1.5" fill="#a20a3a" />
+                </svg>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">PNB</span>
               </div>
 
               {/* Bank of Baroda */}
-              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
-                <div className="w-5 h-5 rounded-full bg-[#f26522] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
-                  B
-                </div>
-                <span className="text-[11px] font-bold text-slate-700">Bank of Baroda</span>
+              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
+                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+                  <path d="M4 6.5C4 6.5 8 4.2 13.5 7.5C18.5 10.5 20 16 20 18C18 18 13.5 16 9.5 13C5.5 10 4 6.5 4 6.5Z" fill="#f26522" />
+                  <path d="M7.5 11.5C7.5 11.5 10.5 9.5 14.5 12.5C18.5 15.5 18 19 18 19C16 19 12 17 9 15C6.5 13.2 7.5 11.5 7.5 11.5Z" fill="#f97316" />
+                </svg>
+                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">Bank of Baroda</span>
               </div>
             </div>
-
-            <button
-              type="button"
-              onClick={() => setShowFindIfscModal(true)}
-              className="text-[11px] font-bold text-blue-600 hover:text-blue-700 transition flex items-center gap-1 shrink-0 whitespace-nowrap cursor-pointer"
-            >
-              <span>View All Banks</span>
-              <span>&rarr;</span>
-            </button>
           </div>
         </div>
 
@@ -726,8 +736,8 @@ export default function MoneyTransfer() {
             </div>
           </div>
 
-          {/* 2. CARD: SAVED BENEFICIARIES */}
-          <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
+          {/* 2. CARD: SAVED BENEFICIARIES (Exact 5 Grid Columns) */}
+          <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs">
             {/* Header */}
             <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
@@ -749,25 +759,25 @@ export default function MoneyTransfer() {
               </button>
             </div>
 
-            {/* Horizontal Avatars List */}
-            <div className="flex items-center gap-3.5 overflow-x-auto no-scrollbar py-1">
+            {/* 5 Equal Columns Grid with clean spacing and responsive text */}
+            <div className="grid grid-cols-5 gap-1 text-center">
               {savedBeneficiaries.map((b) => (
                 <div
                   key={b.id}
                   onClick={() => handleSelectBeneficiary(b)}
-                  className="flex flex-col items-center gap-1.5 group cursor-pointer shrink-0 min-w-[72px]"
+                  className="flex flex-col items-center gap-1.5 group cursor-pointer px-0.5"
                   title={`Transfer to ${b.name} (${b.bank})`}
                 >
                   <div
-                    className={`w-13 h-13 rounded-full border-2 ${b.color} flex items-center justify-center font-black text-sm group-hover:scale-105 group-hover:shadow-md transition-all shadow-2xs`}
+                    className={`w-11 h-11 sm:w-12 sm:h-12 rounded-full ${b.avatarBg} flex items-center justify-center font-black text-xs sm:text-sm group-hover:scale-105 group-hover:shadow-md transition-all shadow-2xs`}
                   >
                     {b.initials}
                   </div>
                   <div className="text-center w-full">
-                    <div className="text-xs font-bold text-[#0a1e4d] truncate max-w-[74px]">
+                    <div className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] leading-tight truncate">
                       {b.name}
                     </div>
-                    <div className="text-[10px] font-medium text-slate-400 truncate max-w-[74px]">
+                    <div className="text-[9.5px] sm:text-[10px] font-medium text-slate-400 leading-tight truncate mt-0.5">
                       {b.bank}
                     </div>
                   </div>
@@ -777,18 +787,18 @@ export default function MoneyTransfer() {
               {/* Add New Beneficiary Button */}
               <div
                 onClick={() => setShowAddBeneficiaryModal(true)}
-                className="flex flex-col items-center gap-1.5 group cursor-pointer shrink-0 min-w-[72px]"
+                className="flex flex-col items-center gap-1.5 group cursor-pointer px-0.5"
                 title="Add New Beneficiary"
               >
-                <div className="w-13 h-13 rounded-full border-2 border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold group-hover:scale-105 group-hover:border-blue-500 transition-all shadow-2xs">
-                  <FaPlus size={14} />
+                <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border-2 border-dashed border-blue-400 text-blue-600 flex items-center justify-center text-xl sm:text-2xl font-light hover:border-blue-600 hover:bg-blue-50/50 transition-all">
+                  +
                 </div>
                 <div className="text-center w-full">
-                  <div className="text-xs font-bold text-blue-600">
+                  <div className="text-[10px] sm:text-[11px] font-bold text-blue-600 leading-tight truncate">
                     Add New
                   </div>
-                  <div className="text-[10px] font-medium text-slate-400">
-                    Beneficiary
+                  <div className="text-[9.5px] sm:text-[10px] font-medium text-transparent leading-tight select-none mt-0.5">
+                    .
                   </div>
                 </div>
               </div>
