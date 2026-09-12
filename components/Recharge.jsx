@@ -21,6 +21,7 @@ import {
   FaPhoneAlt,
   FaRegCalendarAlt,
   FaRegCommentDots,
+  FaUsers,
 } from "react-icons/fa";
 import { MdSwapVert } from "react-icons/md";
 
@@ -298,37 +299,66 @@ export default function Recharge() {
 
   return (
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 lg:p-7 text-slate-800 font-sans">
-      {/* 2. BREADCRUMB & HEADER SECTION */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
-        <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
-            Mobile Recharge
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-            Recharge your prepaid & postpaid numbers instantly with DSC PAY.
-          </p>
-        </div>
+      {/* 2. BREADCRUMB & PAGE HEADER SECTION WITH 3 STAT CARDS */}
+      <div className="mb-6">
 
-        {/* Top Right: Cashback Promo Banner */}
-        <div className="bg-gradient-to-r from-blue-50 via-indigo-50/80 to-blue-100/90 border border-blue-200/80 rounded-2xl px-5 py-3.5 flex items-center gap-4 shadow-2xs max-w-md">
-          <div className="w-11 h-11 rounded-full bg-white text-blue-600 flex items-center justify-center text-lg shadow-xs shrink-0 border border-blue-100">
-            <FaGift />
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
+              Mobile Recharge
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-400 font-medium mt-0.5">
+              Recharge your prepaid & postpaid numbers instantly with DSC PAY.
+            </p>
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="text-sm font-black text-[#0a1e4d] leading-tight">
-              Get ₹10 Cashback
+
+          {/* 3 Header Feature Stat Cards (Exact Money Transfer Look) */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            {/* Card 1: Instant Recharge */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaBolt />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  Instant Recharge
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  In Seconds
+                </div>
+              </div>
             </div>
-            <div className="text-[11px] font-medium text-slate-500 mt-0.5">
-              On your next 3 Mobile Recharges with DSC Wallet
+
+            {/* Card 2: 100% Secure */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaShieldAlt />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  100% Secure
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  Bank Level Security
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: All Operators */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaUsers />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  All Operators
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  Jio, Airtel, Vi, BSNL
+                </div>
+              </div>
             </div>
           </div>
-          <button
-            onClick={() => setShowPlansModal(true)}
-            className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 px-3.5 py-1.5 rounded-full transition shadow-2xs shrink-0 flex items-center gap-1 cursor-pointer"
-          >
-            <span>View Plans</span>
-            <span>&rarr;</span>
-          </button>
         </div>
       </div>
 

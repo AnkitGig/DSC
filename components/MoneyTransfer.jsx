@@ -574,8 +574,8 @@ export default function MoneyTransfer() {
             </form>
           </div>
 
-          {/* CARD: SUPPORTED BANKS (Exact 6 Banks Row with authentic vector logos) */}
-          <div className="bg-white rounded-3xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs">
+          {/* CARD: SUPPORTED BANKS (Adaptive Responsive Grid - Fits perfectly without clipping) */}
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs">
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
               <div className="text-sm font-black text-[#0a1e4d]">
                 Supported Banks
@@ -590,21 +590,29 @@ export default function MoneyTransfer() {
               </button>
             </div>
 
-            {/* Bank Cards 6-Column Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-1.5 sm:gap-2">
+            {/* Bank Cards Adaptive Grid (3 cols on standard laptops, 6 cols on ultra-wide) */}
+            <div className="grid grid-cols-3 2xl:grid-cols-6 gap-2.5">
               {/* SBI */}
-              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, ifscCode: "SBIN0001244" }))}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-400 hover:shadow-2xs rounded-2xl transition cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <circle cx="12" cy="12" r="11" fill="#0077c8" />
                   <circle cx="12" cy="10" r="3.6" fill="#ffffff" />
                   <rect x="10.8" y="10" width="2.4" height="8.5" fill="#ffffff" />
                 </svg>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">SBI</span>
-              </div>
+                <span className="text-xs font-bold text-[#0a1e4d] whitespace-nowrap">SBI</span>
+              </button>
 
               {/* HDFC Bank */}
-              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, ifscCode: "HDFC0000128" }))}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-400 hover:shadow-2xs rounded-2xl transition cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <rect width="24" height="24" rx="3" fill="#004c8f" />
                   <rect x="5" y="2" width="14" height="3" fill="#ed232a" />
                   <rect x="5" y="19" width="14" height="3" fill="#ed232a" />
@@ -613,46 +621,62 @@ export default function MoneyTransfer() {
                   <rect x="6" y="6" width="12" height="12" fill="#ffffff" />
                   <rect x="9" y="9" width="6" height="6" fill="#004c8f" />
                 </svg>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">HDFC Bank</span>
-              </div>
+                <span className="text-xs font-bold text-[#0a1e4d] whitespace-nowrap">HDFC Bank</span>
+              </button>
 
               {/* ICICI Bank */}
-              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, ifscCode: "ICIC0000004" }))}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-400 hover:shadow-2xs rounded-2xl transition cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <circle cx="12" cy="12" r="11" fill="#a81c1d" />
                   <circle cx="12" cy="7" r="1.8" fill="#f37023" />
                   <path d="M10 10.5h4v6.5h-4z" fill="#ffffff" />
                   <path d="M13.5 10.5C14.5 11.5 15 12.8 15 14.5c0 2.5-1.5 4.5-4 4.5-1.5 0-3-.8-3.8-2l1.6-1.1c.5.8 1.3 1.2 2.2 1.2 1.4 0 2.2-1.1 2.2-2.6 0-1.1-.4-2-1.2-2.7l1.5-1.3z" fill="#f37023" />
                 </svg>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">ICICI Bank</span>
-              </div>
+                <span className="text-xs font-bold text-[#0a1e4d] whitespace-nowrap">ICICI Bank</span>
+              </button>
 
               {/* Axis Bank */}
-              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, ifscCode: "UTIB0000054" }))}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-400 hover:shadow-2xs rounded-2xl transition cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <path d="M12 3 L3 20 L8.5 20 L12 13 L15.5 20 L21 20 Z" fill="#97144d" />
                 </svg>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">Axis Bank</span>
-              </div>
+                <span className="text-xs font-bold text-[#0a1e4d] whitespace-nowrap">Axis Bank</span>
+              </button>
 
               {/* PNB */}
-              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, ifscCode: "PUNB0019200" }))}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-400 hover:shadow-2xs rounded-2xl transition shrink-0 cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <rect width="24" height="24" rx="4" fill="#a20a3a" />
                   <path d="M7 6h6a5 5 0 0 1 5 5 5 5 0 0 1-5 5h-3v3H7V6zm3 3v4h3a2 2 0 0 0 0-4h-3z" fill="#fbbf24" />
                   <circle cx="13" cy="11" r="1.5" fill="#a20a3a" />
                 </svg>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">PNB</span>
-              </div>
+                <span className="text-xs font-bold text-[#0a1e4d] whitespace-nowrap">PNB</span>
+              </button>
 
               {/* Bank of Baroda */}
-              <div className="flex items-center justify-center gap-1.5 px-2 py-2 bg-white hover:bg-slate-50 border border-slate-200/80 rounded-2xl shadow-2xs transition cursor-pointer">
-                <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-4.5 sm:h-4.5 shrink-0">
+              <button
+                type="button"
+                onClick={() => setForm((prev) => ({ ...prev, ifscCode: "BARB0CONNAU" }))}
+                className="w-full flex items-center justify-center gap-2 px-3 py-2.5 bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-blue-400 hover:shadow-2xs rounded-2xl transition cursor-pointer"
+              >
+                <svg viewBox="0 0 24 24" className="w-5 h-5 shrink-0">
                   <path d="M4 6.5C4 6.5 8 4.2 13.5 7.5C18.5 10.5 20 16 20 18C18 18 13.5 16 9.5 13C5.5 10 4 6.5 4 6.5Z" fill="#f26522" />
                   <path d="M7.5 11.5C7.5 11.5 10.5 9.5 14.5 12.5C18.5 15.5 18 19 18 19C16 19 12 17 9 15C6.5 13.2 7.5 11.5 7.5 11.5Z" fill="#f97316" />
                 </svg>
-                <span className="text-[10px] sm:text-[11px] font-bold text-[#0a1e4d] whitespace-nowrap">Bank of Baroda</span>
-              </div>
+                <span className="text-xs font-bold text-[#0a1e4d] whitespace-nowrap">Bank of Baroda</span>
+              </button>
             </div>
           </div>
         </div>

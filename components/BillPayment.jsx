@@ -21,6 +21,7 @@ import {
   FaTimes,
   FaInfoCircle,
   FaFileInvoiceDollar,
+  FaBullhorn,
 } from "react-icons/fa";
 import { MdOutlineReceiptLong, MdSatelliteAlt } from "react-icons/md";
 
@@ -351,76 +352,72 @@ export default function BillPayment() {
 
   return (
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans">
-      {/* 1. TOP HEADER & PROMO HERO BANNER */}
-      <div className="mb-6 flex flex-col xl:flex-row xl:items-center justify-between gap-5">
-        {/* Left: Breadcrumbs & Title */}
-        <div>
-          <div className="text-[11px] font-semibold text-slate-400 mb-1.5 flex items-center gap-1.5 select-none">
-            <Link href="/" className="hover:text-blue-600 transition">
-              Home
-            </Link>
-            <span className="text-slate-300">›</span>
-            <span className="text-slate-600 font-medium">Bill Payment</span>
-          </div>
-          <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
-            Bill Payment
-          </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">
-            Pay all your utility bills instantly with DSC PAY.
-          </p>
-        </div>
 
-        {/* Right: Modern Top Promo Banner (Pay Bills on Time) */}
-        <div className="relative rounded-2xl bg-gradient-to-r from-[#dbeafe]/90 via-[#e0f2fe] to-[#bfdbfe] border border-blue-200/80 px-6 py-4 shadow-2xs flex items-center justify-between gap-5 overflow-hidden max-w-xl">
-          {/* Subtle Background Glow */}
-          <div className="absolute -right-4 -bottom-6 w-36 h-36 rounded-full bg-blue-400/25 blur-xl pointer-events-none"></div>
 
-          {/* Left 3D Document & Coin Graphic */}
-          <div className="hidden sm:flex items-center justify-center relative w-14 h-14 shrink-0 select-none">
-            <div className="w-11 h-13 bg-white rounded-xl shadow-md border border-blue-100 flex flex-col items-center justify-center p-1.5 transform rotate-[-4deg]">
-              <div className="w-5 h-1 bg-blue-500 rounded-full mb-1"></div>
-              <div className="w-4 h-1 bg-slate-200 rounded-full mb-0.5"></div>
-              <div className="w-4 h-1 bg-slate-200 rounded-full"></div>
-            </div>
-            <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-amber-950 font-black text-[10px] flex items-center justify-center shadow-md border-2 border-white">
-              ₹
-            </div>
+      {/* 2. BREADCRUMBS & PAGE HEADER WITH 3 STAT CARDS (Exact Money Transfer Look) */}
+      <div className="mb-6">
+
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
+              Bill Payment
+            </h1>
+            <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">
+              Pay all your utility bills instantly with DSC PAY.
+            </p>
           </div>
 
-          {/* Content & Bullets */}
-          <div className="flex-1 min-w-0">
-            <div className="text-base font-black text-[#0a1e4d] leading-none">
-              Pay Bills on Time
-            </div>
-            <div className="text-xs font-bold text-blue-700 mt-1 mb-2.5">
-              Safe. Secure. Hassle Free.
+          {/* 3 Header Feature Stat Cards (Exact Money Transfer Style) */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            {/* Card 1: Instant Payment */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaBolt />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  Instant Payment
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  In Seconds
+                </div>
+              </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-[10px] font-bold text-blue-950 border border-blue-200/80 shadow-2xs">
-                <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[7px] font-black">
-                  <FaCheck />
+            {/* Card 2: 100% Secure */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaShieldAlt />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  100% Secure
                 </div>
-                <span>Multiple Billers</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-[10px] font-bold text-blue-950 border border-blue-200/80 shadow-2xs">
-                <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[7px] font-black">
-                  <FaCheck />
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  Bank Level Security
                 </div>
-                <span>Instant Confirmation</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 bg-white/95 backdrop-blur-xs px-2.5 py-1 rounded-full text-[10px] font-bold text-blue-950 border border-blue-200/80 shadow-2xs">
-                <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[7px] font-black">
-                  <FaCheck />
+              </div>
+            </div>
+
+            {/* Card 3: All Billers */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[165px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaUsers />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  All Billers
                 </div>
-                <span>24/7 Service</span>
-              </span>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  Electricity, Gas, DTH
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. MAIN 2-COLUMN GRID (7 Cols Left, 5 Cols Right) */}
+      {/* 3. MAIN 2-COLUMN GRID (7 Cols Left, 5 Cols Right) */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ================= LEFT COLUMN ================= */}
         <div className="lg:col-span-7 xl:col-span-7 space-y-6 min-w-0">
@@ -440,25 +437,22 @@ export default function BillPayment() {
                     key={cat.id}
                     type="button"
                     onClick={() => handleCategorySelect(cat.id)}
-                    className={`p-3 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer group text-center ${
-                      isSelected
+                    className={`p-3 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer group text-center ${isSelected
                         ? "border-blue-500 bg-white ring-2 ring-blue-500/20 shadow-xs scale-[1.03]"
                         : "border-slate-200/70 bg-[#fafcff] hover:bg-white hover:border-blue-300 hover:shadow-xs hover:-translate-y-0.5"
-                    }`}
+                      }`}
                   >
                     <div
-                      className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-110 ${
-                        isSelected
+                      className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-110 ${isSelected
                           ? "bg-blue-50 text-blue-600 shadow-2xs"
                           : `bg-white ${cat.iconColor} shadow-2xs border border-slate-100`
-                      }`}
+                        }`}
                     >
                       <Icon />
                     </div>
                     <span
-                      className={`text-[11px] font-bold leading-tight ${
-                        isSelected ? "text-blue-600 font-black" : "text-slate-700"
-                      }`}
+                      className={`text-[11px] font-bold leading-tight ${isSelected ? "text-blue-600 font-black" : "text-slate-700"
+                        }`}
                     >
                       {cat.name}
                     </span>
@@ -645,76 +639,71 @@ export default function BillPayment() {
               </div>
             )}
           </div>
+        </div>
 
-          {/* CARD 3: BOTTOM TRUST STRIP */}
-          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs">
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              {/* Item 1 */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
-                  <FaShieldAlt />
-                </div>
-                <div>
-                  <div className="text-xs font-black text-[#0a1e4d] leading-none">
-                    100% Secure
+        {/* ================= RIGHT COLUMN: PROMO HERO BANNER & MY BILLS ================= */}
+        <div className="lg:col-span-5 xl:col-span-5 space-y-6 min-w-0">
+          {/* 1. PROMO HERO CARD: PAY BILLS ON TIME (Exact Money Transfer Right Top Hero Banner style) */}
+          <div className="relative rounded-3xl bg-gradient-to-br from-[#dbeafe] via-[#eff6ff] to-[#dbeafe] border border-blue-200/90 shadow-2xs overflow-hidden min-h-[200px] p-6 flex items-center justify-between">
+            {/* Background Decorative Rings */}
+            <div className="absolute -right-6 -bottom-10 w-44 h-44 rounded-full bg-blue-300/30 blur-2xl pointer-events-none"></div>
+            <div className="absolute right-14 top-2 w-28 h-28 rounded-full bg-blue-400/20 blur-xl pointer-events-none"></div>
+
+            {/* Left Content */}
+            <div className="relative z-10 max-w-[62%]">
+              <h3 className="text-lg sm:text-xl font-black text-[#0a1e4d] leading-tight">
+                Pay Bills on Time
+              </h3>
+              <p className="text-xs font-bold text-blue-600 mt-1 mb-3">
+                Safe. Secure. Hassle Free.
+              </p>
+
+              <ul className="space-y-1.5 text-[11px] font-bold text-slate-700">
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
                   </div>
-                  <div className="text-[10px] font-medium text-slate-400 mt-1">
-                    Your data is safe with us
+                  <span>Multiple billers supported</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
+                  </div>
+                  <span>Instant BBPS confirmation</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
+                  </div>
+                  <span>24/7 service</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Right Graphic Mockup */}
+            <div className="relative w-28 h-40 shrink-0 flex items-center justify-center select-none pointer-events-none">
+              <div className="w-24 h-36 bg-[#071536] rounded-2xl p-1.5 shadow-xl transform rotate-[-4deg] border border-slate-700/50 flex flex-col justify-between">
+                <div className="w-8 h-1 bg-slate-700 rounded-full mx-auto mb-1"></div>
+                <div className="flex-1 bg-white rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-inner">
+                  <div className="w-8 h-8 rounded-full bg-amber-50 text-amber-500 flex items-center justify-center text-sm mb-1 shadow-2xs">
+                    <FaBolt />
+                  </div>
+                  <span className="text-[8px] font-extrabold text-[#0a1e4d] leading-none">
+                    BBPS Pay
+                  </span>
+                  <div className="mt-1.5 w-full bg-emerald-50 rounded p-0.5 text-[6px] text-emerald-600 font-bold">
+                    Fast Receipt
                   </div>
                 </div>
+                <div className="w-2 h-2 rounded-full border border-slate-700 mx-auto mt-1"></div>
               </div>
-
-              {/* Item 2 */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
-                  <FaBolt />
-                </div>
-                <div>
-                  <div className="text-xs font-black text-[#0a1e4d] leading-none">
-                    Instant Payment
-                  </div>
-                  <div className="text-[10px] font-medium text-slate-400 mt-1">
-                    Get instant confirmation
-                  </div>
-                </div>
-              </div>
-
-              {/* Item 3 */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
-                  <FaUsers />
-                </div>
-                <div>
-                  <div className="text-xs font-black text-[#0a1e4d] leading-none">
-                    Wide Network
-                  </div>
-                  <div className="text-[10px] font-medium text-slate-400 mt-1">
-                    200+ billers supported
-                  </div>
-                </div>
-              </div>
-
-              {/* Item 4 */}
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
-                  <FaHeadset />
-                </div>
-                <div>
-                  <div className="text-xs font-black text-[#0a1e4d] leading-none">
-                    24/7 Support
-                  </div>
-                  <div className="text-[10px] font-medium text-slate-400 mt-1">
-                    Always here for you
-                  </div>
-                </div>
+              <div className="absolute bottom-2 left-0 w-8 h-8 rounded-full bg-[#1d68f6] text-white flex items-center justify-center font-black text-xs shadow-md border-2 border-white z-20">
+                ₹
               </div>
             </div>
           </div>
-        </div>
 
-        {/* ================= RIGHT COLUMN ================= */}
-        <div className="lg:col-span-5 xl:col-span-5 space-y-6 min-w-0">
-          {/* 1. CARD: MY BILLS (DUE BILLS & HISTORY) */}
+          {/* 2. CARD: MY BILLS (DUE BILLS & HISTORY) */}
           <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
             {/* Header */}
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-2">
@@ -740,22 +729,20 @@ export default function BillPayment() {
               <button
                 type="button"
                 onClick={() => setMyBillsTab("due")}
-                className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${
-                  myBillsTab === "due"
+                className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${myBillsTab === "due"
                     ? "border-blue-600 text-blue-600 font-extrabold"
                     : "border-transparent text-slate-400 hover:text-slate-700"
-                }`}
+                  }`}
               >
                 Due Bills
               </button>
               <button
                 type="button"
                 onClick={() => setMyBillsTab("history")}
-                className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${
-                  myBillsTab === "history"
+                className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${myBillsTab === "history"
                     ? "border-blue-600 text-blue-600 font-extrabold"
                     : "border-transparent text-slate-400 hover:text-slate-700"
-                }`}
+                  }`}
               >
                 Bill History
               </button>
