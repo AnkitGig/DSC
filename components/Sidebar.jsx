@@ -35,7 +35,7 @@ export default function Sidebar({ isOpen, onClose }) {
     { title: "Bill Payment", href: "/utility", icon: FaReceipt },
     { title: "Banking", href: "/withdrawal", icon: FaUniversity },
     { title: "Government", href: "/aadhaar", icon: FaLandmark },
-    { title: "Insurance", href: "/recharge/mobile", icon: FaShieldAlt },
+    { title: "Insurance", href: "/utility/lic-premium", icon: FaShieldAlt },
     { title: "Shopping", href: "/sell-earn", icon: FaShoppingCart },
     { title: "E-Gift Card", href: "/ott", icon: FaGift },
     { title: "OTT Subscription", href: "/ott", icon: FaPlayCircle },
@@ -86,19 +86,24 @@ export default function Sidebar({ isOpen, onClose }) {
             <div className="space-y-0.5">
               {servicesMenu.map((item, idx) => {
                 const Icon = item.icon;
-                const isActive = pathname === item.href;
+                const isActive =
+                  pathname === item.href ||
+                  (item.href === "/recharge/mobile" && pathname.startsWith("/recharge"));
                 return (
                   <Link
                     key={idx}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex items-center gap-3.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
+                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
                       isActive
-                        ? "bg-white/15 text-white font-semibold"
+                        ? "bg-[#1d68f6] text-white shadow-md shadow-blue-600/30"
                         : "text-slate-300 hover:bg-white/10 hover:text-white"
                     }`}
                   >
-                    <Icon size={15} className="text-slate-400 group-hover:text-white shrink-0" />
+                    <Icon
+                      size={15}
+                      className={isActive ? "text-white shrink-0" : "text-slate-400 group-hover:text-white shrink-0"}
+                    />
                     <span className="truncate">{item.title}</span>
                   </Link>
                 );

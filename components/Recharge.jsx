@@ -1,795 +1,897 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import React, { useState } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   FaMobileAlt,
-  FaTv,
-  FaSearch,
+  FaReceipt,
+  FaUser,
   FaCheckCircle,
-  FaRedoAlt,
-  FaBolt,
   FaShieldAlt,
-  FaWallet,
-  FaTimes,
-  FaChevronRight,
+  FaHeadset,
   FaHistory,
+  FaChevronRight,
+  FaChevronDown,
+  FaBolt,
+  FaGift,
+  FaTimes,
+  FaCheck,
   FaPhoneAlt,
-  FaCopy,
+  FaRegCalendarAlt,
+  FaRegCommentDots,
 } from "react-icons/fa";
-import { MdOutlineFlashOn, MdVerifiedUser } from "react-icons/md";
+import { MdSwapVert } from "react-icons/md";
 
-// Indian Operators Info with Real Brand Colors
-const mobileOperators = [
-  { id: "Jio", name: "Jio Prepaid", brandColor: "bg-[#0a2885] text-white", short: "Jio" },
-  { id: "Airtel", name: "Airtel Prepaid", brandColor: "bg-[#ed1c24] text-white", short: "Airtel" },
-  { id: "Vi", name: "Vodafone Idea", brandColor: "bg-[#d32f2f] text-white", short: "Vi" },
-  { id: "BSNL", name: "BSNL Prepaid", brandColor: "bg-[#0288d1] text-white", short: "BSNL" },
-  { id: "MTNL", name: "MTNL Dolphin", brandColor: "bg-[#00897b] text-white", short: "MTNL" },
-];
-
-const dthOperators = [
-  { id: "Tata Play", name: "Tata Play", brandColor: "bg-[#9c27b0] text-white", short: "Tata Play" },
-  { id: "Airtel Digital TV", name: "Airtel DTH", brandColor: "bg-[#ed1c24] text-white", short: "Airtel DTH" },
-  { id: "Dish TV", name: "Dish TV", brandColor: "bg-[#ff6f00] text-white", short: "Dish TV" },
-  { id: "D2H", name: "Videocon D2H", brandColor: "bg-[#1565c0] text-white", short: "D2H" },
-  { id: "Sun Direct", name: "Sun Direct", brandColor: "bg-[#ef6c00] text-white", short: "Sun Direct" },
-];
-
-const circlesList = [
-  "Delhi NCR",
-  "Mumbai",
-  "Maharashtra & Goa",
-  "Gujarat",
-  "UP East",
-  "UP West",
-  "Bihar & Jharkhand",
-  "West Bengal",
-  "Kolkata",
-  "Rajasthan",
-  "Punjab",
-  "Haryana",
-  "Madhya Pradesh & CG",
-  "Karnataka",
-  "Tamil Nadu",
-  "Andhra Pradesh & Telangana",
-  "Kerala",
-  "Odisha",
-  "Assam & North East",
-];
-
-// Curated Real Plans for Operators
-const planCategories = [
-  { id: "popular", name: "Recommended" },
-  { id: "unlimited", name: "Truly Unlimited" },
-  { id: "data", name: "Data Add-ons" },
-  { id: "annual", name: "Annual Plans" },
-  { id: "talktime", name: "Top-up Talktime" },
-];
-
-const plansDatabase = {
-  popular: [
-    {
-      amount: 299,
-      validity: "28 Days",
-      data: "1.5 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "Unlimited 5G Data included + Free Subscriptions",
-      badge: "MOST POPULAR",
-    },
-    {
-      amount: 349,
-      validity: "28 Days",
-      data: "2.0 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "Hero Unlimited Plan + High Speed 5G Access",
-      badge: "HERO PLAN",
-    },
-    {
-      amount: 666,
-      validity: "70 Days",
-      data: "1.5 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "Best value medium duration unlimited pack",
-      badge: "BEST VALUE",
-    },
-  ],
-  unlimited: [
-    {
-      amount: 719,
-      validity: "72 Days",
-      data: "2.0 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "High-speed 2GB daily pack with OTT apps",
-      badge: "SUPER VALUE",
-    },
-    {
-      amount: 899,
-      validity: "90 Days",
-      data: "2.0 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "Quarterly Pack + 20GB extra bonus data",
-      badge: "BONUS DATA",
-    },
-    {
-      amount: 479,
-      validity: "56 Days",
-      data: "1.5 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "2-Month unlimited calls and daily data pack",
-      badge: "",
-    },
-  ],
-  data: [
-    {
-      amount: 19,
-      validity: "Base Plan",
-      data: "1.0 GB",
-      calls: "N/A",
-      sms: "N/A",
-      perks: "Instant high-speed emergency data pack",
-      badge: "POPULAR",
-    },
-    {
-      amount: 29,
-      validity: "Base Plan",
-      data: "2.0 GB",
-      calls: "N/A",
-      sms: "N/A",
-      perks: "2GB 4G/5G high-speed data booster",
-      badge: "",
-    },
-    {
-      amount: 65,
-      validity: "Base Plan",
-      data: "4.0 GB",
-      calls: "N/A",
-      sms: "N/A",
-      perks: "4GB Extra Data Pack with unlimited 5G boost",
-      badge: "VALUE",
-    },
-    {
-      amount: 181,
-      validity: "30 Days",
-      data: "30.0 GB",
-      calls: "N/A",
-      sms: "N/A",
-      perks: "Bulk 30GB Work-from-Home data voucher",
-      badge: "WORK FROM HOME",
-    },
-  ],
-  annual: [
-    {
-      amount: 2999,
-      validity: "365 Days",
-      data: "2.5 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "365 Days 912GB Total Data + OTT Bundle",
-      badge: "MEGA SAVER",
-    },
-    {
-      amount: 3599,
-      validity: "365 Days",
-      data: "2.0 GB/Day",
-      calls: "Unlimited Calls",
-      sms: "100 SMS/Day",
-      perks: "1 Year Disney+ Hotstar Subscription Included",
-      badge: "HOTSTAR VIP",
-    },
-  ],
-  talktime: [
-    {
-      amount: 10,
-      validity: "Unlimited",
-      data: "N/A",
-      calls: "₹7.47 Talktime",
-      sms: "Standard",
-      perks: "Main balance talktime with unlimited validity",
-      badge: "",
-    },
-    {
-      amount: 50,
-      validity: "Unlimited",
-      data: "N/A",
-      calls: "₹39.37 Talktime",
-      sms: "Standard",
-      perks: "Standard Talktime Topup Balance",
-      badge: "",
-    },
-    {
-      amount: 100,
-      validity: "Unlimited",
-      data: "N/A",
-      calls: "₹81.75 Talktime",
-      sms: "Standard",
-      perks: "Full Value Top-up Recharge Balance",
-      badge: "BEST SELLER",
-    },
-  ],
-};
-
-const mockRecentRecharges = [
-  {
-    id: "TXN-882910",
-    number: "9876543210",
-    operator: "Jio",
-    circle: "Delhi NCR",
-    amount: 299,
-    date: "11 Sep 2026, 04:15 PM",
-    status: "Success",
-    type: "mobile",
-  },
-  {
-    id: "TXN-882909",
-    number: "9123456780",
-    operator: "Airtel",
-    circle: "Mumbai",
-    amount: 349,
-    date: "11 Sep 2026, 02:30 PM",
-    status: "Success",
-    type: "mobile",
-  },
-  {
-    id: "TXN-882905",
-    number: "3004829102",
-    operator: "Tata Play",
-    circle: "All India",
-    amount: 450,
-    date: "10 Sep 2026, 06:10 PM",
-    status: "Success",
-    type: "dth",
-  },
-  {
-    id: "TXN-882894",
-    number: "9450123456",
-    operator: "BSNL",
-    circle: "UP East",
-    amount: 199,
-    date: "09 Sep 2026, 11:20 AM",
-    status: "Success",
-    type: "mobile",
-  },
-];
-
-const Recharge = ({ tabType }) => {
+export default function Recharge() {
   const router = useRouter();
-  const [tab, setTab] = useState(tabType || "mobile");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [selectedOperator, setSelectedOperator] = useState("Jio");
+  const [selectedCircle, setSelectedCircle] = useState("Delhi & NCR");
+  const [planType, setPlanType] = useState("prepaid");
+  const [activeTabOperator, setActiveTabOperator] = useState("Jio");
+  const [showPlansModal, setShowPlansModal] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectedPlanForRecharge, setSelectedPlanForRecharge] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [rechargeSuccess, setRechargeSuccess] = useState(false);
 
-  const [form, setForm] = useState({
-    mobile: "",
-    operator: "Jio",
-    circle: "Delhi NCR",
-    subscriberId: "",
-    amount: "299",
-  });
+  const operators = [
+    { id: "Jio", name: "Reliance Jio", logo: "Jio", color: "bg-[#0a2885] text-white" },
+    { id: "Airtel", name: "Bharti Airtel", logo: "airtel", color: "bg-[#ed1c24] text-white" },
+    { id: "Vi", name: "Vodafone Idea", logo: "Vi", color: "bg-[#d32f2f] text-white" },
+    { id: "BSNL", name: "BSNL Prepaid", logo: "BSNL", color: "bg-[#0288d1] text-white" },
+  ];
 
-  const [activePlanTab, setActivePlanTab] = useState("popular");
-  const [processingModal, setProcessingModal] = useState(false);
-  const [successReceipt, setSuccessReceipt] = useState(null);
-  const [rechargesList, setRechargesList] = useState(mockRecentRecharges);
+  const circles = [
+    "Delhi & NCR",
+    "Mumbai",
+    "Maharashtra & Goa",
+    "Gujarat",
+    "UP East",
+    "UP West",
+    "Bihar & Jharkhand",
+    "Rajasthan",
+    "Punjab",
+    "Karnataka",
+    "West Bengal",
+    "Tamil Nadu",
+  ];
 
-  // Filters
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  useEffect(() => {
-    if (tabType && tab !== tabType) {
-      setTab(tabType);
-    }
-  }, [tabType, tab]);
-
-  const handleTabChange = (newTab) => {
-    setTab(newTab);
-    router.push(`/recharge/${newTab}`);
+  // Operator-specific plans matching the screenshot
+  const plansByOperator = {
+    Jio: [
+      {
+        id: "jio-199",
+        amount: 199,
+        badge: "Popular",
+        validity: "28 Days Validity",
+        data: "2 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "jio-299",
+        amount: 299,
+        badge: null,
+        validity: "28 Days Validity",
+        data: "3 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "jio-349",
+        amount: 349,
+        badge: null,
+        validity: "28 Days Validity",
+        data: "2.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "jio-399",
+        amount: 399,
+        badge: "Best Value",
+        validity: "56 Days Validity",
+        data: "2 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+    ],
+    Airtel: [
+      {
+        id: "airtel-199",
+        amount: 199,
+        badge: "Popular",
+        validity: "28 Days Validity",
+        data: "2 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "airtel-299",
+        amount: 299,
+        badge: null,
+        validity: "28 Days Validity",
+        data: "1.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "airtel-359",
+        amount: 359,
+        badge: null,
+        validity: "28 Days Validity",
+        data: "2.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "airtel-479",
+        amount: 479,
+        badge: "Best Value",
+        validity: "56 Days Validity",
+        data: "1.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+    ],
+    Vi: [
+      {
+        id: "vi-199",
+        amount: 199,
+        badge: "Popular",
+        validity: "28 Days Validity",
+        data: "1.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "vi-299",
+        amount: 299,
+        badge: null,
+        validity: "28 Days Validity",
+        data: "2 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "vi-349",
+        amount: 349,
+        badge: null,
+        validity: "28 Days Validity",
+        data: "2.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "vi-479",
+        amount: 479,
+        badge: "Best Value",
+        validity: "56 Days Validity",
+        data: "1.5 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+    ],
+    BSNL: [
+      {
+        id: "bsnl-149",
+        amount: 149,
+        badge: "Popular",
+        validity: "28 Days Validity",
+        data: "1 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "bsnl-199",
+        amount: 199,
+        badge: null,
+        validity: "30 Days Validity",
+        data: "2 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "bsnl-299",
+        amount: 299,
+        badge: null,
+        validity: "30 Days Validity",
+        data: "3 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+      {
+        id: "bsnl-397",
+        amount: 397,
+        badge: "Best Value",
+        validity: "150 Days Validity",
+        data: "2 GB / Day",
+        calls: "Unlimited Calls",
+        sms: "100 SMS / Day",
+      },
+    ],
   };
 
-  // Auto-detect operator on mobile number input
-  const handleNumberChange = (e) => {
+  const recentTransactions = [
+    {
+      operator: "Jio",
+      logoBg: "bg-[#0a2885]",
+      number: "9876543210",
+      date: "12 Jan 2025, 10:32 AM",
+      amount: 199,
+      status: "Success",
+    },
+    {
+      operator: "Airtel",
+      logoBg: "bg-[#ed1c24]",
+      number: "9123456789",
+      date: "10 Jan 2025, 04:12 PM",
+      amount: 299,
+      status: "Success",
+    },
+    {
+      operator: "Vi",
+      logoBg: "bg-[#d32f2f]",
+      number: "9988776655",
+      date: "08 Jan 2025, 09:45 AM",
+      amount: 179,
+      status: "Success",
+    },
+    {
+      operator: "Jio",
+      logoBg: "bg-[#0a2885]",
+      number: "9871234560",
+      date: "05 Jan 2025, 02:18 PM",
+      amount: 349,
+      status: "Failed",
+    },
+  ];
+
+  const handleMobileNumberChange = (e) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, 10);
-    let detectedOperator = form.operator;
-
-    if (val.startsWith("98") || val.startsWith("99") || val.startsWith("96") || val.startsWith("97")) {
-      detectedOperator = "Airtel";
-    } else if (val.startsWith("70") || val.startsWith("79") || val.startsWith("63") || val.startsWith("89") || val.startsWith("88")) {
-      detectedOperator = "Jio";
-    } else if (val.startsWith("94") || val.startsWith("91")) {
-      detectedOperator = "BSNL";
-    } else if (val.startsWith("93") || val.startsWith("80") || val.startsWith("90")) {
-      detectedOperator = "Vi";
+    setMobileNumber(val);
+    // Simple operator guessing by first digit
+    if (val.startsWith("98") || val.startsWith("99")) {
+      setSelectedOperator("Airtel");
+    } else if (val.startsWith("97") || val.startsWith("96") || val.startsWith("70")) {
+      setSelectedOperator("Jio");
+    } else if (val.startsWith("95") || val.startsWith("94")) {
+      setSelectedOperator("BSNL");
+    } else if (val.startsWith("93") || val.startsWith("92")) {
+      setSelectedOperator("Vi");
     }
-
-    setForm({
-      ...form,
-      mobile: val,
-      operator: detectedOperator || form.operator,
-    });
   };
 
-  const handleInitiateRecharge = (e) => {
-    e.preventDefault();
-    const targetNum = tab === "mobile" ? form.mobile : form.subscriberId;
-    if (!targetNum || targetNum.length < 8) {
-      alert(`Please enter a valid ${tab === "mobile" ? "10-digit mobile number" : "Subscriber ID"}`);
-      return;
-    }
-    if (!form.amount || Number(form.amount) <= 0) {
-      alert("Please enter or select a recharge amount");
-      return;
-    }
+  const handlePlanSelect = (plan) => {
+    setSelectedPlanForRecharge(plan);
+    setShowConfirmModal(true);
+  };
 
-    setProcessingModal(true);
+  const handleExecuteRecharge = () => {
+    setIsProcessing(true);
     setTimeout(() => {
-      setProcessingModal(false);
-      const newTxn = {
-        id: `TXN-${Math.floor(100000 + Math.random() * 900000)}`,
-        number: targetNum,
-        operator: form.operator,
-        circle: form.circle,
-        amount: Number(form.amount),
-        date: "Just now",
-        status: "Success",
-        type: tab,
-      };
-      setSuccessReceipt(newTxn);
-      setRechargesList([newTxn, ...rechargesList]);
+      setIsProcessing(false);
+      setRechargeSuccess(true);
+      setTimeout(() => {
+        setRechargeSuccess(false);
+        setShowConfirmModal(false);
+        setSelectedPlanForRecharge(null);
+      }, 2000);
     }, 1500);
   };
 
-  const currentOperatorObj = (tab === "mobile" ? mobileOperators : dthOperators).find(
-    (op) => op.id === form.operator
-  ) || mobileOperators[0];
-
-  const currentPlans = plansDatabase[activePlanTab] || plansDatabase.popular;
-
-  const filteredRecharges = rechargesList.filter((item) => {
-    const matchesTab = item.type === tab;
-    const matchesStatus = statusFilter === "All" || item.status === statusFilter;
-    const matchesSearch =
-      !searchQuery ||
-      item.number.includes(searchQuery) ||
-      item.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.operator.toLowerCase().includes(searchQuery.toLowerCase());
-
-    return matchesTab && matchesStatus && matchesSearch;
-  });
-
   return (
-    <div className="min-h-screen bg-slate-50 md:ml-64 p-4 md:p-8 font-sans text-slate-800">
-      {/* Top Header & Tab Navigation */}
-      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="p-4 sm:p-6 lg:p-7 md:ml-64 transition-all duration-300 min-h-screen bg-[#f4f8fc]">
+      {/* 1. BREADCRUMB & HEADER SECTION */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            {tab === "mobile" ? "Mobile Prepaid Recharge" : "DTH Television Recharge"}
+          {/* Title & Subtitle */}
+          <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight">
+            Mobile Recharge
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 mt-0.5">
-            Real-time operator bill settlement & live plan browsing with instant wallet cashback.
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
+            Recharge your mobile number instantly with DSC PAY.
           </p>
         </div>
 
-        {/* Switcher Tabs */}
-        <div className="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-xs self-start sm:self-auto">
+        {/* Top Right: Cashback Promo Banner */}
+        <div className="bg-gradient-to-r from-blue-50/90 to-indigo-50/90 border border-blue-200/70 rounded-2xl px-4 py-3 flex items-center gap-4 shadow-xs">
+          <div className="w-10 h-10 rounded-full bg-white text-blue-600 flex items-center justify-center text-lg shadow-xs shrink-0 border border-blue-100">
+            <FaGift />
+          </div>
+          <div>
+            <div className="text-sm font-black text-[#0a1e4d] leading-tight">
+              Get ₹10 Cashback
+            </div>
+            <div className="text-[11px] font-medium text-slate-500 mt-0.5">
+              On your next 3 Mobile Recharges
+            </div>
+          </div>
           <button
-            onClick={() => handleTabChange("mobile")}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold transition-all ${tab === "mobile"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-500/25"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-              }`}
+            onClick={() => setShowPlansModal(true)}
+            className="ml-2 text-xs font-bold text-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50/80 border border-blue-200 px-3 py-1.5 rounded-full transition shadow-2xs shrink-0 flex items-center gap-1"
           >
-            <FaMobileAlt size={13} />
-            <span>Mobile</span>
-          </button>
-
-          <button
-            onClick={() => handleTabChange("dth")}
-            className={`flex items-center gap-2 px-5 py-2 rounded-xl text-xs font-bold transition-all ${tab === "dth"
-              ? "bg-blue-600 text-white shadow-sm shadow-blue-500/25"
-              : "text-slate-600 hover:text-slate-900 hover:bg-slate-50"
-              }`}
-          >
-            <FaTv size={13} />
-            <span>DTH TV</span>
+            <span>Know More</span>
+            <span>&rarr;</span>
           </button>
         </div>
       </div>
 
-      {/* Modern 2-Column Split: Left Form Card + Right Plans Showcase */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8 items-start">
-        {/* Left Column: Clean Recharge Card (5 Cols) */}
-        <div className="lg:col-span-5 bg-white rounded-3xl p-6 md:p-7 border border-slate-200 shadow-sm space-y-5">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-3.5">
-            <h2 className="text-base font-extrabold text-slate-900">
-              {tab === "mobile" ? "Recharge Details" : "DTH Account"}
-            </h2>
-            <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-bold bg-emerald-50 px-2.5 py-1 rounded-full">
+      {/* 2. MAIN 2-COLUMN GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ================= LEFT COLUMN: FORM & POPULAR PLANS ================= */}
+        <div className="lg:col-span-7 xl:col-span-8 space-y-6 min-w-0">
+          {/* CARD 1: MOBILE RECHARGE FORM */}
+          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-xs">
+            {/* Form Header */}
+            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                  <FaMobileAlt />
+                </div>
+                <h2 className="text-base font-extrabold text-[#0a1e4d] tracking-tight">
+                  Mobile Recharge
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowPlansModal(true)}
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
+              >
+                <span>View Plans</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+
+            {/* Form Fields */}
+            <div className="space-y-4">
+              {/* Field 1: Mobile Number */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Mobile Number
+                </label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    value={mobileNumber}
+                    onChange={handleMobileNumberChange}
+                    placeholder="Enter 10 digit mobile number"
+                    className="w-full pl-4 pr-11 py-2.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                  />
+                  <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                    <FaUser size={14} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Field 2 & 3: Operator & Circle Dropdowns */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Select Operator */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Select Operator
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedOperator}
+                      onChange={(e) => {
+                        setSelectedOperator(e.target.value);
+                        setActiveTabOperator(e.target.value);
+                      }}
+                      className="w-full appearance-none pl-10 pr-9 py-2.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition cursor-pointer"
+                    >
+                      {operators.map((op) => (
+                        <option key={op.id} value={op.id}>
+                          {op.name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* Operator Icon Prefix */}
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                      <span className="w-5 h-5 rounded-full bg-[#0a2885] text-white text-[9px] font-black flex items-center justify-center">
+                        {selectedOperator.slice(0, 3)}
+                      </span>
+                    </div>
+
+                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                      <FaChevronDown size={11} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Select Circle */}
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                    Select Circle
+                  </label>
+                  <div className="relative">
+                    <select
+                      value={selectedCircle}
+                      onChange={(e) => setSelectedCircle(e.target.value)}
+                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition cursor-pointer"
+                    >
+                      {circles.map((c) => (
+                        <option key={c} value={c}>
+                          {c}
+                        </option>
+                      ))}
+                    </select>
+                    <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                      <FaChevronDown size={11} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Prepaid / Postpaid Toggle */}
+              <div className="grid grid-cols-2 gap-3 pt-1">
+                <button
+                  type="button"
+                  onClick={() => setPlanType("prepaid")}
+                  className={`py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${planType === "prepaid"
+                      ? "border-blue-600 bg-blue-50/50 text-blue-700 shadow-2xs"
+                      : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    }`}
+                >
+                  <FaMobileAlt size={14} className={planType === "prepaid" ? "text-blue-600" : "text-slate-400"} />
+                  <span>Prepaid</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setPlanType("postpaid")}
+                  className={`py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${planType === "postpaid"
+                      ? "border-blue-600 bg-blue-50/50 text-blue-700 shadow-2xs"
+                      : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                    }`}
+                >
+                  <FaReceipt size={14} className={planType === "postpaid" ? "text-blue-600" : "text-slate-400"} />
+                  <span>Postpaid</span>
+                </button>
+              </div>
+
+              {/* Full Width View Plans CTA Button */}
+              <button
+                type="button"
+                onClick={() => setShowPlansModal(true)}
+                className="w-full py-3 bg-[#1d68f6] hover:bg-blue-600 text-white font-bold text-sm rounded-xl shadow-xs transition duration-150 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+              >
+                <span>View Plans</span>
+              </button>
             </div>
           </div>
 
-          <form onSubmit={handleInitiateRecharge} className="space-y-4">
-            {/* Operator Dropdown */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                {tab === "mobile" ? "Select Telecom Operator" : "Select DTH Provider"}
-              </label>
-              <select
-                className="w-full px-3.5 py-3 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition cursor-pointer"
-                value={form.operator}
-                onChange={(e) => setForm({ ...form, operator: e.target.value })}
+          {/* CARD 2: POPULAR RECHARGE PLANS */}
+          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-xs">
+            {/* Header */}
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <FaBolt className="text-blue-600 text-sm" />
+                <h2 className="text-base font-extrabold text-[#0a1e4d] tracking-tight">
+                  Popular Recharge Plans
+                </h2>
+              </div>
+              <button
+                onClick={() => setShowPlansModal(true)}
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
               >
-                {(tab === "mobile" ? mobileOperators : dthOperators).map((op) => (
-                  <option key={op.id} value={op.id}>
-                    {op.name}
-                  </option>
-                ))}
-              </select>
+                <span>View All Plans</span>
+                <span>&rarr;</span>
+              </button>
             </div>
 
-            {/* Mobile / Subscriber Number Input */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                {tab === "mobile" ? "Mobile Number" : "Subscriber ID / VC Number"}
-              </label>
-              <div className="relative">
-                {tab === "mobile" ? (
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-400 text-xs">
-                    +91
-                  </span>
-                ) : (
-                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400">
-                    <FaTv size={14} />
-                  </span>
-                )}
-                <input
-                  type={tab === "mobile" ? "tel" : "text"}
-                  maxLength={tab === "mobile" ? 10 : 16}
-                  placeholder={tab === "mobile" ? "Enter 10 digit mobile" : "Enter smartcard number"}
-                  className={`w-full ${tab === "mobile" ? "pl-12" : "pl-10"
-                    } pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition font-mono`}
-                  value={tab === "mobile" ? form.mobile : form.subscriberId}
-                  onChange={
-                    tab === "mobile"
-                      ? handleNumberChange
-                      : (e) => setForm({ ...form, subscriberId: e.target.value })
-                  }
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Circle Selector */}
-            {tab === "mobile" && (
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Circle / Region
-                </label>
-                <select
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
-                  value={form.circle}
-                  onChange={(e) => setForm({ ...form, circle: e.target.value })}
-                >
-                  {circlesList.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Amount Input with Currency */}
-            <div>
-              <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-bold text-slate-700">
-                  Recharge Amount (₹)
-                </label>
-                <span className="text-[11px] text-blue-600 font-bold">
-                  Wallet Payment
-                </span>
-              </div>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 font-extrabold text-slate-400 text-base">
-                  ₹
-                </span>
-                <input
-                  type="number"
-                  min="10"
-                  step="1"
-                  placeholder="299"
-                  className="w-full pl-9 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-base font-extrabold text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-mono transition"
-                  value={form.amount}
-                  onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                  required
-                />
-              </div>
-            </div>
-
-            {/* Quick Chips */}
-            <div className="flex flex-wrap items-center gap-1.5 pt-1">
-              {[239, 299, 349, 666, 899].map((amt) => (
+            {/* Operator Filter Tabs */}
+            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+              {operators.map((op) => (
                 <button
-                  key={amt}
-                  type="button"
-                  onClick={() => setForm({ ...form, amount: String(amt) })}
-                  className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${form.amount === String(amt)
-                    ? "bg-blue-600 text-white shadow-xs"
-                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-200"
+                  key={op.id}
+                  onClick={() => setActiveTabOperator(op.id)}
+                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer ${activeTabOperator === op.id
+                      ? "bg-[#1d68f6] text-white shadow-2xs"
+                      : "bg-slate-100 hover:bg-slate-200/80 text-slate-600"
                     }`}
                 >
-                  ₹{amt}
+                  {op.id}
                 </button>
               ))}
             </div>
 
-            {/* Big Action Button */}
-            <button
-              type="submit"
-              className="w-full mt-3 py-3.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-sm tracking-wide shadow-sm transition-all active:scale-[0.99] flex items-center justify-center gap-2 cursor-pointer"
-            >
-              {/* <FaBolt size={14} /> */}
-              <span>Proceed to Recharge ₹{form.amount || "0"}</span>
-            </button>
+            {/* 4 Plan Cards in a Row */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {(plansByOperator[activeTabOperator] || plansByOperator.Jio).map((plan) => (
+                <div
+                  key={plan.id}
+                  className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all group min-w-0"
+                >
+                  <div>
+                    {/* Amount & Optional Badge */}
+                    <div className="flex items-center justify-between gap-1 mb-3">
+                      <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] leading-none">
+                        ₹{plan.amount}
+                      </span>
+                      {plan.badge && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ede9fe] text-[#7c3aed] shrink-0">
+                          {plan.badge}
+                        </span>
+                      )}
+                    </div>
 
-            <div className="flex items-center justify-center gap-2 text-[11px] text-slate-400 font-semibold pt-1">
-              <FaShieldAlt className="text-emerald-500" />
-              <span>100% Secure Transaction & Instant Operator Confirmation</span>
+                    {/* Features List with SVG Icons */}
+                    <div className="space-y-2.5 text-xs text-slate-700 font-semibold mb-4">
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <FaRegCalendarAlt className="text-blue-500 text-[11px] shrink-0" />
+                        <span className="truncate whitespace-nowrap">{plan.validity}</span>
+                      </div>
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <MdSwapVert className="text-blue-500 text-sm shrink-0" />
+                        <span className="truncate whitespace-nowrap">{plan.data}</span>
+                      </div>
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <FaPhoneAlt className="text-blue-500 text-[10px] shrink-0" />
+                        <span className="truncate whitespace-nowrap">{plan.calls}</span>
+                      </div>
+                      <div className="flex items-center gap-2 overflow-hidden">
+                        <FaRegCommentDots className="text-blue-500 text-[11px] shrink-0" />
+                        <span className="truncate whitespace-nowrap">{plan.sms}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recharge Action Button */}
+                  <button
+                    onClick={() => handlePlanSelect(plan)}
+                    className="w-full py-2 bg-[#1d68f6] hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition shadow-xs"
+                  >
+                    Recharge
+                  </button>
+                </div>
+              ))}
             </div>
-          </form>
+          </div>
         </div>
 
-        {/* Right Column: Live Plan Recommendations & Browser (7 Cols) */}
-        <div className="lg:col-span-7 bg-white rounded-3xl p-6 md:p-7 border border-slate-200 shadow-sm space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-3">
-            <div>
-              <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
-                <span>Browse {form.operator} Plans</span>
-                <span className="text-[10px] bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded-full">
-                  Live Plans
-                </span>
-              </h2>
-              <p className="text-xs text-slate-500 mt-0.5">Circle: {form.circle}</p>
+        {/* ================= RIGHT COLUMN: STAY CONNECTED & RECENT ================= */}
+        <div className="lg:col-span-5 xl:col-span-4 space-y-5 min-w-0">
+          {/* CARD 1: STAY CONNECTED ALWAYS PROMO CARD */}
+          <div className="bg-gradient-to-br from-[#eef6fe] via-[#e5f1fc] to-[#dbeef9] border border-blue-100/90 rounded-3xl p-5 sm:p-6 relative overflow-hidden shadow-xs">
+            <div className="flex items-center justify-between gap-3">
+              <div className="flex-1 min-w-0 z-10">
+                <h3 className="text-lg font-black text-[#0a1e4d] leading-tight mb-1">
+                  Stay Connected Always
+                </h3>
+                <p className="text-[11px] text-slate-500 font-medium mb-3 leading-tight">
+                  Recharge in seconds & never miss a moment.
+                </p>
+
+                {/* Checklist */}
+                <div className="space-y-1.5 text-xs font-bold text-[#0a1e4d]">
+                  <div className="flex items-center gap-2">
+                    <FaCheckCircle className="text-blue-600 text-xs shrink-0" />
+                    <span className="truncate">Instant Recharge</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FaCheckCircle className="text-blue-600 text-xs shrink-0" />
+                    <span className="truncate">Secure Payments</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FaCheckCircle className="text-blue-600 text-xs shrink-0" />
+                    <span className="truncate">Best Commission</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <FaCheckCircle className="text-blue-600 text-xs shrink-0" />
+                    <span className="truncate">24/7 Support</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Graphic: Smartphone displaying operator logos */}
+              <div className="relative flex items-center justify-center shrink-0">
+                {/* Smartphone Mockup */}
+                <div className="w-28 h-44 bg-slate-900 rounded-[24px] p-1.5 shadow-xl border-4 border-slate-800 flex flex-col justify-between relative z-10">
+                  {/* Speaker Notch */}
+                  <div className="w-8 h-1 bg-slate-700 rounded-full mx-auto my-0.5"></div>
+                  {/* Screen */}
+                  <div className="w-full flex-1 bg-white rounded-[18px] p-1.5 flex flex-col items-center justify-center gap-1.5">
+                    {/* Jio */}
+                    <div className="w-7 h-7 rounded-full bg-[#0a2885] text-white flex items-center justify-center font-black text-[10px] shadow-xs">
+                      Jio
+                    </div>
+                    {/* Airtel */}
+                    <div className="text-[#ed1c24] font-black text-[11px] tracking-tighter">
+                      airtel
+                    </div>
+                    {/* Vi */}
+                    <div className="text-[#d32f2f] font-black text-xs leading-none">
+                      Vi
+                    </div>
+                    {/* BSNL */}
+                    <div className="text-[#0288d1] font-black text-[9px] leading-tight text-center">
+                      BSNL
+                    </div>
+                  </div>
+                  {/* Home Bar */}
+                  <div className="w-10 h-0.5 bg-slate-700 rounded-full mx-auto my-0.5"></div>
+                </div>
+
+                {/* Potted Plant beside Phone */}
+                <div className="absolute -bottom-1 -right-3 w-10 h-12 flex flex-col items-center justify-end z-20">
+                  <div className="text-xl leading-none">🪴</div>
+                </div>
+
+                {/* Floating Blue Call Badge */}
+                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg border-2 border-white z-20">
+                  <FaPhoneAlt size={10} />
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Plan Category Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 border-b border-slate-100">
-            {planCategories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActivePlanTab(cat.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all shrink-0 ${activePlanTab === cat.id
-                  ? "bg-blue-600 text-white shadow-xs"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                  }`}
-              >
-                {cat.name}
-              </button>
-            ))}
+          {/* CARD 2: 100% SECURE TRANSACTIONS */}
+          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs flex items-center gap-3.5">
+            <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
+              <FaCheckCircle />
+            </div>
+            <div>
+              <div className="text-xs font-black text-[#0a1e4d]">
+                100% Secure Transactions
+              </div>
+              <div className="text-[11px] font-medium text-slate-400 mt-0.5">
+                Your payments are safe with bank-level security.
+              </div>
+            </div>
           </div>
 
-          {/* Plan Cards List */}
-          <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
-            {currentPlans.map((plan, idx) => (
-              <div
-                key={idx}
-                onClick={() => setForm({ ...form, amount: String(plan.amount) })}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${form.amount === String(plan.amount)
-                  ? "bg-blue-50/70 border-blue-500 ring-2 ring-blue-500/20 shadow-xs"
-                  : "bg-slate-50/60 border-slate-200 hover:border-blue-300 hover:bg-white hover:shadow-sm"
-                  }`}
+          {/* CARD 3: NEED HELP WITH RECHARGE? */}
+          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs flex items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaHeadset />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d]">
+                  Need Help with Recharge?
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-0.5">
+                  Our support team is available 24/7
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={() => router.push("/profile")}
+              className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50/60 hover:bg-blue-50 border border-blue-200/80 px-3 py-1.5 rounded-full transition shadow-2xs shrink-0"
+            >
+              Contact Support &rarr;
+            </button>
+          </div>
+
+          {/* CARD 4: RECENT RECHARGES */}
+          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-xs">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <FaHistory className="text-slate-400 text-xs" />
+                <h3 className="text-xs font-extrabold text-[#0a1e4d]">
+                  Recent Recharges
+                </h3>
+              </div>
+              <Link
+                href="/transactions"
+                className="text-[11px] font-bold text-blue-600 hover:text-blue-700"
               >
-                <div className="space-y-1.5 flex-1">
+                View All &rarr;
+              </Link>
+            </div>
+
+            {/* List */}
+            <div className="space-y-3">
+              {recentTransactions.map((tx, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between gap-3 text-xs"
+                >
                   <div className="flex items-center gap-2.5">
-                    <span className="text-xl font-black text-slate-900">₹{plan.amount}</span>
-                    {plan.badge && (
-                      <span className="text-[10px] font-extrabold uppercase tracking-wide bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md">
-                        {plan.badge}
-                      </span>
-                    )}
+                    <div
+                      className={`w-8 h-8 rounded-full ${tx.logoBg} text-white font-black text-[10px] flex items-center justify-center shadow-2xs shrink-0`}
+                    >
+                      {tx.operator}
+                    </div>
+                    <div>
+                      <div className="font-extrabold text-[#0a1e4d] leading-tight">
+                        {tx.number}
+                      </div>
+                      <div className="text-[10px] font-medium text-slate-400 leading-none mt-0.5">
+                        {tx.date}
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-slate-600 font-bold">
-                    <span className="bg-white px-2 py-0.5 rounded-md border border-slate-200 text-slate-800">
-                      Validity: {plan.validity}
-                    </span>
-                    <span className="bg-white px-2 py-0.5 rounded-md border border-slate-200 text-slate-800">
-                      Data: {plan.data}
-                    </span>
-                    <span className="bg-white px-2 py-0.5 rounded-md border border-slate-200 text-slate-800">
-                      {plan.calls}
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-black text-slate-900">₹{tx.amount}</span>
+                    <span
+                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tx.status === "Success"
+                          ? "bg-emerald-50 text-emerald-600 border-emerald-200"
+                          : "bg-rose-50 text-rose-600 border-rose-200"
+                        }`}
+                    >
+                      {tx.status}
                     </span>
                   </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
 
-                  <p className="text-xs text-slate-500 leading-relaxed pt-0.5">
-                    {plan.perks}
-                  </p>
+      {/* ================= RECHARGE CONFIRMATION MODAL ================= */}
+      {showConfirmModal && selectedPlanForRecharge && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full text-slate-800 border border-slate-100 relative">
+            <button
+              onClick={() => setShowConfirmModal(false)}
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+            >
+              <FaTimes size={16} />
+            </button>
+
+            {rechargeSuccess ? (
+              <div className="text-center py-4">
+                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                  <FaCheck size={24} />
+                </div>
+                <h3 className="text-lg font-black text-slate-900 mb-1">
+                  Recharge Successful!
+                </h3>
+                <p className="text-xs text-slate-500 mb-2">
+                  ₹{selectedPlanForRecharge.amount} plan activated for{" "}
+                  {mobileNumber || "9876543210"}.
+                </p>
+                <div className="text-[11px] font-mono text-slate-400">
+                  Txn ID: DSC{Date.now().toString().slice(-8)}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
+                  <FaMobileAlt size={22} />
+                </div>
+                <h3 className="text-base font-black text-slate-900 text-center mb-1">
+                  Confirm Mobile Recharge
+                </h3>
+                <p className="text-xs text-slate-500 text-center mb-4">
+                  Please review the recharge details before proceeding.
+                </p>
+
+                <div className="bg-slate-50 rounded-2xl p-4 space-y-2 text-xs border border-slate-100 mb-5">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Mobile Number:</span>
+                    <span className="font-bold text-slate-900">
+                      {mobileNumber || "9876543210"}
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Operator:</span>
+                    <span className="font-bold text-slate-900">
+                      {selectedOperator} ({selectedCircle})
+                    </span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500">Validity & Data:</span>
+                    <span className="font-bold text-slate-900">
+                      {selectedPlanForRecharge.validity}, {selectedPlanForRecharge.data}
+                    </span>
+                  </div>
+                  <div className="flex justify-between pt-2 border-t border-slate-200">
+                    <span className="font-bold text-slate-700">Total Payable:</span>
+                    <span className="font-black text-base text-blue-600">
+                      ₹{selectedPlanForRecharge.amount}
+                    </span>
+                  </div>
                 </div>
 
                 <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setForm({ ...form, amount: String(plan.amount) });
-                  }}
-                  className={`px-4 py-2 rounded-xl text-xs font-bold transition-all shrink-0 self-start sm:self-auto ${form.amount === String(plan.amount)
-                    ? "bg-blue-600 text-white shadow-xs"
-                    : "bg-white hover:bg-blue-50 text-blue-600 border border-slate-300 hover:border-blue-400"
-                    }`}
+                  disabled={isProcessing}
+                  onClick={handleExecuteRecharge}
+                  className="w-full py-2.5 bg-[#1d68f6] hover:bg-blue-600 disabled:bg-blue-400 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 mb-2"
                 >
-                  {form.amount === String(plan.amount) ? "Selected" : "Select Plan"}
+                  {isProcessing ? (
+                    <>
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                      <span>Processing Recharge...</span>
+                    </>
+                  ) : (
+                    <span>Pay ₹{selectedPlanForRecharge.amount} from Wallet</span>
+                  )}
+                </button>
+
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
+                >
+                  Cancel
                 </button>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Recent Recharge Transactions Table */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
-        <div className="p-4 md:p-6 border-b border-slate-200 flex flex-col md:flex-row md:items-center justify-between gap-3 bg-slate-50/50">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center">
-              <FaHistory size={14} />
-            </div>
-            <div>
-              <h3 className="font-black text-slate-900 text-base">Recent Recharge History</h3>
-              <p className="text-xs text-slate-500">Live operator response & transaction receipts</p>
-            </div>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <div className="relative">
-              <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" />
-              <input
-                type="text"
-                placeholder="Search number, txn id..."
-                className="pl-8 pr-3 py-1.5 bg-white border border-slate-300 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500/20"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-
-            <select
-              className="bg-white border border-slate-300 rounded-xl px-2.5 py-1.5 text-xs font-semibold text-slate-700 focus:outline-none"
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="All">All Status</option>
-              <option value="Success">Success</option>
-              <option value="Pending">Pending</option>
-              <option value="Failed">Failed</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs border-collapse">
-            <thead>
-              <tr className="bg-slate-100/70 border-b border-slate-200 text-slate-600 font-bold uppercase tracking-wider">
-                <th className="py-3.5 px-4 md:px-6">Transaction ID</th>
-                <th className="py-3.5 px-4">{tab === "mobile" ? "Mobile Number" : "Subscriber ID"}</th>
-                <th className="py-3.5 px-4">Operator</th>
-                <th className="py-3.5 px-4">Date & Time</th>
-                <th className="py-3.5 px-4 text-right">Amount</th>
-                <th className="py-3.5 px-4 text-center">Status</th>
-                <th className="py-3.5 px-4 md:px-6 text-center">Action</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {filteredRecharges.length === 0 ? (
-                <tr>
-                  <td colSpan={7} className="py-10 text-center text-slate-400 font-medium">
-                    No recharge records found.
-                  </td>
-                </tr>
-              ) : (
-                filteredRecharges.map((item) => (
-                  <tr key={item.id} className="hover:bg-blue-50/30 transition">
-                    <td className="py-3.5 px-4 md:px-6 font-mono font-bold text-slate-700">
-                      {item.id}
-                    </td>
-                    <td className="py-3.5 px-4 font-mono font-bold text-slate-900">
-                      {item.number}
-                    </td>
-                    <td className="py-3.5 px-4">
-                      <span className="font-semibold text-slate-800">{item.operator}</span>
-                      <span className="text-[11px] text-slate-400 block">{item.circle}</span>
-                    </td>
-                    <td className="py-3.5 px-4 text-slate-500">{item.date}</td>
-                    <td className="py-3.5 px-4 text-right font-black text-slate-900 text-sm">
-                      ₹{item.amount}
-                    </td>
-                    <td className="py-3.5 px-4 text-center">
-                      <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-300 px-2.5 py-1 rounded-full text-[11px] font-bold">
-                        <FaCheckCircle size={10} />
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-3.5 px-4 md:px-6 text-center">
-                      <button
-                        onClick={() => {
-                          setForm({
-                            ...form,
-                            mobile: tab === "mobile" ? item.number : form.mobile,
-                            subscriberId: tab === "dth" ? item.number : form.subscriberId,
-                            operator: item.operator,
-                            amount: String(item.amount),
-                          });
-                        }}
-                        className="inline-flex items-center gap-1 text-blue-600 hover:text-blue-800 font-bold text-xs bg-blue-50 hover:bg-blue-100 px-2.5 py-1 rounded-lg transition"
-                      >
-                        <FaRedoAlt size={10} />
-                        <span>Repeat</span>
-                      </button>
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      {/* Processing Animation Modal */}
-      {processingModal && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl p-8 max-w-sm w-full text-center">
-            <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-            <h3 className="text-lg font-black text-slate-900 mb-1">Connecting to Operator...</h3>
-            <p className="text-xs text-slate-500">
-              Processing recharge of ₹{form.amount} on {form.operator} network.
-            </p>
+            )}
           </div>
         </div>
       )}
 
-      {/* Success Receipt Modal */}
-      {successReceipt && (
-        <div className="fixed inset-0 z-[999] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl p-6 sm:p-8 max-w-sm w-full text-center border border-slate-100 relative">
-            <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-              <FaCheckCircle size={32} />
-            </div>
-            <h3 className="text-xl font-black text-slate-900 mb-1">Recharge Successful!</h3>
-            <span className="text-xs text-slate-500 font-mono block mb-5">
-              Txn ID: {successReceipt.id}
-            </span>
-
-            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-6 text-xs space-y-2 text-left">
-              <div className="flex justify-between">
-                <span className="text-slate-500">Mobile Number:</span>
-                <span className="font-bold text-slate-900 font-mono">{successReceipt.number}</span>
+      {/* ================= ALL PLANS MODAL ================= */}
+      {showPlansModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-2xl w-full text-slate-800 border border-slate-100 relative max-h-[85vh] flex flex-col">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <h3 className="text-base font-black text-slate-900">
+                  Select a Recharge Plan
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Showing plans for {selectedOperator} ({selectedCircle})
+                </p>
               </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Operator & Circle:</span>
-                <span className="font-bold text-slate-900">{successReceipt.operator}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Amount Paid:</span>
-                <span className="font-black text-emerald-700 text-sm">₹{successReceipt.amount}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Payment Mode:</span>
-                <span className="font-bold text-blue-600">DSC Wallet</span>
-              </div>
+              <button
+                onClick={() => setShowPlansModal(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <FaTimes size={16} />
+              </button>
             </div>
 
-            <button
-              onClick={() => setSuccessReceipt(null)}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-md transition"
-            >
-              Done & Download Receipt
-            </button>
+            {/* Operator Pills in Modal */}
+            <div className="flex items-center gap-2 py-3 overflow-x-auto">
+              {operators.map((op) => (
+                <button
+                  key={op.id}
+                  onClick={() => setActiveTabOperator(op.id)}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition shrink-0 ${activeTabOperator === op.id
+                      ? "bg-[#1d68f6] text-white shadow-2xs"
+                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    }`}
+                >
+                  {op.name}
+                </button>
+              ))}
+            </div>
+
+            {/* Plans List Scrollable */}
+            <div className="overflow-y-auto space-y-3 py-2 flex-1 scrollbar-thin">
+              {(plansByOperator[activeTabOperator] || plansByOperator.Jio).map((plan) => (
+                <div
+                  key={plan.id}
+                  className="p-4 rounded-2xl border border-slate-200/90 hover:border-blue-400 hover:shadow-sm transition flex items-center justify-between gap-4"
+                >
+                  <div>
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-lg font-black text-slate-900">
+                        ₹{plan.amount}
+                      </span>
+                      {plan.badge && (
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700">
+                          {plan.badge}
+                        </span>
+                      )}
+                    </div>
+                    <div className="text-xs text-slate-600 font-medium">
+                      {plan.validity} &bull; {plan.data} &bull; {plan.calls} &bull; {plan.sms}
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setShowPlansModal(false);
+                      handlePlanSelect(plan);
+                    }}
+                    className="px-4 py-2 bg-[#1d68f6] hover:bg-blue-600 text-white font-bold text-xs rounded-xl shadow-2xs shrink-0"
+                  >
+                    Select
+                  </button>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
     </div>
   );
-};
-
-export default Recharge;
+}
