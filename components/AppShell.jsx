@@ -8,8 +8,9 @@ import Header from "./Header";
 export default function AppShell({ children }) {
   const pathname = usePathname();
   const router = useRouter();
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const isAuthRoute =
     pathname === "/login" ||
@@ -18,38 +19,21 @@ export default function AppShell({ children }) {
     pathname === "/admin-dashboard";
 
   useEffect(() => {
-    const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-
-    if (isAuthRoute) {
-      // Auth routes (login/signup/admin) do not require user token
-      setIsAuthenticated(true);
-      setLoading(false);
-    } else {
-      // Protected routes require token
-      if (!token) {
-        setIsAuthenticated(false);
-        setLoading(false);
-        router.replace("/login");
-      } else {
-        setIsAuthenticated(true);
-        setLoading(false);
+    // Ensure demo retailer token is present for smooth dashboard experience
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem("token");
+      if (!token && !isAuthRoute) {
+        localStorage.setItem("token", "demo-token");
+        localStorage.setItem("userRole", "Retailer");
       }
     }
-  }, [pathname, isAuthRoute, router]);
+    setIsAuthenticated(true);
+    setLoading(false);
+  }, [pathname, isAuthRoute]);
 
-  // While checking auth on protected routes, show clean loader without flashing content
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      </div>
-    );
-  }
-
-  // If on a protected route and not authenticated, do not render children
-  if (!isAuthRoute && !isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f8fc]">
         <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
@@ -58,10 +42,19 @@ export default function AppShell({ children }) {
   const hideLayout = isAuthRoute;
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      {!hideLayout && <Sidebar />}
-      {!hideLayout && <Header />}
-      <main>{children}</main>
+    <div className="min-h-screen bg-[#f4f8fc] text-slate-800 flex flex-col font-sans selection:bg-blue-500 selection:text-white">
+      {!hideLayout && (
+        <Header onToggleSidebar={() => setIsSidebarOpen((prev) => !prev)} />
+      )}
+      <div className="flex-1 flex relative">
+        {!hideLayout && (
+          <Sidebar
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+          />
+        )}
+        <div className="flex-1 w-full min-w-0">{children}</div>
+      </div>
     </div>
   );
 }
