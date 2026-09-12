@@ -12,6 +12,7 @@ import {
   FaHeadset,
   FaHistory,
   FaChevronRight,
+  FaChevronLeft,
   FaChevronDown,
   FaBolt,
   FaGift,
@@ -37,10 +38,10 @@ export default function Recharge() {
   const [rechargeSuccess, setRechargeSuccess] = useState(false);
 
   const operators = [
-    { id: "Jio", name: "Reliance Jio", logo: "Jio", color: "bg-[#0a2885] text-white" },
-    { id: "Airtel", name: "Bharti Airtel", logo: "airtel", color: "bg-[#ed1c24] text-white" },
-    { id: "Vi", name: "Vodafone Idea", logo: "Vi", color: "bg-[#d32f2f] text-white" },
-    { id: "BSNL", name: "BSNL Prepaid", logo: "BSNL", color: "bg-[#0288d1] text-white" },
+    { id: "Jio", name: "Reliance Jio", logo: "Jio", color: "bg-[#0a2885] text-white", border: "border-[#0a2885]" },
+    { id: "Airtel", name: "Bharti Airtel", logo: "airtel", color: "bg-[#ed1c24] text-white", border: "border-[#ed1c24]" },
+    { id: "Vi", name: "Vodafone Idea", logo: "Vi", color: "bg-[#d32f2f] text-white", border: "border-[#d32f2f]" },
+    { id: "BSNL", name: "BSNL Prepaid", logo: "BSNL", color: "bg-[#0288d1] text-white", border: "border-[#0288d1]" },
   ];
 
   const circles = [
@@ -58,13 +59,13 @@ export default function Recharge() {
     "Tamil Nadu",
   ];
 
-  // Operator-specific plans matching the screenshot
   const plansByOperator = {
     Jio: [
       {
         id: "jio-199",
         amount: 199,
         badge: "Popular",
+        badgeColor: "bg-blue-100 text-blue-800 border-blue-200",
         validity: "28 Days Validity",
         data: "2 GB / Day",
         calls: "Unlimited Calls",
@@ -82,7 +83,8 @@ export default function Recharge() {
       {
         id: "jio-349",
         amount: 349,
-        badge: null,
+        badge: "Hero Pack",
+        badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
         validity: "28 Days Validity",
         data: "2.5 GB / Day",
         calls: "Unlimited Calls",
@@ -92,6 +94,7 @@ export default function Recharge() {
         id: "jio-399",
         amount: 399,
         badge: "Best Value",
+        badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
         validity: "56 Days Validity",
         data: "2 GB / Day",
         calls: "Unlimited Calls",
@@ -103,6 +106,7 @@ export default function Recharge() {
         id: "airtel-199",
         amount: 199,
         badge: "Popular",
+        badgeColor: "bg-red-100 text-red-800 border-red-200",
         validity: "28 Days Validity",
         data: "2 GB / Day",
         calls: "Unlimited Calls",
@@ -120,7 +124,8 @@ export default function Recharge() {
       {
         id: "airtel-359",
         amount: 359,
-        badge: null,
+        badge: "Hero Pack",
+        badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
         validity: "28 Days Validity",
         data: "2.5 GB / Day",
         calls: "Unlimited Calls",
@@ -130,6 +135,7 @@ export default function Recharge() {
         id: "airtel-479",
         amount: 479,
         badge: "Best Value",
+        badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
         validity: "56 Days Validity",
         data: "1.5 GB / Day",
         calls: "Unlimited Calls",
@@ -141,6 +147,7 @@ export default function Recharge() {
         id: "vi-199",
         amount: 199,
         badge: "Popular",
+        badgeColor: "bg-red-100 text-red-800 border-red-200",
         validity: "28 Days Validity",
         data: "1.5 GB / Day",
         calls: "Unlimited Calls",
@@ -158,7 +165,8 @@ export default function Recharge() {
       {
         id: "vi-349",
         amount: 349,
-        badge: null,
+        badge: "Hero Pack",
+        badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
         validity: "28 Days Validity",
         data: "2.5 GB / Day",
         calls: "Unlimited Calls",
@@ -168,6 +176,7 @@ export default function Recharge() {
         id: "vi-479",
         amount: 479,
         badge: "Best Value",
+        badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
         validity: "56 Days Validity",
         data: "1.5 GB / Day",
         calls: "Unlimited Calls",
@@ -179,6 +188,7 @@ export default function Recharge() {
         id: "bsnl-149",
         amount: 149,
         badge: "Popular",
+        badgeColor: "bg-cyan-100 text-cyan-800 border-cyan-200",
         validity: "28 Days Validity",
         data: "1 GB / Day",
         calls: "Unlimited Calls",
@@ -196,18 +206,19 @@ export default function Recharge() {
       {
         id: "bsnl-299",
         amount: 299,
-        badge: null,
+        badge: "Best Value",
+        badgeColor: "bg-purple-100 text-purple-800 border-purple-200",
         validity: "30 Days Validity",
         data: "3 GB / Day",
         calls: "Unlimited Calls",
         sms: "100 SMS / Day",
       },
       {
-        id: "bsnl-397",
-        amount: 397,
-        badge: "Best Value",
-        validity: "150 Days Validity",
-        data: "2 GB / Day",
+        id: "bsnl-399",
+        amount: 399,
+        badgeColor: "bg-emerald-100 text-emerald-800 border-emerald-200",
+        validity: "70 Days Validity",
+        data: "1.5 GB / Day",
         calls: "Unlimited Calls",
         sms: "100 SMS / Day",
       },
@@ -218,49 +229,52 @@ export default function Recharge() {
     {
       operator: "Jio",
       logoBg: "bg-[#0a2885]",
-      number: "9876543210",
-      date: "12 Jan 2025, 10:32 AM",
-      amount: 199,
+      number: "+91 98765 43210",
+      date: "12 Jan 2025, 04:30 PM",
+      amount: 299,
       status: "Success",
     },
     {
       operator: "Airtel",
       logoBg: "bg-[#ed1c24]",
-      number: "9123456789",
-      date: "10 Jan 2025, 04:12 PM",
-      amount: 299,
+      number: "+91 91234 56789",
+      date: "11 Jan 2025, 01:15 PM",
+      amount: 199,
       status: "Success",
     },
     {
       operator: "Vi",
       logoBg: "bg-[#d32f2f]",
-      number: "9988776655",
-      date: "08 Jan 2025, 09:45 AM",
-      amount: 179,
+      number: "+91 88765 43211",
+      date: "10 Jan 2025, 11:20 AM",
+      amount: 349,
       status: "Success",
     },
     {
       operator: "Jio",
       logoBg: "bg-[#0a2885]",
-      number: "9871234560",
-      date: "05 Jan 2025, 02:18 PM",
-      amount: 349,
-      status: "Failed",
+      number: "+91 78901 23456",
+      date: "09 Jan 2025, 09:45 AM",
+      amount: 399,
+      status: "Success",
     },
   ];
 
   const handleMobileNumberChange = (e) => {
     const val = e.target.value.replace(/\D/g, "").slice(0, 10);
     setMobileNumber(val);
-    // Simple operator guessing by first digit
-    if (val.startsWith("98") || val.startsWith("99")) {
+    if (val.startsWith("98") || val.startsWith("99") || val.startsWith("80")) {
       setSelectedOperator("Airtel");
-    } else if (val.startsWith("97") || val.startsWith("96") || val.startsWith("70")) {
+      setActiveTabOperator("Airtel");
+    } else if (val.startsWith("97") || val.startsWith("96") || val.startsWith("70") || val.startsWith("63")) {
       setSelectedOperator("Jio");
+      setActiveTabOperator("Jio");
     } else if (val.startsWith("95") || val.startsWith("94")) {
       setSelectedOperator("BSNL");
-    } else if (val.startsWith("93") || val.startsWith("92")) {
+      setActiveTabOperator("BSNL");
+    } else if (val.startsWith("93") || val.startsWith("92") || val.startsWith("88")) {
       setSelectedOperator("Vi");
+      setActiveTabOperator("Vi");
     }
   };
 
@@ -278,68 +292,74 @@ export default function Recharge() {
         setRechargeSuccess(false);
         setShowConfirmModal(false);
         setSelectedPlanForRecharge(null);
-      }, 2000);
-    }, 1500);
+      }, 1800);
+    }, 1200);
   };
 
   return (
-    <div className="p-4 sm:p-6 lg:p-7 md:ml-64 transition-all duration-300 min-h-screen bg-[#f4f8fc]">
-      {/* 1. BREADCRUMB & HEADER SECTION */}
+    <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 lg:p-7 text-slate-800 font-sans">
+      {/* 2. BREADCRUMB & HEADER SECTION */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 mb-6">
         <div>
-          {/* Title & Subtitle */}
-          <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
             Mobile Recharge
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-1">
-            Recharge your mobile number instantly with DSC PAY.
+          <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+            Recharge your prepaid & postpaid numbers instantly with DSC PAY.
           </p>
         </div>
 
         {/* Top Right: Cashback Promo Banner */}
-        <div className="bg-gradient-to-r from-blue-50/90 to-indigo-50/90 border border-blue-200/70 rounded-2xl px-4 py-3 flex items-center gap-4 shadow-xs">
-          <div className="w-10 h-10 rounded-full bg-white text-blue-600 flex items-center justify-center text-lg shadow-xs shrink-0 border border-blue-100">
+        <div className="bg-gradient-to-r from-blue-50 via-indigo-50/80 to-blue-100/90 border border-blue-200/80 rounded-2xl px-5 py-3.5 flex items-center gap-4 shadow-2xs max-w-md">
+          <div className="w-11 h-11 rounded-full bg-white text-blue-600 flex items-center justify-center text-lg shadow-xs shrink-0 border border-blue-100">
             <FaGift />
           </div>
-          <div>
+          <div className="flex-1 min-w-0">
             <div className="text-sm font-black text-[#0a1e4d] leading-tight">
               Get ₹10 Cashback
             </div>
             <div className="text-[11px] font-medium text-slate-500 mt-0.5">
-              On your next 3 Mobile Recharges
+              On your next 3 Mobile Recharges with DSC Wallet
             </div>
           </div>
           <button
             onClick={() => setShowPlansModal(true)}
-            className="ml-2 text-xs font-bold text-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50/80 border border-blue-200 px-3 py-1.5 rounded-full transition shadow-2xs shrink-0 flex items-center gap-1"
+            className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 px-3.5 py-1.5 rounded-full transition shadow-2xs shrink-0 flex items-center gap-1 cursor-pointer"
           >
-            <span>Know More</span>
+            <span>View Plans</span>
             <span>&rarr;</span>
           </button>
         </div>
       </div>
 
-      {/* 2. MAIN 2-COLUMN GRID */}
+      {/* 3. MAIN 2-COLUMN GRID */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
         {/* ================= LEFT COLUMN: FORM & POPULAR PLANS ================= */}
         <div className="lg:col-span-7 xl:col-span-8 space-y-6 min-w-0">
           {/* CARD 1: MOBILE RECHARGE FORM */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-xs">
+          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-2xs">
             {/* Form Header */}
-            <div className="flex items-center justify-between pb-4 mb-4 border-b border-slate-100">
+            <div className="flex items-center justify-between pb-4 mb-5 border-b border-slate-100">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0 shadow-2xs">
                   <FaMobileAlt />
                 </div>
-                <h2 className="text-base font-extrabold text-[#0a1e4d] tracking-tight">
-                  Mobile Recharge
-                </h2>
+                <div>
+                  <h2 className="text-base font-extrabold text-[#0a1e4d] tracking-tight leading-tight">
+                    Instant Mobile Recharge
+                  </h2>
+                  <span className="text-[11px] font-medium text-slate-400">
+                    Enter details to view personalized plans
+                  </span>
+                </div>
               </div>
+
               <button
+                type="button"
                 onClick={() => setShowPlansModal(true)}
-                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition cursor-pointer"
               >
-                <span>View Plans</span>
+                <span>Browse All Plans</span>
                 <span>&rarr;</span>
               </button>
             </div>
@@ -357,7 +377,7 @@ export default function Recharge() {
                     value={mobileNumber}
                     onChange={handleMobileNumberChange}
                     placeholder="Enter 10 digit mobile number"
-                    className="w-full pl-4 pr-11 py-2.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-semibold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                    className="w-full pl-4 pr-11 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-bold text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition shadow-2xs"
                   />
                   <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
                     <FaUser size={14} />
@@ -379,7 +399,7 @@ export default function Recharge() {
                         setSelectedOperator(e.target.value);
                         setActiveTabOperator(e.target.value);
                       }}
-                      className="w-full appearance-none pl-10 pr-9 py-2.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition cursor-pointer"
+                      className="w-full appearance-none pl-11 pr-9 py-2.5 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition cursor-pointer shadow-2xs"
                     >
                       {operators.map((op) => (
                         <option key={op.id} value={op.id}>
@@ -390,7 +410,7 @@ export default function Recharge() {
 
                     {/* Operator Icon Prefix */}
                     <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                      <span className="w-5 h-5 rounded-full bg-[#0a2885] text-white text-[9px] font-black flex items-center justify-center">
+                      <span className={`w-6 h-6 rounded-full ${operators.find(o => o.id === selectedOperator)?.color || 'bg-blue-600'} text-white text-[9px] font-black flex items-center justify-center shadow-2xs`}>
                         {selectedOperator.slice(0, 3)}
                       </span>
                     </div>
@@ -404,13 +424,13 @@ export default function Recharge() {
                 {/* Select Circle */}
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                    Select Circle
+                    Select Circle / State
                   </label>
                   <div className="relative">
                     <select
                       value={selectedCircle}
                       onChange={(e) => setSelectedCircle(e.target.value)}
-                      className="w-full appearance-none pl-3.5 pr-9 py-2.5 bg-slate-50/50 hover:bg-slate-50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition cursor-pointer"
+                      className="w-full appearance-none pl-4 pr-9 py-2.5 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition cursor-pointer shadow-2xs"
                     >
                       {circles.map((c) => (
                         <option key={c} value={c}>
@@ -430,9 +450,9 @@ export default function Recharge() {
                 <button
                   type="button"
                   onClick={() => setPlanType("prepaid")}
-                  className={`py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${planType === "prepaid"
-                      ? "border-blue-600 bg-blue-50/50 text-blue-700 shadow-2xs"
-                      : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                  className={`py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-all cursor-pointer ${planType === "prepaid"
+                    ? "border-blue-600 bg-blue-50/70 text-blue-700 shadow-2xs font-extrabold ring-1 ring-blue-600"
+                    : "border-slate-200 text-slate-600 hover:bg-slate-50"
                     }`}
                 >
                   <FaMobileAlt size={14} className={planType === "prepaid" ? "text-blue-600" : "text-slate-400"} />
@@ -442,9 +462,9 @@ export default function Recharge() {
                 <button
                   type="button"
                   onClick={() => setPlanType("postpaid")}
-                  className={`py-2.5 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition ${planType === "postpaid"
-                      ? "border-blue-600 bg-blue-50/50 text-blue-700 shadow-2xs"
-                      : "border-slate-200 text-slate-600 hover:bg-slate-50"
+                  className={`py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2 border transition-all cursor-pointer ${planType === "postpaid"
+                    ? "border-blue-600 bg-blue-50/70 text-blue-700 shadow-2xs font-extrabold ring-1 ring-blue-600"
+                    : "border-slate-200 text-slate-600 hover:bg-slate-50"
                     }`}
                 >
                   <FaReceipt size={14} className={planType === "postpaid" ? "text-blue-600" : "text-slate-400"} />
@@ -456,26 +476,30 @@ export default function Recharge() {
               <button
                 type="button"
                 onClick={() => setShowPlansModal(true)}
-                className="w-full py-3 bg-[#1d68f6] hover:bg-blue-600 text-white font-bold text-sm rounded-xl shadow-xs transition duration-150 flex items-center justify-center gap-2 mt-2 cursor-pointer"
+                className="w-full py-3.5 bg-[#1d68f6] hover:bg-blue-700 active:scale-[0.99] text-white font-bold text-sm rounded-2xl shadow-md shadow-blue-500/20 transition flex items-center justify-center gap-2 mt-2 cursor-pointer"
               >
-                <span>View Plans</span>
+                <span>View Plans & Offers</span>
+                <span>&rarr;</span>
               </button>
             </div>
           </div>
 
           {/* CARD 2: POPULAR RECHARGE PLANS */}
-          <div className="bg-white rounded-2xl p-5 sm:p-6 border border-slate-100 shadow-xs">
+          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-2xs">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-2">
-                <FaBolt className="text-blue-600 text-sm" />
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-500 flex items-center justify-center text-sm shrink-0">
+                  <FaBolt />
+                </div>
                 <h2 className="text-base font-extrabold text-[#0a1e4d] tracking-tight">
                   Popular Recharge Plans
                 </h2>
               </div>
               <button
+                type="button"
                 onClick={() => setShowPlansModal(true)}
-                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition cursor-pointer"
               >
                 <span>View All Plans</span>
                 <span>&rarr;</span>
@@ -483,43 +507,44 @@ export default function Recharge() {
             </div>
 
             {/* Operator Filter Tabs */}
-            <div className="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+            <div className="flex items-center gap-2 mb-5 overflow-x-auto no-scrollbar pb-1">
               {operators.map((op) => (
                 <button
                   key={op.id}
                   onClick={() => setActiveTabOperator(op.id)}
-                  className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer ${activeTabOperator === op.id
-                      ? "bg-[#1d68f6] text-white shadow-2xs"
-                      : "bg-slate-100 hover:bg-slate-200/80 text-slate-600"
+                  className={`px-4 py-2 rounded-full text-xs font-bold transition-all shrink-0 cursor-pointer flex items-center gap-1.5 ${activeTabOperator === op.id
+                    ? "bg-[#1d68f6] text-white shadow-xs"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700"
                     }`}
                 >
-                  {op.id}
+                  <span className={`w-2 h-2 rounded-full ${op.color} shrink-0`}></span>
+                  <span>{op.name}</span>
                 </button>
               ))}
             </div>
 
             {/* 4 Plan Cards in a Row */}
-            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
               {(plansByOperator[activeTabOperator] || plansByOperator.Jio).map((plan) => (
                 <div
                   key={plan.id}
-                  className="bg-white border border-slate-200/90 rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between hover:border-blue-400 hover:shadow-md transition-all group min-w-0"
+                  className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between hover:border-blue-500 hover:shadow-md hover:-translate-y-0.5 transition-all group min-w-0"
                 >
                   <div>
                     {/* Amount & Optional Badge */}
                     <div className="flex items-center justify-between gap-1 mb-3">
-                      <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] leading-none">
+                      <span className="text-2xl font-black text-[#0a1e4d] font-mono leading-none">
                         ₹{plan.amount}
                       </span>
                       {plan.badge && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-[#ede9fe] text-[#7c3aed] shrink-0">
+                        <span className={`text-[10px] font-extrabold px-2 py-0.5 rounded-full border shadow-2xs shrink-0 ${plan.badgeColor || 'bg-blue-50 text-blue-700 border-blue-200'}`}>
                           {plan.badge}
                         </span>
                       )}
                     </div>
 
-                    {/* Features List with SVG Icons */}
-                    <div className="space-y-2.5 text-xs text-slate-700 font-semibold mb-4">
+                    {/* Features List */}
+                    <div className="space-y-2 text-xs text-slate-700 font-semibold mb-4 border-t border-slate-100 pt-3">
                       <div className="flex items-center gap-2 overflow-hidden">
                         <FaRegCalendarAlt className="text-blue-500 text-[11px] shrink-0" />
                         <span className="truncate whitespace-nowrap">{plan.validity}</span>
@@ -541,8 +566,9 @@ export default function Recharge() {
 
                   {/* Recharge Action Button */}
                   <button
+                    type="button"
                     onClick={() => handlePlanSelect(plan)}
-                    className="w-full py-2 bg-[#1d68f6] hover:bg-blue-600 text-white text-xs font-bold rounded-xl transition shadow-xs"
+                    className="w-full py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition shadow-2xs cursor-pointer"
                   >
                     Recharge
                   </button>
@@ -552,21 +578,24 @@ export default function Recharge() {
           </div>
         </div>
 
-        {/* ================= RIGHT COLUMN: STAY CONNECTED & RECENT ================= */}
-        <div className="lg:col-span-5 xl:col-span-4 space-y-5 min-w-0">
+        {/* ================= RIGHT COLUMN ================= */}
+        <div className="lg:col-span-5 xl:col-span-4 space-y-6 min-w-0">
           {/* CARD 1: STAY CONNECTED ALWAYS PROMO CARD */}
-          <div className="bg-gradient-to-br from-[#eef6fe] via-[#e5f1fc] to-[#dbeef9] border border-blue-100/90 rounded-3xl p-5 sm:p-6 relative overflow-hidden shadow-xs">
+          <div className="bg-gradient-to-br from-[#e0f2fe] via-[#e5f1fc] to-[#bfdbfe] border border-blue-200/90 rounded-3xl p-6 relative overflow-hidden shadow-2xs min-h-[210px]">
+            {/* Background Glow */}
+            <div className="absolute -right-6 -bottom-10 w-44 h-44 rounded-full bg-blue-300/30 blur-2xl pointer-events-none"></div>
+
             <div className="flex items-center justify-between gap-3">
               <div className="flex-1 min-w-0 z-10">
                 <h3 className="text-lg font-black text-[#0a1e4d] leading-tight mb-1">
                   Stay Connected Always
                 </h3>
-                <p className="text-[11px] text-slate-500 font-medium mb-3 leading-tight">
+                <p className="text-[11px] text-blue-800 font-bold mb-3 leading-tight">
                   Recharge in seconds & never miss a moment.
                 </p>
 
                 {/* Checklist */}
-                <div className="space-y-1.5 text-xs font-bold text-[#0a1e4d]">
+                <div className="space-y-1.5 text-xs font-bold text-slate-800">
                   <div className="flex items-center gap-2">
                     <FaCheckCircle className="text-blue-600 text-xs shrink-0" />
                     <span className="truncate">Instant Recharge</span>
@@ -586,42 +615,28 @@ export default function Recharge() {
                 </div>
               </div>
 
-              {/* Graphic: Smartphone displaying operator logos */}
+              {/* Graphic: 3D Smartphone with operator logos */}
               <div className="relative flex items-center justify-center shrink-0">
-                {/* Smartphone Mockup */}
-                <div className="w-28 h-44 bg-slate-900 rounded-[24px] p-1.5 shadow-xl border-4 border-slate-800 flex flex-col justify-between relative z-10">
-                  {/* Speaker Notch */}
-                  <div className="w-8 h-1 bg-slate-700 rounded-full mx-auto my-0.5"></div>
-                  {/* Screen */}
-                  <div className="w-full flex-1 bg-white rounded-[18px] p-1.5 flex flex-col items-center justify-center gap-1.5">
-                    {/* Jio */}
-                    <div className="w-7 h-7 rounded-full bg-[#0a2885] text-white flex items-center justify-center font-black text-[10px] shadow-xs">
+                <div className="w-26 h-42 bg-[#071536] rounded-[22px] p-1.5 shadow-xl border border-slate-700/50 flex flex-col justify-between relative z-10 transform rotate-[-3deg]">
+                  <div className="w-7 h-1 bg-slate-700 rounded-full mx-auto my-0.5"></div>
+                  <div className="w-full flex-1 bg-white rounded-[16px] p-1.5 flex flex-col items-center justify-center gap-1.5 shadow-inner">
+                    <div className="w-6 h-6 rounded-full bg-[#0a2885] text-white flex items-center justify-center font-black text-[9px] shadow-xs">
                       Jio
                     </div>
-                    {/* Airtel */}
-                    <div className="text-[#ed1c24] font-black text-[11px] tracking-tighter">
+                    <div className="text-[#ed1c24] font-black text-[10px] tracking-tighter">
                       airtel
                     </div>
-                    {/* Vi */}
                     <div className="text-[#d32f2f] font-black text-xs leading-none">
                       Vi
                     </div>
-                    {/* BSNL */}
-                    <div className="text-[#0288d1] font-black text-[9px] leading-tight text-center">
+                    <div className="text-[#0288d1] font-black text-[8px] leading-tight text-center">
                       BSNL
                     </div>
                   </div>
-                  {/* Home Bar */}
-                  <div className="w-10 h-0.5 bg-slate-700 rounded-full mx-auto my-0.5"></div>
+                  <div className="w-8 h-0.5 bg-slate-700 rounded-full mx-auto my-0.5"></div>
                 </div>
 
-                {/* Potted Plant beside Phone */}
-                <div className="absolute -bottom-1 -right-3 w-10 h-12 flex flex-col items-center justify-end z-20">
-                  <div className="text-xl leading-none">🪴</div>
-                </div>
-
-                {/* Floating Blue Call Badge */}
-                <div className="absolute -left-2.5 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg border-2 border-white z-20">
+                <div className="absolute -left-2 top-1/2 -translate-y-1/2 w-7 h-7 rounded-full bg-blue-600 text-white flex items-center justify-center shadow-lg border-2 border-white z-20">
                   <FaPhoneAlt size={10} />
                 </div>
               </div>
@@ -629,24 +644,24 @@ export default function Recharge() {
           </div>
 
           {/* CARD 2: 100% SECURE TRANSACTIONS */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs flex items-center gap-3.5">
-            <div className="w-10 h-10 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0">
-              <FaCheckCircle />
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs flex items-center gap-3.5">
+            <div className="w-11 h-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center text-lg shrink-0 border border-emerald-100">
+              <FaShieldAlt />
             </div>
             <div>
               <div className="text-xs font-black text-[#0a1e4d]">
                 100% Secure Transactions
               </div>
               <div className="text-[11px] font-medium text-slate-400 mt-0.5">
-                Your payments are safe with bank-level security.
+                Your payments are encrypted with 256-bit bank level security.
               </div>
             </div>
           </div>
 
           {/* CARD 3: NEED HELP WITH RECHARGE? */}
-          <div className="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs flex items-center justify-between gap-3">
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+              <div className="w-11 h-11 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0 border border-blue-100">
                 <FaHeadset />
               </div>
               <div>
@@ -654,51 +669,54 @@ export default function Recharge() {
                   Need Help with Recharge?
                 </div>
                 <div className="text-[11px] font-medium text-slate-400 mt-0.5">
-                  Our support team is available 24/7
+                  Our customer support team is available 24/7
                 </div>
               </div>
             </div>
             <button
               onClick={() => router.push("/profile")}
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50/60 hover:bg-blue-50 border border-blue-200/80 px-3 py-1.5 rounded-full transition shadow-2xs shrink-0"
+              className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 px-3.5 py-1.5 rounded-full transition shadow-2xs shrink-0 cursor-pointer"
             >
-              Contact Support &rarr;
+              Support &rarr;
             </button>
           </div>
 
           {/* CARD 4: RECENT RECHARGES */}
-          <div className="bg-white rounded-2xl p-5 border border-slate-100 shadow-xs">
+          <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
             {/* Header */}
-            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-100">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
               <div className="flex items-center gap-2">
-                <FaHistory className="text-slate-400 text-xs" />
-                <h3 className="text-xs font-extrabold text-[#0a1e4d]">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs shrink-0">
+                  <FaHistory />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">
                   Recent Recharges
                 </h3>
               </div>
               <Link
                 href="/transactions"
-                className="text-[11px] font-bold text-blue-600 hover:text-blue-700"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
               >
-                View All &rarr;
+                <span>View All</span>
+                <span>&rarr;</span>
               </Link>
             </div>
 
             {/* List */}
-            <div className="space-y-3">
+            <div className="space-y-3.5">
               {recentTransactions.map((tx, idx) => (
                 <div
                   key={idx}
-                  className="flex items-center justify-between gap-3 text-xs"
+                  className="flex items-center justify-between gap-3 text-xs p-1.5 hover:bg-slate-50 rounded-2xl transition"
                 >
-                  <div className="flex items-center gap-2.5">
+                  <div className="flex items-center gap-3 min-w-0">
                     <div
-                      className={`w-8 h-8 rounded-full ${tx.logoBg} text-white font-black text-[10px] flex items-center justify-center shadow-2xs shrink-0`}
+                      className={`w-9 h-9 rounded-full ${tx.logoBg} text-white font-black text-[10px] flex items-center justify-center shadow-2xs shrink-0`}
                     >
                       {tx.operator}
                     </div>
-                    <div>
-                      <div className="font-extrabold text-[#0a1e4d] leading-tight">
+                    <div className="min-w-0">
+                      <div className="font-extrabold text-[#0a1e4d] leading-tight truncate">
                         {tx.number}
                       </div>
                       <div className="text-[10px] font-medium text-slate-400 leading-none mt-0.5">
@@ -707,12 +725,12 @@ export default function Recharge() {
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-2.5">
-                    <span className="font-black text-slate-900">₹{tx.amount}</span>
+                  <div className="flex items-center gap-3 shrink-0 text-right">
+                    <span className="font-black text-slate-900 font-mono">₹{tx.amount}</span>
                     <span
-                      className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${tx.status === "Success"
-                          ? "bg-emerald-50 text-emerald-600 border-emerald-200"
-                          : "bg-rose-50 text-rose-600 border-rose-200"
+                      className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full border shadow-2xs ${tx.status === "Success"
+                        ? "bg-emerald-50 text-emerald-600 border-emerald-200"
+                        : "bg-rose-50 text-rose-600 border-rose-200"
                         }`}
                     >
                       {tx.status}
@@ -738,7 +756,7 @@ export default function Recharge() {
 
             {rechargeSuccess ? (
               <div className="text-center py-4">
-                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3">
+                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-xs">
                   <FaCheck size={24} />
                 </div>
                 <h3 className="text-lg font-black text-slate-900 mb-1">
@@ -748,88 +766,95 @@ export default function Recharge() {
                   ₹{selectedPlanForRecharge.amount} plan activated for{" "}
                   {mobileNumber || "9876543210"}.
                 </p>
-                <div className="text-[11px] font-mono text-slate-400">
-                  Txn ID: DSC{Date.now().toString().slice(-8)}
+                <div className="text-xs font-mono font-bold text-blue-600">
+                  Txn ID: DSC-RC-{Math.floor(100000 + Math.random() * 900000)}
                 </div>
               </div>
             ) : (
               <div>
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-3">
-                  <FaMobileAlt size={22} />
+                <div className="text-center pb-4 border-b border-slate-100 mb-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                    <FaMobileAlt size={20} />
+                  </div>
+                  <h3 className="text-base font-black text-slate-900">
+                    Confirm Recharge
+                  </h3>
+                  <p className="text-xs text-slate-400">
+                    {selectedOperator} • {selectedCircle}
+                  </p>
                 </div>
-                <h3 className="text-base font-black text-slate-900 text-center mb-1">
-                  Confirm Mobile Recharge
-                </h3>
-                <p className="text-xs text-slate-500 text-center mb-4">
-                  Please review the recharge details before proceeding.
-                </p>
 
-                <div className="bg-slate-50 rounded-2xl p-4 space-y-2 text-xs border border-slate-100 mb-5">
+                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 mb-5">
                   <div className="flex justify-between">
                     <span className="text-slate-500">Mobile Number:</span>
-                    <span className="font-bold text-slate-900">
+                    <span className="font-bold text-slate-800 font-mono">
                       {mobileNumber || "9876543210"}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Operator:</span>
-                    <span className="font-bold text-slate-900">
-                      {selectedOperator} ({selectedCircle})
+                    <span className="text-slate-500">Validity:</span>
+                    <span className="font-semibold text-slate-800">
+                      {selectedPlanForRecharge.validity}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-slate-500">Validity & Data:</span>
-                    <span className="font-bold text-slate-900">
-                      {selectedPlanForRecharge.validity}, {selectedPlanForRecharge.data}
+                    <span className="text-slate-500">Data & Benefits:</span>
+                    <span className="font-semibold text-slate-800">
+                      {selectedPlanForRecharge.data}
                     </span>
                   </div>
-                  <div className="flex justify-between pt-2 border-t border-slate-200">
-                    <span className="font-bold text-slate-700">Total Payable:</span>
-                    <span className="font-black text-base text-blue-600">
+                  <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-2 text-sm">
+                    <span>Recharge Amount:</span>
+                    <span className="text-blue-600 font-mono">
                       ₹{selectedPlanForRecharge.amount}
                     </span>
                   </div>
                 </div>
 
-                <button
-                  disabled={isProcessing}
-                  onClick={handleExecuteRecharge}
-                  className="w-full py-2.5 bg-[#1d68f6] hover:bg-blue-600 disabled:bg-blue-400 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 mb-2"
-                >
-                  {isProcessing ? (
-                    <>
+                <div className="flex gap-3">
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmModal(false)}
+                    className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleExecuteRecharge}
+                    disabled={isProcessing}
+                    className="flex-1 py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                  >
+                    {isProcessing ? (
                       <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      <span>Processing Recharge...</span>
-                    </>
-                  ) : (
-                    <span>Pay ₹{selectedPlanForRecharge.amount} from Wallet</span>
-                  )}
-                </button>
-
-                <button
-                  onClick={() => setShowConfirmModal(false)}
-                  className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
-                >
-                  Cancel
-                </button>
+                    ) : (
+                      <span>Pay ₹{selectedPlanForRecharge.amount}</span>
+                    )}
+                  </button>
+                </div>
               </div>
             )}
           </div>
         </div>
       )}
 
-      {/* ================= ALL PLANS MODAL ================= */}
+      {/* ================= ALL PLANS BROWSE MODAL ================= */}
       {showPlansModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4 animate-in fade-in">
           <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-2xl w-full text-slate-800 border border-slate-100 relative max-h-[85vh] flex flex-col">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-              <div>
-                <h3 className="text-base font-black text-slate-900">
-                  Select a Recharge Plan
-                </h3>
-                <p className="text-xs text-slate-500">
-                  Showing plans for {selectedOperator} ({selectedCircle})
-                </p>
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm">
+                  <FaBolt />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-slate-900">
+                    {selectedOperator} Recharge Plans ({selectedCircle})
+                  </h3>
+                  <p className="text-[11px] text-slate-400">
+                    Select a pack to recharge instantly
+                  </p>
+                </div>
               </div>
               <button
                 onClick={() => setShowPlansModal(false)}
@@ -839,52 +864,39 @@ export default function Recharge() {
               </button>
             </div>
 
-            {/* Operator Pills in Modal */}
-            <div className="flex items-center gap-2 py-3 overflow-x-auto">
-              {operators.map((op) => (
-                <button
-                  key={op.id}
-                  onClick={() => setActiveTabOperator(op.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition shrink-0 ${activeTabOperator === op.id
-                      ? "bg-[#1d68f6] text-white shadow-2xs"
-                      : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                >
-                  {op.name}
-                </button>
-              ))}
-            </div>
-
-            {/* Plans List Scrollable */}
-            <div className="overflow-y-auto space-y-3 py-2 flex-1 scrollbar-thin">
-              {(plansByOperator[activeTabOperator] || plansByOperator.Jio).map((plan) => (
+            <div className="overflow-y-auto py-4 space-y-3 flex-1 pr-1">
+              {(plansByOperator[selectedOperator] || plansByOperator.Jio).map((plan) => (
                 <div
                   key={plan.id}
-                  className="p-4 rounded-2xl border border-slate-200/90 hover:border-blue-400 hover:shadow-sm transition flex items-center justify-between gap-4"
+                  className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-slate-50/70 border border-slate-200/80 rounded-2xl hover:border-blue-500 hover:bg-white transition"
                 >
                   <div>
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="text-lg font-black text-slate-900">
+                      <span className="text-xl font-black text-[#0a1e4d] font-mono">
                         ₹{plan.amount}
                       </span>
                       {plan.badge && (
-                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-purple-50 text-purple-700">
+                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-800">
                           {plan.badge}
                         </span>
                       )}
                     </div>
-                    <div className="text-xs text-slate-600 font-medium">
-                      {plan.validity} &bull; {plan.data} &bull; {plan.calls} &bull; {plan.sms}
+                    <div className="text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1">
+                      <span>⏱ {plan.validity}</span>
+                      <span>📶 {plan.data}</span>
+                      <span>📞 {plan.calls}</span>
+                      <span>💬 {plan.sms}</span>
                     </div>
                   </div>
+
                   <button
                     onClick={() => {
                       setShowPlansModal(false);
                       handlePlanSelect(plan);
                     }}
-                    className="px-4 py-2 bg-[#1d68f6] hover:bg-blue-600 text-white font-bold text-xs rounded-xl shadow-2xs shrink-0"
+                    className="py-2 px-5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs whitespace-nowrap self-start sm:self-auto"
                   >
-                    Select
+                    Select Plan
                   </button>
                 </div>
               ))}
