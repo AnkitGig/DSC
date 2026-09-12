@@ -1,0 +1,1125 @@
+"use client";
+
+import React, { useState } from "react";
+import Link from "next/link";
+import {
+  FaBolt,
+  FaShieldAlt,
+  FaUsers,
+  FaMobileAlt,
+  FaUser,
+  FaSearch,
+  FaPaperPlane,
+  FaCheckCircle,
+  FaRegCreditCard,
+  FaCheck,
+  FaTimes,
+  FaHistory,
+  FaPlus,
+  FaQrcode,
+} from "react-icons/fa";
+import { MdOutlineAccountBalance, MdSwapHoriz } from "react-icons/md";
+import { RiBankFill, RiQrCodeLine } from "react-icons/ri";
+
+const initialSavedBeneficiaries = [
+  {
+    id: "b1",
+    initials: "RK",
+    name: "Rohit Kumar",
+    bank: "HDFC Bank",
+    accountNumber: "50100492810291",
+    ifsc: "HDFC0000128",
+    color: "text-[#6366f1] bg-[#eef2ff] border-[#c7d2fe]",
+    avatarBg: "bg-[#eef2ff] text-[#4f46e5]",
+  },
+  {
+    id: "b2",
+    initials: "SP",
+    name: "Suman Patel",
+    bank: "SBI Bank",
+    accountNumber: "302918827102",
+    ifsc: "SBIN0001244",
+    color: "text-[#3b82f6] bg-[#eff6ff] border-[#bfdbfe]",
+    avatarBg: "bg-[#eff6ff] text-[#2563eb]",
+  },
+  {
+    id: "b3",
+    initials: "AK",
+    name: "Ankit Sharma",
+    bank: "Axis Bank",
+    accountNumber: "918020048192019",
+    ifsc: "UTIB0000054",
+    color: "text-[#a855f7] bg-[#faf5ff] border-[#e9d5ff]",
+    avatarBg: "bg-[#faf5ff] text-[#9333ea]",
+  },
+  {
+    id: "b4",
+    initials: "MT",
+    name: "Maa Transfer",
+    bank: "PNB Bank",
+    accountNumber: "0192002100829102",
+    ifsc: "PUNB0019200",
+    color: "text-[#f43f5e] bg-[#fff1f2] border-[#fecdd3]",
+    avatarBg: "bg-[#fff1f2] text-[#e11d48]",
+  },
+];
+
+const initialRecentTransfers = [
+  {
+    id: 1,
+    initials: "SP",
+    name: "Suman Patel",
+    details: "SBI Bank • 9876543210",
+    accountNumber: "302918827102",
+    bank: "SBI Bank",
+    amount: 2500,
+    date: "12 Jan 2025, 10:24 AM",
+    status: "Success",
+    color: "bg-[#eff6ff] text-[#2563eb]",
+  },
+  {
+    id: 2,
+    initials: "AK",
+    name: "Ankit Sharma",
+    details: "Axis Bank • 8765432109",
+    accountNumber: "918020048192019",
+    bank: "Axis Bank",
+    amount: 1000,
+    date: "11 Jan 2025, 04:15 PM",
+    status: "Success",
+    color: "bg-[#faf5ff] text-[#9333ea]",
+  },
+  {
+    id: 3,
+    initials: "RK",
+    name: "Rohit Kumar",
+    details: "HDFC Bank • 7654321098",
+    accountNumber: "50100492810291",
+    bank: "HDFC Bank",
+    amount: 5000,
+    date: "10 Jan 2025, 11:32 AM",
+    status: "Success",
+    color: "bg-[#eef2ff] text-[#4f46e5]",
+  },
+  {
+    id: 4,
+    initials: "MT",
+    name: "Maa Transfer",
+    details: "PNB Bank • 9876123456",
+    accountNumber: "0192002100829102",
+    bank: "PNB Bank",
+    amount: 3000,
+    date: "09 Jan 2025, 09:18 AM",
+    status: "Failed",
+    color: "bg-[#fff1f2] text-[#e11d48]",
+  },
+];
+
+export default function MoneyTransfer() {
+  const [activeTab, setActiveTab] = useState("bank"); // 'bank', 'mobile', 'self'
+  const [form, setForm] = useState({
+    beneficiaryName: "",
+    accountNumber: "",
+    ifscCode: "",
+    mobileNumber: "",
+    selfAccount: "HDFC Bank - XX1092",
+    amount: "",
+    remarks: "",
+  });
+
+  const [savedBeneficiaries, setSavedBeneficiaries] = useState(initialSavedBeneficiaries);
+  const [recentTransfers, setRecentTransfers] = useState(initialRecentTransfers);
+
+  // Modals
+  const [showAddBeneficiaryModal, setShowAddBeneficiaryModal] = useState(false);
+  const [newBeneficiary, setNewBeneficiary] = useState({ name: "", bank: "", accountNumber: "", ifsc: "" });
+  const [showFindIfscModal, setShowFindIfscModal] = useState(false);
+  const [selectedIfscBank, setSelectedIfscBank] = useState("SBI");
+  const [showTransferSuccessModal, setShowTransferSuccessModal] = useState(false);
+  const [transferReceipt, setTransferReceipt] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  // Quick Amount Select
+  const handleAmountSelect = (val) => {
+    setForm((prev) => ({ ...prev, amount: val }));
+  };
+
+  // Select a saved beneficiary to autofill
+  const handleSelectBeneficiary = (b) => {
+    setActiveTab("bank");
+    setForm((prev) => ({
+      ...prev,
+      beneficiaryName: b.name,
+      accountNumber: b.accountNumber,
+      ifscCode: b.ifsc,
+    }));
+  };
+
+  // Handle Transfer Submission
+  const handleProceedTransfer = (e) => {
+    if (e) e.preventDefault();
+
+    if (activeTab === "bank") {
+      if (!form.beneficiaryName.trim()) {
+        alert("Please enter the Beneficiary Name");
+        return;
+      }
+      if (!form.accountNumber.trim()) {
+        alert("Please enter the Bank Account Number");
+        return;
+      }
+      if (!form.ifscCode.trim()) {
+        alert("Please enter the IFSC Code");
+        return;
+      }
+    } else if (activeTab === "mobile") {
+      if (!form.mobileNumber.trim()) {
+        alert("Please enter a valid Mobile Number or UPI ID");
+        return;
+      }
+    }
+
+    const amt = parseFloat(form.amount);
+    if (!amt || isNaN(amt) || amt <= 0) {
+      alert("Please enter a valid transfer amount");
+      return;
+    }
+
+    setIsProcessing(true);
+    setTimeout(() => {
+      setIsProcessing(false);
+      const recipientName =
+        activeTab === "bank"
+          ? form.beneficiaryName
+          : activeTab === "mobile"
+            ? `Mobile (${form.mobileNumber})`
+            : "Self Account (HDFC Bank)";
+
+      const bankName =
+        activeTab === "bank"
+          ? form.ifscCode.slice(0, 4).toUpperCase() + " Bank"
+          : activeTab === "mobile"
+            ? "UPI Instant"
+            : "Self A/C";
+
+      const receipt = {
+        txnId: `DSC-MT-${Math.floor(100000 + Math.random() * 900000)}`,
+        utr: `5299${Math.floor(10000000 + Math.random() * 90000000)}`,
+        recipient: recipientName,
+        bank: bankName,
+        account: form.accountNumber ? `•••• ${form.accountNumber.slice(-4)}` : form.mobileNumber || "Self",
+        amount: amt,
+        date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) + ", " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        status: "Success",
+      };
+
+      setTransferReceipt(receipt);
+      setShowTransferSuccessModal(true);
+
+      // Add to recent transfers
+      const newTxn = {
+        id: Date.now(),
+        initials: recipientName.slice(0, 2).toUpperCase(),
+        name: recipientName,
+        details: `${bankName} • ${form.accountNumber ? form.accountNumber.slice(-10) : form.mobileNumber || "Transfer"}`,
+        accountNumber: form.accountNumber || "N/A",
+        bank: bankName,
+        amount: amt,
+        date: receipt.date,
+        status: "Success",
+        color: "bg-[#eff6ff] text-[#2563eb]",
+      };
+      setRecentTransfers([newTxn, ...recentTransfers]);
+
+      // Reset form amount
+      setForm((prev) => ({ ...prev, amount: "", remarks: "" }));
+    }, 1000);
+  };
+
+  // Add new beneficiary
+  const handleAddNewBeneficiary = (e) => {
+    e.preventDefault();
+    if (!newBeneficiary.name || !newBeneficiary.accountNumber) return;
+
+    const initials = newBeneficiary.name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .slice(0, 2)
+      .toUpperCase();
+
+    const created = {
+      id: "b_" + Date.now(),
+      initials: initials || "NB",
+      name: newBeneficiary.name,
+      bank: newBeneficiary.bank || "Bank Account",
+      accountNumber: newBeneficiary.accountNumber,
+      ifsc: newBeneficiary.ifsc || "SBIN0001000",
+      color: "text-[#2563eb] bg-[#eff6ff] border-[#bfdbfe]",
+      avatarBg: "bg-[#eff6ff] text-[#2563eb]",
+    };
+
+    setSavedBeneficiaries([created, ...savedBeneficiaries]);
+    setShowAddBeneficiaryModal(false);
+    setNewBeneficiary({ name: "", bank: "", accountNumber: "", ifsc: "" });
+  };
+
+  return (
+    <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans">
+      {/* 2. BREADCRUMBS & PAGE HEADER SECTION */}
+      <div className="mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
+              Money Transfer
+            </h1>
+            <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">
+              Send money instantly, securely and 24x7 with DSC PAY.
+            </p>
+          </div>
+
+          {/* 3 Header Feature Stat Cards */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            {/* Card 1: Instant Transfer */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[170px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaBolt />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  Instant Transfer
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  In Seconds
+                </div>
+              </div>
+            </div>
+
+            {/* Card 2: 100% Secure */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[170px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaShieldAlt />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  100% Secure
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  Bank Level Security
+                </div>
+              </div>
+            </div>
+
+            {/* Card 3: All Banks */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-3 flex items-center gap-3.5 shadow-2xs min-w-[170px]">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-base shrink-0">
+                <FaUsers />
+              </div>
+              <div>
+                <div className="text-xs font-black text-[#0a1e4d] leading-none">
+                  All Banks
+                </div>
+                <div className="text-[11px] font-medium text-slate-400 mt-1">
+                  UPI, IMPS, NEFT, RTGS
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 3. MAIN 2-COLUMN GRID (7 cols Left, 5 cols Right) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* ================= LEFT COLUMN: TRANSFER FORM & SUPPORTED BANKS ================= */}
+        <div className="lg:col-span-7 xl:col-span-7 space-y-5 min-w-0">
+          {/* CARD: MONEY TRANSFER FORM */}
+          <div className="bg-white rounded-3xl p-5 sm:p-7 border border-slate-200/90 shadow-2xs">
+            {/* Top 3 Tabs: To Bank Account / To Mobile (UPI) / To Self Account */}
+            <div className="grid grid-cols-3 gap-2 p-1 bg-[#f1f5f9] rounded-2xl mb-6">
+              <button
+                type="button"
+                onClick={() => setActiveTab("bank")}
+                className={`py-3 px-2 sm:px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer ${activeTab === "bank"
+                  ? "bg-white text-blue-600 shadow-xs border border-slate-200/60"
+                  : "text-slate-600 hover:text-slate-900"
+                  }`}
+              >
+                <RiBankFill size={16} />
+                <span className="whitespace-nowrap">To Bank Account</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("mobile")}
+                className={`py-3 px-2 sm:px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer ${activeTab === "mobile"
+                  ? "bg-white text-blue-600 shadow-xs border border-slate-200/60"
+                  : "text-slate-600 hover:text-slate-900"
+                  }`}
+              >
+                <FaMobileAlt size={15} />
+                <span className="whitespace-nowrap">To Mobile (UPI)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab("self")}
+                className={`py-3 px-2 sm:px-3 rounded-xl text-xs font-black flex items-center justify-center gap-2 transition cursor-pointer ${activeTab === "self"
+                  ? "bg-white text-blue-600 shadow-xs border border-slate-200/60"
+                  : "text-slate-600 hover:text-slate-900"
+                  }`}
+              >
+                <FaUser size={14} />
+                <span className="whitespace-nowrap">To Self Account</span>
+              </button>
+            </div>
+
+            {/* FORM BODY */}
+            <form onSubmit={handleProceedTransfer} className="space-y-4">
+              {activeTab === "bank" && (
+                <>
+                  {/* Field 1: Beneficiary Name */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Beneficiary Name
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={form.beneficiaryName}
+                        onChange={(e) =>
+                          setForm({ ...form, beneficiaryName: e.target.value })
+                        }
+                        placeholder="Enter beneficiary name (as per bank records)"
+                        className="w-full pl-4 pr-11 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                      />
+                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none">
+                        <FaUser size={15} />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Field 2: Bank Account Number */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Bank Account Number
+                    </label>
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                        <FaRegCreditCard size={15} />
+                      </div>
+                      <input
+                        type="text"
+                        value={form.accountNumber}
+                        onChange={(e) =>
+                          setForm({ ...form, accountNumber: e.target.value })
+                        }
+                        placeholder="Enter bank account number"
+                        className="w-full pl-10 pr-4 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-semibold font-mono text-slate-800 placeholder:font-sans placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Field 3: IFSC Code */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1.5">
+                      <label className="text-xs font-bold text-slate-700">
+                        IFSC Code
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowFindIfscModal(true)}
+                        className="text-xs font-bold text-blue-600 hover:text-blue-700 transition cursor-pointer"
+                      >
+                        Find IFSC
+                      </button>
+                    </div>
+                    <div className="relative">
+                      <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">
+                        <FaSearch size={14} />
+                      </div>
+                      <input
+                        type="text"
+                        value={form.ifscCode}
+                        onChange={(e) =>
+                          setForm({ ...form, ifscCode: e.target.value.toUpperCase() })
+                        }
+                        placeholder="Enter IFSC code"
+                        maxLength={11}
+                        className="w-full pl-10 pr-4 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-bold font-mono uppercase text-slate-800 placeholder:font-sans placeholder:normal-case placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeTab === "mobile" && (
+                <>
+                  {/* Field 1: Mobile Number / UPI ID */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Mobile Number or Virtual Payment Address (UPI)
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        value={form.mobileNumber}
+                        onChange={(e) =>
+                          setForm({ ...form, mobileNumber: e.target.value })
+                        }
+                        placeholder="Enter 10-digit mobile number or upi@id"
+                        className="w-full pl-4 pr-11 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                      />
+                      <div className="absolute right-3.5 top-1/2 -translate-y-1/2 text-blue-500 pointer-events-none">
+                        <FaMobileAlt size={16} />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {activeTab === "self" && (
+                <>
+                  {/* Field 1: Select Self Bank Account */}
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      Choose Your Registered Bank Account
+                    </label>
+                    <select
+                      value={form.selfAccount}
+                      onChange={(e) =>
+                        setForm({ ...form, selfAccount: e.target.value })
+                      }
+                      className="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500 cursor-pointer"
+                    >
+                      <option value="HDFC Bank - XX1092">HDFC Bank (A/C: •••• 1092) - Primary</option>
+                      <option value="SBI Bank - XX8821">State Bank of India (A/C: •••• 8821)</option>
+                      <option value="ICICI Bank - XX4419">ICICI Bank (A/C: •••• 4419)</option>
+                    </select>
+                  </div>
+                </>
+              )}
+
+              {/* Field: Transfer Amount with Quick Chips */}
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Transfer Amount
+                </label>
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5">
+                  <div className="relative flex-1">
+                    <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-600 font-bold text-sm pointer-events-none">
+                      ₹
+                    </div>
+                    <input
+                      type="number"
+                      value={form.amount}
+                      onChange={(e) => setForm({ ...form, amount: e.target.value })}
+                      placeholder="Enter amount"
+                      className="w-full pl-8 pr-4 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-bold font-mono text-slate-900 placeholder:font-sans placeholder:font-normal placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                    />
+                  </div>
+
+                  {/* Quick Select Amount Chips */}
+                  <div className="flex items-center gap-1.5 shrink-0 overflow-x-auto no-scrollbar py-0.5">
+                    {["500", "1,000", "2,000", "5,000"].map((amt) => {
+                      const cleanVal = amt.replace(",", "");
+                      const isSelected = form.amount === cleanVal;
+                      return (
+                        <button
+                          key={amt}
+                          type="button"
+                          onClick={() => handleAmountSelect(cleanVal)}
+                          className={`px-3 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${isSelected
+                            ? "bg-blue-600 text-white shadow-xs"
+                            : "bg-[#eff6ff] hover:bg-blue-100/70 text-blue-600 border border-blue-100"
+                            }`}
+                        >
+                          ₹{amt}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Field: Remarks (Optional) */}
+              <div>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className="text-xs font-bold text-slate-700">
+                    Remarks <span className="text-slate-400 font-normal">(Optional)</span>
+                  </label>
+                  <span className="text-[11px] font-medium text-slate-400">
+                    This will be shown to the receiver
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={form.remarks}
+                  onChange={(e) => setForm({ ...form, remarks: e.target.value })}
+                  placeholder="e.g. Rent, Payment, etc."
+                  className="w-full px-4 py-3 bg-white hover:bg-slate-50/50 focus:bg-white border border-slate-200 focus:border-blue-500 rounded-xl text-xs sm:text-sm font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/10 transition"
+                />
+              </div>
+
+              {/* Action Button: Proceed to Transfer */}
+              <div className="pt-2">
+                <button
+                  type="submit"
+                  disabled={isProcessing}
+                  className="w-full py-3.5 bg-[#1d68f6] hover:bg-blue-700 active:scale-[0.99] text-white rounded-2xl text-sm font-bold transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {isProcessing ? (
+                    <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <span>Proceed to Transfer</span>
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+
+          {/* CARD: SUPPORTED BANKS */}
+          <div className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div className="text-xs font-black text-[#0a1e4d] whitespace-nowrap">
+              Supported Banks
+            </div>
+
+            {/* Bank Logos Strip */}
+            <div className="flex items-center gap-3 overflow-x-auto no-scrollbar py-1">
+              {/* SBI */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
+                <div className="w-5 h-5 rounded-full bg-[#0077c8] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
+                  S
+                </div>
+                <span className="text-[11px] font-bold text-slate-700">SBI</span>
+              </div>
+
+              {/* HDFC Bank */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
+                <div className="w-5 h-5 rounded-md bg-[#004c8f] flex items-center justify-center p-0.5 shadow-2xs">
+                  <div className="w-3 h-3 bg-[#ed232a] rounded-2xs flex items-center justify-center text-[7px] font-black text-white">
+                    H
+                  </div>
+                </div>
+                <span className="text-[11px] font-bold text-slate-700">HDFC Bank</span>
+              </div>
+
+              {/* ICICI Bank */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
+                <div className="w-5 h-5 rounded-full bg-[#9c2415] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
+                  I
+                </div>
+                <span className="text-[11px] font-bold text-slate-700">ICICI Bank</span>
+              </div>
+
+              {/* Axis Bank */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
+                <div className="w-5 h-5 rounded-md bg-[#861f41] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
+                  ▲
+                </div>
+                <span className="text-[11px] font-bold text-slate-700">Axis Bank</span>
+              </div>
+
+              {/* PNB */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
+                <div className="w-5 h-5 rounded-md bg-[#9f1239] flex items-center justify-center text-amber-300 text-[9px] font-black shadow-2xs">
+                  P
+                </div>
+                <span className="text-[11px] font-bold text-slate-700">PNB</span>
+              </div>
+
+              {/* Bank of Baroda */}
+              <div className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-50 hover:bg-white border border-slate-200 rounded-xl transition shrink-0 cursor-default">
+                <div className="w-5 h-5 rounded-full bg-[#f26522] flex items-center justify-center text-white text-[9px] font-black shadow-2xs">
+                  B
+                </div>
+                <span className="text-[11px] font-bold text-slate-700">Bank of Baroda</span>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setShowFindIfscModal(true)}
+              className="text-[11px] font-bold text-blue-600 hover:text-blue-700 transition flex items-center gap-1 shrink-0 whitespace-nowrap cursor-pointer"
+            >
+              <span>View All Banks</span>
+              <span>&rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        {/* ================= RIGHT COLUMN: PROMO BANNER, SAVED BENEFICIARIES, RECENT TRANSFERS ================= */}
+        <div className="lg:col-span-5 xl:col-span-5 space-y-6 min-w-0">
+          {/* 1. PROMO HERO CARD: SEND MONEY ANYWHERE */}
+          <div className="relative rounded-3xl bg-gradient-to-br from-[#dbeafe] via-[#eff6ff] to-[#dbeafe] border border-blue-200/90 shadow-2xs overflow-hidden min-h-[210px] p-6 flex items-center justify-between">
+            {/* Background Decorative Rings */}
+            <div className="absolute -right-6 -bottom-10 w-44 h-44 rounded-full bg-blue-300/30 blur-2xl pointer-events-none"></div>
+            <div className="absolute right-14 top-2 w-28 h-28 rounded-full bg-blue-400/20 blur-xl pointer-events-none"></div>
+
+            {/* Left Content */}
+            <div className="relative z-10 max-w-[62%]">
+              <h3 className="text-lg sm:text-xl font-black text-[#0a1e4d] leading-tight">
+                Send Money Anywhere
+              </h3>
+              <p className="text-xs font-bold text-blue-600 mt-1 mb-3">
+                Fast. Secure. Reliable.
+              </p>
+
+              <ul className="space-y-1.5 text-[11px] font-bold text-slate-700">
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
+                  </div>
+                  <span>Transfer to all major banks</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
+                  </div>
+                  <span>Low transaction charges</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
+                  </div>
+                  <span>Instant confirmation</span>
+                </li>
+                <li className="flex items-center gap-1.5">
+                  <div className="w-3.5 h-3.5 rounded-full bg-[#1d68f6] text-white flex items-center justify-center text-[8px] shrink-0">
+                    <FaCheck />
+                  </div>
+                  <span>24/7 service</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Right Graphic Mockup (3D Phone + Floating Plane & Coin) */}
+            <div className="relative w-32 h-44 shrink-0 flex items-center justify-center select-none pointer-events-none">
+              {/* Paper Plane Floating Top Right */}
+              <div className="absolute top-1 right-2 text-blue-500 transform rotate-12 drop-shadow-md z-20 animate-pulse">
+                <FaPaperPlane size={24} />
+              </div>
+
+              {/* Blue Rupee Coin Floating Left */}
+              <div className="absolute bottom-4 left-0 w-8 h-8 rounded-full bg-[#1d68f6] text-white flex items-center justify-center font-black text-xs shadow-md border-2 border-white z-20">
+                ₹
+              </div>
+
+              {/* Smartphone Bezel */}
+              <div className="w-24 h-40 bg-[#071536] rounded-2xl p-1.5 shadow-xl transform rotate-[-4deg] border border-slate-700/50 flex flex-col justify-between">
+                <div className="w-8 h-1 bg-slate-700 rounded-full mx-auto mb-1"></div>
+                {/* Screen Content */}
+                <div className="flex-1 bg-white rounded-xl p-1.5 flex flex-col items-center justify-center text-center shadow-inner">
+                  <img
+                    src="/assets/logo1.png"
+                    alt="DSC PAY Logo"
+                    className="h-6 w-auto object-contain mb-1"
+                  />
+                  <span className="text-[7px] font-extrabold text-[#0a1e4d] leading-none">
+                    DSC PAY
+                  </span>
+                  <div className="mt-2 w-full bg-blue-50 rounded p-0.5 text-[6px] text-blue-600 font-bold">
+                    Fast IMPS
+                  </div>
+                </div>
+                <div className="w-2 h-2 rounded-full border border-slate-700 mx-auto mt-1"></div>
+              </div>
+            </div>
+          </div>
+
+          {/* 2. CARD: SAVED BENEFICIARIES */}
+          <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs shrink-0">
+                  <FaUser />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">
+                  Saved Beneficiaries
+                </h3>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowAddBeneficiaryModal(true)}
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition cursor-pointer"
+              >
+                <span>View All</span>
+                <span>&rarr;</span>
+              </button>
+            </div>
+
+            {/* Horizontal Avatars List */}
+            <div className="flex items-center gap-3.5 overflow-x-auto no-scrollbar py-1">
+              {savedBeneficiaries.map((b) => (
+                <div
+                  key={b.id}
+                  onClick={() => handleSelectBeneficiary(b)}
+                  className="flex flex-col items-center gap-1.5 group cursor-pointer shrink-0 min-w-[72px]"
+                  title={`Transfer to ${b.name} (${b.bank})`}
+                >
+                  <div
+                    className={`w-13 h-13 rounded-full border-2 ${b.color} flex items-center justify-center font-black text-sm group-hover:scale-105 group-hover:shadow-md transition-all shadow-2xs`}
+                  >
+                    {b.initials}
+                  </div>
+                  <div className="text-center w-full">
+                    <div className="text-xs font-bold text-[#0a1e4d] truncate max-w-[74px]">
+                      {b.name}
+                    </div>
+                    <div className="text-[10px] font-medium text-slate-400 truncate max-w-[74px]">
+                      {b.bank}
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {/* Add New Beneficiary Button */}
+              <div
+                onClick={() => setShowAddBeneficiaryModal(true)}
+                className="flex flex-col items-center gap-1.5 group cursor-pointer shrink-0 min-w-[72px]"
+                title="Add New Beneficiary"
+              >
+                <div className="w-13 h-13 rounded-full border-2 border-dashed border-blue-300 bg-blue-50/50 hover:bg-blue-50 text-blue-600 flex items-center justify-center text-lg font-bold group-hover:scale-105 group-hover:border-blue-500 transition-all shadow-2xs">
+                  <FaPlus size={14} />
+                </div>
+                <div className="text-center w-full">
+                  <div className="text-xs font-bold text-blue-600">
+                    Add New
+                  </div>
+                  <div className="text-[10px] font-medium text-slate-400">
+                    Beneficiary
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* 3. CARD: RECENT TRANSFERS */}
+          <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
+            {/* Header */}
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs shrink-0">
+                  <FaHistory />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">
+                  Recent Transfers
+                </h3>
+              </div>
+
+              <Link
+                href="/transactions"
+                className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1 transition"
+              >
+                <span>View All</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+
+            {/* Transactions List */}
+            <div className="space-y-3.5">
+              {recentTransfers.slice(0, 4).map((tx) => (
+                <div
+                  key={tx.id}
+                  className="flex items-center justify-between gap-3 p-2 hover:bg-slate-50 rounded-2xl transition"
+                >
+                  {/* Left: Avatar + Details */}
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div
+                      className={`w-10 h-10 rounded-full ${tx.color} font-black text-xs flex items-center justify-center shadow-2xs shrink-0`}
+                    >
+                      {tx.initials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-[#0a1e4d] truncate">
+                        {tx.name}
+                      </div>
+                      <div className="text-[11px] font-medium text-slate-400 truncate">
+                        {tx.details}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right: Amount, Date & Status Badge */}
+                  <div className="flex items-center gap-3 shrink-0 text-right">
+                    <div>
+                      <div className="text-xs font-black text-[#0a1e4d]">
+                        ₹{tx.amount.toLocaleString("en-IN")}
+                      </div>
+                      <div className="text-[10px] font-medium text-slate-400">
+                        {tx.date}
+                      </div>
+                    </div>
+
+                    <span
+                      className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${tx.status === "Success"
+                        ? "bg-emerald-50 text-emerald-600 border border-emerald-200/80"
+                        : "bg-rose-50 text-rose-600 border border-rose-200/80"
+                        }`}
+                    >
+                      {tx.status}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* MODAL: ADD NEW BENEFICIARY */}
+      {showAddBeneficiaryModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border border-slate-100">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <h3 className="text-base font-black text-[#0a1e4d]">
+                Add New Beneficiary
+              </h3>
+              <button
+                onClick={() => setShowAddBeneficiaryModal(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <FaTimes size={16} />
+              </button>
+            </div>
+
+            <form onSubmit={handleAddNewBeneficiary} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Beneficiary Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Ramesh Chandra"
+                  value={newBeneficiary.name}
+                  onChange={(e) =>
+                    setNewBeneficiary({ ...newBeneficiary, name: e.target.value })
+                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Bank Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. State Bank of India"
+                  value={newBeneficiary.bank}
+                  onChange={(e) =>
+                    setNewBeneficiary({ ...newBeneficiary, bank: e.target.value })
+                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Account Number
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. 30291088219"
+                  value={newBeneficiary.accountNumber}
+                  onChange={(e) =>
+                    setNewBeneficiary({
+                      ...newBeneficiary,
+                      accountNumber: e.target.value,
+                    })
+                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold font-mono text-slate-800 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  IFSC Code
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. SBIN0001244"
+                  value={newBeneficiary.ifsc}
+                  onChange={(e) =>
+                    setNewBeneficiary({
+                      ...newBeneficiary,
+                      ifsc: e.target.value.toUpperCase(),
+                    })
+                  }
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold font-mono uppercase text-slate-800 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddBeneficiaryModal(false)}
+                  className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs"
+                >
+                  Save Beneficiary
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: FIND IFSC CODE */}
+      {showFindIfscModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-md w-full border border-slate-100">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <h3 className="text-base font-black text-[#0a1e4d]">
+                Find Bank IFSC Code
+              </h3>
+              <button
+                onClick={() => setShowFindIfscModal(false)}
+                className="text-slate-400 hover:text-slate-600"
+              >
+                <FaTimes size={16} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Select Bank
+                </label>
+                <select
+                  value={selectedIfscBank}
+                  onChange={(e) => setSelectedIfscBank(e.target.value)}
+                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none"
+                >
+                  <option value="SBI">State Bank of India (SBI)</option>
+                  <option value="HDFC">HDFC Bank</option>
+                  <option value="ICICI">ICICI Bank</option>
+                  <option value="AXIS">Axis Bank</option>
+                  <option value="PNB">Punjab National Bank (PNB)</option>
+                  <option value="BOB">Bank of Baroda</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Select Branch City
+                </label>
+                <select className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none">
+                  <option>New Delhi - Main Branch</option>
+                  <option>Mumbai - Fort</option>
+                  <option>Bangalore - MG Road</option>
+                  <option>Kolkata - Park Street</option>
+                  <option>Chennai - Mount Road</option>
+                </select>
+              </div>
+
+              <div className="p-3 bg-blue-50 border border-blue-200 rounded-xl text-center">
+                <div className="text-[11px] font-bold text-slate-500 uppercase">
+                  Suggested IFSC
+                </div>
+                <div className="text-base font-black text-blue-700 font-mono mt-0.5">
+                  {selectedIfscBank === "SBI"
+                    ? "SBIN0001244"
+                    : selectedIfscBank === "HDFC"
+                      ? "HDFC0000128"
+                      : selectedIfscBank === "ICICI"
+                        ? "ICIC0000004"
+                        : selectedIfscBank === "AXIS"
+                          ? "UTIB0000054"
+                          : selectedIfscBank === "PNB"
+                            ? "PUNB0019200"
+                            : "BARB0CONNAU"}
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const ifsc =
+                    selectedIfscBank === "SBI"
+                      ? "SBIN0001244"
+                      : selectedIfscBank === "HDFC"
+                        ? "HDFC0000128"
+                        : selectedIfscBank === "ICICI"
+                          ? "ICIC0000004"
+                          : selectedIfscBank === "AXIS"
+                            ? "UTIB0000054"
+                            : selectedIfscBank === "PNB"
+                              ? "PUNB0019200"
+                              : "BARB0CONNAU";
+                  setForm({ ...form, ifscCode: ifsc });
+                  setShowFindIfscModal(false);
+                }}
+                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+              >
+                Use this IFSC Code
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: TRANSFER RECEIPT / SUCCESS */}
+      {showTransferSuccessModal && transferReceipt && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-in fade-in">
+          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-slate-100 text-center">
+            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-sm">
+              <FaCheckCircle size={28} />
+            </div>
+
+            <h3 className="text-lg font-black text-[#0a1e4d]">
+              Transfer Successful!
+            </h3>
+            <p className="text-xs font-medium text-slate-400 mt-0.5">
+              Money sent instantly via DSC PAY IMPS
+            </p>
+
+            <div className="text-2xl font-black text-slate-900 my-4 font-mono">
+              ₹{transferReceipt.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
+            </div>
+
+            <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 text-left mb-5">
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">To Beneficiary:</span>
+                <span className="font-bold text-slate-800">{transferReceipt.recipient}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Bank / Mode:</span>
+                <span className="font-semibold text-slate-800">{transferReceipt.bank}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Txn ID:</span>
+                <span className="font-mono font-bold text-blue-600">{transferReceipt.txnId}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Bank UTR:</span>
+                <span className="font-mono font-bold text-slate-800">{transferReceipt.utr}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500 font-medium">Date & Time:</span>
+                <span className="text-slate-600 font-medium">{transferReceipt.date}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => setShowTransferSuccessModal(false)}
+              className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
+            >
+              Done
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

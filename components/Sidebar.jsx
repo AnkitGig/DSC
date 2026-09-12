@@ -30,7 +30,7 @@ export default function Sidebar({ isOpen, onClose }) {
   const [showAddServiceModal, setShowAddServiceModal] = useState(false);
 
   const servicesMenu = [
-    { title: "Money Transfer", href: "/withdrawal", icon: FaPaperPlane },
+    { title: "Money Transfer", href: "/money-transfer", icon: FaPaperPlane },
     { title: "Recharge", href: "/recharge/mobile", icon: FaMobileAlt },
     { title: "Bill Payment", href: "/utility", icon: FaReceipt },
     { title: "Banking", href: "/withdrawal", icon: FaUniversity },

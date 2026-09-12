@@ -94,35 +94,11 @@ export default function Header({ onToggleSidebar }) {
         </button>
 
         <Link href="/" className="flex items-center gap-3 group">
-          {/* Blue Rounded Square Emblem with Red/White Fold */}
-          <div className="w-10 h-10 rounded-xl bg-[#0b2158] flex items-center justify-center p-2 shadow-xs shrink-0 group-hover:scale-105 transition-transform">
-            <svg viewBox="0 0 36 36" className="w-full h-full" fill="none">
-              {/* Upper Red Origami Curve */}
-              <path
-                d="M6 6 L22 6 C28.5 6 32.5 10 32.5 16.5 C32.5 22 28.5 25.5 22 25.5 L16 25.5 L16 16.5 Z"
-                fill="#ef4444"
-              />
-              {/* White Curve Divider */}
-              <path
-                d="M12 11 L20 11 C23.5 11 25.5 13 25.5 16 C25.5 18.5 23.5 20.5 20 20.5 L16 20.5 Z"
-                fill="#ffffff"
-              />
-              {/* Navy Lower Wing */}
-              <path
-                d="M6 16.5 L16 16.5 L16 30.5 L6 30.5 Z"
-                fill="#071536"
-              />
-            </svg>
-          </div>
-
-          <div className="flex flex-col">
-            <span className="text-[17px] font-black text-[#0a1e4d] tracking-tight leading-none">
-              DSC PAY
-            </span>
-            <span className="text-[10px] font-semibold text-slate-400 leading-tight mt-0.5 tracking-wide">
-              Digital Service Centre
-            </span>
-          </div>
+          <img 
+            src="/assets/logo1.png" 
+            alt="DSC PAY Logo" 
+            className="h-10 w-auto object-contain shrink-0 group-hover:scale-105 transition-transform" 
+          />
         </Link>
       </div>
 
@@ -148,7 +124,7 @@ export default function Header({ onToggleSidebar }) {
         >
           <FaBell size={18} />
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[9px] font-bold rounded-full w-4 h-4 flex items-center justify-center border-2 border-white shadow-2xs">
-            1
+            3
           </span>
         </button>
 
