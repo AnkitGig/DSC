@@ -351,376 +351,276 @@ export default function Aadhaar() {
 
   return (
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans pb-16">
-      {/* Top Header Navigation & Title matching DSC design */}
-      <div className="max-w-7xl mx-auto mb-6">
-        {/* Header Title & Top 3 Stat Cards Row */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-          <div className="flex items-center gap-3.5">
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-                  Aadhaar Services
-                </h1>
-                <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-extrabold flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  UIDAI Live
-                </span>
-              </div>
-              <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-                Official UIDAI Aadhaar Update, Demographic Correction & Biometric Portal
-              </p>
+      {/* 1. TOP HEADER & PROMO BANNER */}
+      <div className="max-w-7xl mx-auto mb-5">
+        {/* Breadcrumb */}
+        <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-2">
+          <Link href="/" className="hover:text-blue-600 transition">Home</Link>
+          <span className="text-slate-300">&gt;</span>
+          <span className="text-slate-400">Government</span>
+          <span className="text-slate-300">&gt;</span>
+          <span className="text-blue-600">Aadhaar Services</span>
+        </div>
+
+        {/* Header Content Row */}
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          {/* Left Title & Subtitle */}
+          <div>
+            <div className="flex items-center gap-2.5">
+              <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
+                Aadhaar Services
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-extrabold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                UIDAI Live
+              </span>
             </div>
+            <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+              Official UIDAI Aadhaar Update, Demographic Correction & Biometric Portal
+            </p>
           </div>
 
-          {/* 3 Top Stat Badges (Unified Single Brand Blue Palette) */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
-            {/* Stat 1 */}
-            <div className="flex items-center gap-2.5 bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 shadow-xs min-w-[140px]">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center shrink-0 text-sm">
-                <FaBolt />
-              </div>
-              <div className="leading-tight">
-                <p className="text-[11px] font-bold text-slate-900">Instant UIDAI Sync</p>
-                <p className="text-[10px] text-slate-400 font-medium">Direct Server Link</p>
-              </div>
-            </div>
-
-            {/* Stat 2 */}
-            <div className="flex items-center gap-2.5 bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 shadow-xs min-w-[140px]">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center shrink-0 text-sm">
-                <FaShieldAlt />
-              </div>
-              <div className="leading-tight">
-                <p className="text-[11px] font-bold text-slate-900">100% UIDAI Secure</p>
-                <p className="text-[10px] text-slate-400 font-medium">256-bit Certified</p>
-              </div>
-            </div>
-
-            {/* Stat 3 */}
-            <div className="flex items-center gap-2.5 bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 shadow-xs min-w-[140px]">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center shrink-0 text-sm">
+          {/* Right Header Promo Card */}
+          <div className="bg-gradient-to-r from-[#d8ebfc] via-[#e8f3fe] to-[#cfdff9] rounded-3xl p-3 sm:px-6 sm:py-3.5 border border-blue-200/80 shadow-xs flex items-center justify-between gap-4 min-w-[340px] sm:min-w-[420px] relative overflow-hidden">
+            <div className="flex items-center gap-3 shrink-0">
+              <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-xl shadow-md shadow-blue-500/30">
                 <FaIdCard />
               </div>
-              <div className="leading-tight">
-                <p className="text-[11px] font-bold text-slate-900">All-in-One Services</p>
-                <p className="text-[10px] text-slate-400 font-medium">Demographic & Bio</p>
+              <div>
+                <h3 className="text-sm sm:text-base font-black text-[#0a1e4d] leading-tight">
+                  Official UIDAI Seva Kendra
+                </h3>
+                <p className="text-[11px] font-semibold text-blue-600 mt-0.5 tracking-wide">
+                  Instant Sync &nbsp;|&nbsp; 100% Certified &nbsp;|&nbsp; 256-Bit Secure
+                </p>
               </div>
             </div>
+            <div className="absolute -right-6 -bottom-6 w-24 h-24 rounded-full bg-blue-300/20 blur-xl pointer-events-none" />
           </div>
         </div>
       </div>
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto">
-
-
-        {/* 2-Column Main Workspace */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Left Column: Services Grid & Category Filters (8 Cols) */}
-          <div className="lg:col-span-8 space-y-6">
-            {/* Category Filter Pills & Search */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 bg-white p-3.5 rounded-2xl border border-slate-200/90 shadow-xs">
-              {/* Category Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
-                {[
-                  { id: "all", label: "All Services" },
-                  { id: "demographic", label: "Demographic" },
-                  { id: "biometric", label: "Biometrics" },
-                  { id: "special", label: "Child Enrolment" },
-                  { id: "cards", label: "PVC & Print" },
-                  { id: "verification", label: "Verify" },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`px-3.5 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition cursor-pointer ${activeTab === tab.id
-                      ? "bg-blue-600 text-white shadow-sm shadow-blue-500/20"
-                      : "bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200/60"
-                      }`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Search Services Box */}
-              <div className="relative min-w-[200px]">
+      {/* 2. MAIN 2-COLUMN LAYOUT */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* ========================================================================= */}
+        {/* LEFT COLUMN: 8 Service Cards Grid, Hardware Banner, 4 Badges (8 Cols) */}
+        {/* ========================================================================= */}
+        <div className="lg:col-span-8 space-y-5">
+          {/* Section Header & Search Row */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="text-sm sm:text-base font-bold text-[#0a1e4d]">
+                Select Aadhaar Service
+              </h2>
+              <div className="relative w-48 sm:w-64">
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" />
                 <input
                   type="text"
-                  placeholder="Search Aadhaar service..."
+                  placeholder="Search service..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                  className="w-full bg-white border border-slate-200/90 rounded-xl pl-8 pr-3 py-1.5 text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#1d68f6] shadow-2xs transition"
                 />
               </div>
             </div>
 
-            {/* Services Cards Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* 8 Cards Grid (2 rows x 4 cols on desktop matching Insurance page) */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               {filteredServices.map((service) => {
                 const IconComponent = service.icon;
                 return (
                   <div
                     key={service.id}
                     onClick={() => handleOpenService(service)}
-                    className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs hover:shadow-md hover:border-[#1d68f6] hover:ring-2 hover:ring-blue-500/10 transition-all duration-200 flex flex-col justify-between cursor-pointer group hover:-translate-y-0.5 relative overflow-hidden"
+                    className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-[#1d68f6] hover:ring-2 hover:ring-blue-500/15 transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[175px] justify-between group hover:-translate-y-0.5"
                   >
-                    {/* Top Row: Icon, Titles & Status Badge */}
-                    <div>
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div
-                          className="w-12 h-12 rounded-2xl flex items-center justify-center border text-xl bg-blue-50/80 text-[#1d68f6] border-blue-100/90 group-hover:bg-[#1d68f6] group-hover:text-white group-hover:border-[#1d68f6] transition-all duration-200 shadow-2xs"
-                        >
-                          <IconComponent />
-                        </div>
-                        <span
-                          className="px-2.5 py-1 rounded-full text-[10px] font-extrabold border bg-blue-50 text-blue-700 border-blue-200/80"
-                        >
-                          {service.badge}
-                        </span>
-                      </div>
+                    {/* Circular Icon Container */}
+                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2.5 transition-all duration-200 border bg-blue-50/80 text-[#1d68f6] border-blue-100/90 group-hover:bg-[#1d68f6] group-hover:text-white group-hover:border-[#1d68f6] group-hover:scale-110 shadow-2xs">
+                      <IconComponent />
+                    </div>
 
-                      <div className="mb-2">
-                        <h3 className="font-extrabold text-slate-900 text-base group-hover:text-blue-600 transition flex items-center gap-1.5">
-                          {service.title}
-                        </h3>
-                        <p className="text-[11px] font-bold text-slate-400">
-                          {service.hindiTitle}
-                        </p>
-                      </div>
-
-                      <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                    {/* Title & Description */}
+                    <div className="flex-1 flex flex-col justify-start w-full">
+                      <h3 className="text-xs sm:text-[13px] font-black text-[#0a1e4d] group-hover:text-blue-600 transition mb-0.5 leading-tight">
+                        {service.title}
+                      </h3>
+                      <p className="text-[10px] font-bold text-blue-600 mb-1">
+                        {service.hindiTitle}
+                      </p>
+                      <p className="text-[10px] text-slate-400 font-medium leading-tight line-clamp-2">
                         {service.description}
                       </p>
                     </div>
 
-                    {/* Bottom Metadata & CTA */}
-                    <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                      <div className="flex items-center gap-3 text-xs">
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-semibold block leading-none">
-                            Govt Fee
-                          </span>
-                          <span className="text-xs font-extrabold text-slate-800">
-                            {service.fee}
-                          </span>
-                        </div>
-                        <div className="h-6 w-px bg-slate-200" />
-                        <div>
-                          <span className="text-[10px] text-slate-400 font-semibold block leading-none">
-                            Resolution SLA
-                          </span>
-                          <span className="text-xs font-bold text-blue-600">
-                            {service.sla}
-                          </span>
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] group-hover:bg-[#1d68f6] group-hover:text-white flex items-center justify-center text-xs transition shadow-xs"
-                      >
+                    {/* Bottom Metadata & Arrow */}
+                    <div className="w-full mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between">
+                      <span className="text-[10px] font-extrabold text-slate-700 bg-slate-50 px-2 py-0.5 rounded-md border border-slate-200/60">
+                        {service.fee}
+                      </span>
+                      <div className="w-5 h-5 rounded-full flex items-center justify-center text-[9px] bg-blue-50 text-[#1d68f6] group-hover:bg-[#1d68f6] group-hover:text-white transition shadow-2xs">
                         <FaArrowRight />
-                      </button>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
+          </div>
 
-            {/* Supported Biometric Devices Banner */}
-            <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 rounded-3xl p-5 text-white shadow-lg relative overflow-hidden">
-              <div className="relative z-10 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                <div className="space-y-1 max-w-lg">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-[10px] font-bold border border-blue-400/30">
-                    <MdVerifiedUser className="text-xs" />
-                    UIDAI Certified RD Service Compatible
-                  </div>
-                  <h4 className="text-base font-extrabold text-white">
-                    Certified 5-Finger & Dual-Iris Biometric Hardware
-                  </h4>
-                  <p className="text-xs text-slate-300">
-                    Works seamlessly with Morpho, Mantra MFS100, Startek FM220, SecuGen & Iris scanners. Auto-detects driver status instantly.
-                  </p>
+          {/* Supported Biometric Devices Banner - Light Theme Matching DSC Design */}
+          <div className="bg-gradient-to-r from-[#e3f0fc] via-[#edf6fe] to-[#e0effd] border border-blue-200/80 rounded-3xl p-5 sm:p-6 shadow-xs relative overflow-hidden transition-all duration-200">
+            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+              <div className="space-y-1.5 max-w-lg">
+                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100/80 text-[#1d68f6] text-[10px] font-bold border border-blue-200/80">
+                  <MdVerifiedUser className="text-xs" />
+                  <span>UIDAI Certified RD Service Compatible</span>
                 </div>
+                <h4 className="text-base sm:text-lg font-black text-[#0a1e4d] leading-tight">
+                  Certified 5-Finger & Dual-Iris Biometric Hardware
+                </h4>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                  Works seamlessly with Morpho, Mantra MFS100, Startek FM220, SecuGen & Iris scanners. Auto-detects driver status instantly.
+                </p>
+              </div>
 
+              <div className="flex items-center gap-3 shrink-0">
                 <button
                   onClick={() => setShowDeviceModal(true)}
-                  className="px-4 py-2 bg-white hover:bg-slate-100 text-blue-900 rounded-xl text-xs font-extrabold transition shadow-md shrink-0 flex items-center gap-1.5 self-start sm:self-auto cursor-pointer"
+                  className="px-5 py-2.5 bg-[#1d68f6] hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
                 >
-                  <MdSensors className="text-sm text-blue-600" />
+                  <MdSensors className="text-sm" />
                   <span>Configure Scanner</span>
                 </button>
               </div>
             </div>
           </div>
+        </div>
 
-          {/* Right Column: Operator Terminal, Recent Updates & UIDAI Guidelines (4 Cols) */}
-          <div className="lg:col-span-4 space-y-5">
-            {/* Operator Terminal Card */}
-            <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base font-bold">
-                    <FaIdCard />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
-                      Aadhaar Seva Kendra
-                    </h3>
-                    <p className="text-[10px] font-semibold text-slate-400">
-                      Operator ID: ASK-DSC-772910
-                    </p>
-                  </div>
+        {/* Right Column: Operator Terminal, Recent Updates & UIDAI Guidelines (4 Cols) */}
+        <div className="lg:col-span-4 space-y-5">
+          {/* Operator Terminal Card */}
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base font-bold">
+                  <FaIdCard />
                 </div>
-                <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
-                  Certified
-                </span>
-              </div>
-
-              {/* Operator Details & Quota */}
-              <div className="space-y-2.5 mb-4">
-                <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                  <span className="text-slate-500 font-medium">Supervisor:</span>
-                  <span className="font-bold text-slate-800">Rohit Kumar (UIDAI Level 2)</span>
-                </div>
-                <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                  <span className="text-slate-500 font-medium">Station Balance:</span>
-                  <span className="font-extrabold text-emerald-600">₹34,500.00</span>
-                </div>
-                <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                  <span className="text-slate-500 font-medium">Today's Tokens:</span>
-                  <span className="font-bold text-blue-600">24 / 50 Processed</span>
+                <div>
+                  <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
+                    Aadhaar Seva Kendra
+                  </h3>
+                  <p className="text-[10px] font-semibold text-slate-400">
+                    Operator ID: ASK-DSC-772910
+                  </p>
                 </div>
               </div>
+              <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
+                Certified
+              </span>
+            </div>
 
-              <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-3 flex items-center gap-2.5">
-                <RiShieldCheckFill className="text-xl text-blue-600 shrink-0" />
-                <p className="text-[11px] text-blue-900 font-medium leading-relaxed">
-                  Terminal connected to UIDAI Production Server through secure VPN gateway.
-                </p>
+            {/* Operator Details & Quota */}
+            <div className="space-y-2.5 mb-4">
+              <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <span className="text-slate-500 font-medium">Supervisor:</span>
+                <span className="font-bold text-slate-800">Rohit Kumar (UIDAI Level 2)</span>
+              </div>
+              <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <span className="text-slate-500 font-medium">Station Balance:</span>
+                <span className="font-extrabold text-emerald-600">₹34,500.00</span>
+              </div>
+              <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                <span className="text-slate-500 font-medium">Today's Tokens:</span>
+                <span className="font-bold text-blue-600">24 / 50 Processed</span>
               </div>
             </div>
 
-            {/* Recent Update Requests / Live Queue */}
-            <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-                  <FaHistory className="text-blue-600 text-xs" />
-                  Recent Applications
-                </h3>
-                <span className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer">
-                  View All
-                </span>
-              </div>
-
-              <div className="space-y-3">
-                {mockRecentRequests.map((item, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-100 hover:border-blue-200 transition-colors"
-                  >
-                    <div className="flex items-start justify-between gap-2 mb-1.5">
-                      <div>
-                        <p className="text-xs font-bold text-slate-800">{item.resident}</p>
-                        <p className="text-[10px] text-slate-400 font-medium">{item.service}</p>
-                      </div>
-                      <span
-                        className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${item.status === "Success"
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                          : item.status === "Processing"
-                            ? "bg-amber-50 text-amber-700 border border-amber-200"
-                            : "bg-blue-50 text-blue-700 border border-blue-200"
-                          }`}
-                      >
-                        {item.status}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200/60 font-mono">
-                      <span>URN: {item.urn}</span>
-                      <span className="font-bold text-slate-700">{item.fee}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Important UIDAI Guidelines */}
-            <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
-              <h3 className="text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-1.5">
-                <FaInfoCircle className="text-blue-600" />
-                Important Guidelines
-              </h3>
-              <ul className="space-y-2.5 text-xs text-slate-600">
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-emerald-500 mt-0.5 shrink-0 text-xs" />
-                  <span>Original proof documents must be verified before submitting updates.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-emerald-500 mt-0.5 shrink-0 text-xs" />
-                  <span>5-Finger biometric capture required for all biometric updates.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-emerald-500 mt-0.5 shrink-0 text-xs" />
-                  <span>Bal Aadhaar (0-5 Yrs) requires child birth certificate and parent Aadhaar.</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <FaCheckCircle className="text-emerald-500 mt-0.5 shrink-0 text-xs" />
-                  <span>Standard government fee ₹50 for demographic & ₹100 for biometric.</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* 100% Secure UIDAI Card */}
-            <div className="bg-gradient-to-br from-blue-50 to-indigo-50/50 border border-blue-100 rounded-3xl p-5 text-center shadow-xs">
-              <div className="w-12 h-12 bg-white text-blue-600 rounded-2xl shadow-xs flex items-center justify-center mx-auto mb-3 text-xl border border-blue-100">
-                <FaShieldAlt />
-              </div>
-              <h4 className="font-extrabold text-slate-900 text-sm mb-1">
-                100% Secure UIDAI Compliant
-              </h4>
-              <p className="text-xs text-slate-500 leading-relaxed">
-                All biometric data is encrypted using 256-bit Aadhaar Data Vault compliance. Zero data storage on local disk.
+            <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-3 flex items-center gap-2.5">
+              <RiShieldCheckFill className="text-xl text-blue-600 shrink-0" />
+              <p className="text-[11px] text-blue-900 font-medium leading-relaxed">
+                Terminal connected to UIDAI Production Server through secure VPN gateway.
               </p>
             </div>
           </div>
+
+          {/* Recent Update Requests / Live Queue */}
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+                <FaHistory className="text-blue-600 text-xs" />
+                Recent Applications
+              </h3>
+              <span className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer">
+                View All
+              </span>
+            </div>
+
+            <div className="space-y-3">
+              {mockRecentRequests.map((item, idx) => (
+                <div
+                  key={idx}
+                  className="p-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-100 hover:border-blue-200 transition-colors"
+                >
+                  <div className="flex items-start justify-between gap-2 mb-1.5">
+                    <div>
+                      <p className="text-xs font-bold text-slate-800">{item.resident}</p>
+                      <p className="text-[10px] text-slate-400 font-medium">{item.service}</p>
+                    </div>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${item.status === "Success"
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                        : item.status === "Processing"
+                          ? "bg-amber-50 text-amber-700 border border-amber-200"
+                          : "bg-blue-50 text-blue-700 border border-blue-200"
+                        }`}
+                    >
+                      {item.status}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200/60 font-mono">
+                    <span>URN: {item.urn}</span>
+                    <span className="font-bold text-slate-700">{item.fee}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom 4 Trust & Feature Badges matching DSC standards (Single Brand Blue Palette) */}
+      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+            <FaBolt />
+          </div>
+          <h5 className="font-bold text-slate-900 text-xs mb-0.5">Instant URN Generation</h5>
+          <p className="text-[11px] text-slate-400">Track slip in real-time</p>
         </div>
 
-        {/* Bottom 4 Trust & Feature Badges matching DSC standards (Single Brand Blue Palette) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-              <FaBolt />
-            </div>
-            <h5 className="font-bold text-slate-900 text-xs mb-0.5">Instant URN Generation</h5>
-            <p className="text-[11px] text-slate-400">Track slip in real-time</p>
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+            <FaShieldAlt />
           </div>
+          <h5 className="font-bold text-slate-900 text-xs mb-0.5">Bank-Grade Encryption</h5>
+          <p className="text-[11px] text-slate-400">UIDAI certified security</p>
+        </div>
 
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-              <FaShieldAlt />
-            </div>
-            <h5 className="font-bold text-slate-900 text-xs mb-0.5">Bank-Grade Encryption</h5>
-            <p className="text-[11px] text-slate-400">UIDAI certified security</p>
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+            <FaIdCard />
           </div>
+          <h5 className="font-bold text-slate-900 text-xs mb-0.5">Govt Approved Rates</h5>
+          <p className="text-[11px] text-slate-400">Zero hidden surcharges</p>
+        </div>
 
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-              <FaIdCard />
-            </div>
-            <h5 className="font-bold text-slate-900 text-xs mb-0.5">Govt Approved Rates</h5>
-            <p className="text-[11px] text-slate-400">Zero hidden surcharges</p>
+        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+            <FaHeadset />
           </div>
-
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-              <FaHeadset />
-            </div>
-            <h5 className="font-bold text-slate-900 text-xs mb-0.5">24/7 Retailer Support</h5>
-            <p className="text-[11px] text-slate-400">Dedicated desk assistance</p>
-          </div>
+          <h5 className="font-bold text-slate-900 text-xs mb-0.5">24/7 Retailer Support</h5>
+          <p className="text-[11px] text-slate-400">Dedicated desk assistance</p>
         </div>
       </div>
 
