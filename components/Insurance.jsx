@@ -339,11 +339,11 @@ export default function Insurance() {
         myPolicies.map((p) =>
           p.id === policy.id
             ? {
-                ...p,
-                status: "Active",
-                badgeStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
-                validTill: "18 Aug 2027",
-              }
+              ...p,
+              status: "Active",
+              badgeStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
+              validTill: "18 Aug 2027",
+            }
             : p
         )
       );
@@ -357,13 +357,6 @@ export default function Insurance() {
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans pb-16">
       {/* 1. TOP HEADER & PROMO BANNER */}
       <div className="max-w-7xl mx-auto mb-5">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-2">
-          <Link href="/" className="hover:text-blue-600 transition">Home</Link>
-          <span className="text-slate-300">&gt;</span>
-          <span className="text-blue-600">Insurance</span>
-        </div>
-
         {/* Header Content Row */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
           {/* Left Title & Subtitle */}
@@ -439,19 +432,17 @@ export default function Insurance() {
                   <div
                     key={cat.id}
                     onClick={() => handleCardClick(cat.id)}
-                    className={`bg-white rounded-2xl p-4 sm:p-5 border transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[165px] justify-between ${
-                      isSelected
+                    className={`bg-white rounded-2xl p-4 sm:p-5 border transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[165px] justify-between ${isSelected
                         ? "border-[#1d68f6] shadow-md ring-2 ring-blue-500/20 bg-blue-50/15"
                         : "border-slate-200/90 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
-                    }`}
+                      }`}
                   >
                     {/* Circular Icon Container - Single Blue Color Scheme */}
                     <div
-                      className={`w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2.5 transition-all duration-200 border ${
-                        isSelected
+                      className={`w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2.5 transition-all duration-200 border ${isSelected
                           ? "bg-[#1d68f6] text-white border-[#1d68f6] scale-110 shadow-md shadow-blue-500/25"
                           : "bg-blue-50/80 text-[#1d68f6] border-blue-100/90"
-                      }`}
+                        }`}
                     >
                       <IconComponent />
                     </div>
@@ -459,9 +450,8 @@ export default function Insurance() {
                     {/* Title & Subtitle */}
                     <div className="flex-1 flex flex-col justify-start">
                       <h3
-                        className={`text-xs sm:text-[13px] font-black transition mb-1 leading-tight ${
-                          isSelected ? "text-blue-600" : "text-[#0a1e4d]"
-                        }`}
+                        className={`text-xs sm:text-[13px] font-black transition mb-1 leading-tight ${isSelected ? "text-blue-600" : "text-[#0a1e4d]"
+                          }`}
                       >
                         {cat.title}
                       </h3>
@@ -473,11 +463,10 @@ export default function Insurance() {
 
                     {/* Small Blue Arrow Indicator Button at Bottom Right */}
                     <div
-                      className={`self-end mt-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] transition shadow-xs ${
-                        isSelected
+                      className={`self-end mt-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] transition shadow-xs ${isSelected
                           ? "bg-[#1d68f6] text-white"
                           : "bg-blue-50 text-[#1d68f6]"
-                      }`}
+                        }`}
                     >
                       <FaArrowRight />
                     </div>
@@ -644,11 +633,10 @@ export default function Insurance() {
                             setSelectedType(cat.id);
                             setIsDropdownOpen(false);
                           }}
-                          className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${
-                            isCatSelected
+                          className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${isCatSelected
                               ? "bg-blue-50 text-blue-700"
                               : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
-                          }`}
+                            }`}
                         >
                           <div className="flex items-center gap-2.5">
                             <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs bg-blue-50 text-[#1d68f6] border border-blue-100">
@@ -876,11 +864,10 @@ export default function Insurance() {
                         key={i}
                         type="button"
                         onClick={() => setQuoteFilter(f.toLowerCase())}
-                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${
-                          quoteFilter === f.toLowerCase()
+                        className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${quoteFilter === f.toLowerCase()
                             ? "bg-blue-600 text-white"
                             : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                        }`}
+                          }`}
                       >
                         {f}
                       </button>
