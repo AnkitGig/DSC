@@ -5,6 +5,6 @@ export const metadata = {
   description: "Secure your future with trusted insurance plans. Compare, Buy and Renew – All in one place.",
 };
 
-export default function LICPremiumPage() {
+export default function InsurancePage() {
   return <Insurance />;
 }
