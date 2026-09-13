@@ -494,12 +494,47 @@ export default function Aadhaar() {
               </div>
             </div>
           </div>
+
+          {/* Bottom 4 Trust & Feature Badges inside Left Column (Single Brand Blue Palette) */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+                <FaBolt />
+              </div>
+              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Instant URN</h5>
+              <p className="text-[10px] text-slate-400 font-medium">Real-time sync slip</p>
+            </div>
+
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+                <FaShieldAlt />
+              </div>
+              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">256-Bit Secure</h5>
+              <p className="text-[10px] text-slate-400 font-medium">UIDAI certified vault</p>
+            </div>
+
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+                <FaIdCard />
+              </div>
+              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Govt Rates</h5>
+              <p className="text-[10px] text-slate-400 font-medium">Zero extra surcharges</p>
+            </div>
+
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+                <FaHeadset />
+              </div>
+              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">24/7 Support</h5>
+              <p className="text-[10px] text-slate-400 font-medium">Operator desk helpline</p>
+            </div>
+          </div>
         </div>
 
         {/* Right Column: Operator Terminal, Recent Updates & UIDAI Guidelines (4 Cols) */}
-        <div className="lg:col-span-4 space-y-5">
+        <div className="lg:col-span-4 space-y-4">
           {/* Operator Terminal Card */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base font-bold">
@@ -544,7 +579,7 @@ export default function Aadhaar() {
           </div>
 
           {/* Recent Update Requests / Live Queue */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs">
+          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
                 <FaHistory className="text-blue-600 text-xs" />
@@ -586,41 +621,6 @@ export default function Aadhaar() {
               ))}
             </div>
           </div>
-        </div>
-      </div>
-
-      {/* Bottom 4 Trust & Feature Badges matching DSC standards (Single Brand Blue Palette) */}
-      <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-            <FaBolt />
-          </div>
-          <h5 className="font-bold text-slate-900 text-xs mb-0.5">Instant URN Generation</h5>
-          <p className="text-[11px] text-slate-400">Track slip in real-time</p>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-            <FaShieldAlt />
-          </div>
-          <h5 className="font-bold text-slate-900 text-xs mb-0.5">Bank-Grade Encryption</h5>
-          <p className="text-[11px] text-slate-400">UIDAI certified security</p>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-            <FaIdCard />
-          </div>
-          <h5 className="font-bold text-slate-900 text-xs mb-0.5">Govt Approved Rates</h5>
-          <p className="text-[11px] text-slate-400">Zero hidden surcharges</p>
-        </div>
-
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-          <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-            <FaHeadset />
-          </div>
-          <h5 className="font-bold text-slate-900 text-xs mb-0.5">24/7 Retailer Support</h5>
-          <p className="text-[11px] text-slate-400">Dedicated desk assistance</p>
         </div>
       </div>
 
