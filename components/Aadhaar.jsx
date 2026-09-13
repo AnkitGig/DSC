@@ -43,9 +43,9 @@ const aadhaarServicesList = [
     hindiTitle: "नाम संशोधन",
     description: "Update or correct spelling in legal name with valid Proof of Identity (POI).",
     icon: FaIdCard,
-    iconColor: "text-blue-600 bg-blue-50 border-blue-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "POI Required",
-    badgeColor: "bg-blue-50 text-blue-700 border-blue-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹50.00",
     sla: "3-7 Days",
     requiredDocs: ["PAN Card", "Passport", "Voter ID", "Driving License"],
@@ -57,9 +57,9 @@ const aadhaarServicesList = [
     hindiTitle: "मोबाइल नंबर लिंक / अपडेट",
     description: "Link or update active mobile number for receiving UIDAI OTPs and mAadhaar access.",
     icon: FaMobileAlt,
-    iconColor: "text-emerald-600 bg-emerald-50 border-emerald-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "Biometric Auth",
-    badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹50.00",
     sla: "24-48 Hours",
     requiredDocs: ["No Document Required (Only Biometric Verification)"],
@@ -71,9 +71,9 @@ const aadhaarServicesList = [
     hindiTitle: "पता संशोधन",
     description: "Change permanent or current residential address with valid Proof of Address (POA).",
     icon: FaHome,
-    iconColor: "text-violet-600 bg-violet-50 border-violet-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "POA Required",
-    badgeColor: "bg-violet-50 text-violet-700 border-violet-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹50.00",
     sla: "5-10 Days",
     requiredDocs: ["Electricity Bill", "Bank Passbook", "Rent Agreement", "Voter ID"],
@@ -85,9 +85,9 @@ const aadhaarServicesList = [
     hindiTitle: "ईमेल आईडी अपडेट",
     description: "Link or update email address to receive digital certificates and monthly security alerts.",
     icon: FaEnvelope,
-    iconColor: "text-amber-600 bg-amber-50 border-amber-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "OTP Verified",
-    badgeColor: "bg-amber-50 text-amber-700 border-amber-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹50.00",
     sla: "24 Hours",
     requiredDocs: ["No Document Required (Email OTP + Biometric)"],
@@ -99,9 +99,9 @@ const aadhaarServicesList = [
     hindiTitle: "फोटो एवं बायोमेट्रिक अपडेट",
     description: "Update facial photo, 10 fingerprints and dual iris scan for adults or mandatory 5/15 age updates.",
     icon: FaFingerprint,
-    iconColor: "text-indigo-600 bg-indigo-50 border-indigo-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "Mandatory Update",
-    badgeColor: "bg-indigo-50 text-indigo-700 border-indigo-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹100.00",
     sla: "5-10 Days",
     requiredDocs: ["Valid ID Proof + Live 5-Finger Biometric Scanner"],
@@ -113,9 +113,9 @@ const aadhaarServicesList = [
     hindiTitle: "बाल आधार (नीला कार्ड)",
     description: "Apply for Blue Aadhaar Card for newborns and children below 5 years (No biometric required).",
     icon: FaBaby,
-    iconColor: "text-cyan-600 bg-cyan-50 border-cyan-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "Age 0-5 Yrs • Free",
-    badgeColor: "bg-cyan-50 text-cyan-700 border-cyan-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹0.00 (Free)",
     sla: "7-15 Days",
     requiredDocs: ["Child Birth Certificate", "Parent Aadhaar Card (Father/Mother)"],
@@ -127,9 +127,9 @@ const aadhaarServicesList = [
     hindiTitle: "पीवीसी आधार कार्ड ऑर्डर",
     description: "Order high-security, weather-resistant plastic PVC Smart Aadhaar card with hologram & QR code.",
     icon: FaPrint,
-    iconColor: "text-rose-600 bg-rose-50 border-rose-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "Speed Post Delivery",
-    badgeColor: "bg-rose-50 text-rose-700 border-rose-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹50.00",
     sla: "5-7 Days Delivery",
     requiredDocs: ["12-Digit Aadhaar Number + Registered Mobile / Biometric"],
@@ -141,9 +141,9 @@ const aadhaarServicesList = [
     hindiTitle: "आधार-पैन लिंक स्थिति",
     description: "Check instant linking status between Aadhaar and PAN card for income tax compliance.",
     icon: FaUserCheck,
-    iconColor: "text-teal-600 bg-teal-50 border-teal-100",
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "Instant Verification",
-    badgeColor: "bg-teal-50 text-teal-700 border-teal-200",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹0.00 (Free)",
     sla: "Instant",
     requiredDocs: ["12-Digit Aadhaar + 10-Digit PAN Number"],
@@ -372,11 +372,11 @@ export default function Aadhaar() {
             </div>
           </div>
 
-          {/* 3 Top Stat Badges (Unified Design Language) */}
+          {/* 3 Top Stat Badges (Unified Single Brand Blue Palette) */}
           <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5">
             {/* Stat 1 */}
             <div className="flex items-center gap-2.5 bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 shadow-xs min-w-[140px]">
-              <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center shrink-0 text-sm">
                 <FaBolt />
               </div>
               <div className="leading-tight">
@@ -387,7 +387,7 @@ export default function Aadhaar() {
 
             {/* Stat 2 */}
             <div className="flex items-center gap-2.5 bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 shadow-xs min-w-[140px]">
-              <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center shrink-0 text-sm">
                 <FaShieldAlt />
               </div>
               <div className="leading-tight">
@@ -398,7 +398,7 @@ export default function Aadhaar() {
 
             {/* Stat 3 */}
             <div className="flex items-center gap-2.5 bg-white border border-slate-200/90 rounded-2xl px-3.5 py-2 shadow-xs min-w-[140px]">
-              <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 text-sm">
+              <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center shrink-0 text-sm">
                 <FaIdCard />
               </div>
               <div className="leading-tight">
@@ -464,18 +464,18 @@ export default function Aadhaar() {
                   <div
                     key={service.id}
                     onClick={() => handleOpenService(service)}
-                    className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs hover:shadow-lg hover:border-blue-300 transition-all duration-200 flex flex-col justify-between cursor-pointer group hover:-translate-y-0.5 relative overflow-hidden"
+                    className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-xs hover:shadow-md hover:border-[#1d68f6] hover:ring-2 hover:ring-blue-500/10 transition-all duration-200 flex flex-col justify-between cursor-pointer group hover:-translate-y-0.5 relative overflow-hidden"
                   >
                     {/* Top Row: Icon, Titles & Status Badge */}
                     <div>
                       <div className="flex items-start justify-between gap-3 mb-3">
                         <div
-                          className={`w-12 h-12 rounded-2xl flex items-center justify-center border text-xl group-hover:scale-105 transition-transform ${service.iconColor}`}
+                          className="w-12 h-12 rounded-2xl flex items-center justify-center border text-xl bg-blue-50/80 text-[#1d68f6] border-blue-100/90 group-hover:bg-[#1d68f6] group-hover:text-white group-hover:border-[#1d68f6] transition-all duration-200 shadow-2xs"
                         >
                           <IconComponent />
                         </div>
                         <span
-                          className={`px-2.5 py-1 rounded-full text-[10px] font-extrabold border ${service.badgeColor}`}
+                          className="px-2.5 py-1 rounded-full text-[10px] font-extrabold border bg-blue-50 text-blue-700 border-blue-200/80"
                         >
                           {service.badge}
                         </span>
@@ -519,7 +519,7 @@ export default function Aadhaar() {
 
                       <button
                         type="button"
-                        className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white flex items-center justify-center text-xs transition shadow-xs"
+                        className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] group-hover:bg-[#1d68f6] group-hover:text-white flex items-center justify-center text-xs transition shadow-xs"
                       >
                         <FaArrowRight />
                       </button>
@@ -688,10 +688,10 @@ export default function Aadhaar() {
           </div>
         </div>
 
-        {/* Bottom 4 Trust & Feature Badges matching DSC standards */}
+        {/* Bottom 4 Trust & Feature Badges matching DSC standards (Single Brand Blue Palette) */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-2 text-base">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
               <FaBolt />
             </div>
             <h5 className="font-bold text-slate-900 text-xs mb-0.5">Instant URN Generation</h5>
@@ -699,7 +699,7 @@ export default function Aadhaar() {
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2 text-base">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
               <FaShieldAlt />
             </div>
             <h5 className="font-bold text-slate-900 text-xs mb-0.5">Bank-Grade Encryption</h5>
@@ -707,7 +707,7 @@ export default function Aadhaar() {
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mx-auto mb-2 text-base">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
               <FaIdCard />
             </div>
             <h5 className="font-bold text-slate-900 text-xs mb-0.5">Govt Approved Rates</h5>
@@ -715,7 +715,7 @@ export default function Aadhaar() {
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-xs">
-            <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mx-auto mb-2 text-base">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
               <FaHeadset />
             </div>
             <h5 className="font-bold text-slate-900 text-xs mb-0.5">24/7 Retailer Support</h5>
