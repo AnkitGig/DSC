@@ -28,6 +28,9 @@ export async function POST(request) {
       message: "Login successful",
       token,
       userId: user._id,
+      kyc_status: !!user.kyc_status,
+      name: user.name || user.first_name || "",
+      email: user.email,
     });
   } catch (err) {
     return NextResponse.json({ error: err.message }, { status: 500 });

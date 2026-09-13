@@ -30,29 +30,37 @@ export default function Header({ onToggleSidebar }) {
   const profileRef = useRef(null);
   const router = useRouter();
 
-  useEffect(() => {
-    async function fetchUserProfile() {
-      try {
-        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
-        if (!token || !userId) return;
+  const fetchUserProfile = async () => {
+    try {
+      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
+      const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+      if (!token || !userId) return;
 
-        const res = await fetch(`/api/users/profile/${userId}`, {
-          headers: {
-            Authorization: token,
-          },
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.user) {
-            setUser(data.user);
-          }
+      const res = await fetch(`/api/users/profile/${userId}`, {
+        headers: {
+          Authorization: token,
+        },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user) {
+          setUser(data.user);
         }
-      } catch (err) {
-        console.error(err);
       }
+    } catch (err) {
+      console.error(err);
     }
+  };
+
+  useEffect(() => {
     fetchUserProfile();
+
+    const handleAuthChange = () => {
+      fetchUserProfile();
+    };
+
+    window.addEventListener("auth-change", handleAuthChange);
+    return () => window.removeEventListener("auth-change", handleAuthChange);
   }, []);
 
   useEffect(() => {
@@ -80,10 +88,10 @@ export default function Header({ onToggleSidebar }) {
   };
 
   const displayName = user
-    ? user.first_name || user.name || "Rohit Kumar"
-    : "Rohit Kumar";
+    ? user.first_name || user.name || "Retailer"
+    : "Retailer";
 
-  const userRole = user?.role || "Verified Retailer";
+  const userRole = user?.kyc_status ? "Verified Retailer" : "KYC Pending";
 
   return (
     <header className="sticky top-0 z-50 w-full bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs h-[70px] px-4 sm:px-6 flex items-center justify-between transition-all select-none font-sans">

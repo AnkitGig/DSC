@@ -25,11 +25,16 @@ const UserAuth = () => {
       if (typeof window !== "undefined") {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("userId", res.data.userId);
+        localStorage.setItem("kyc_status", String(res.data.kyc_status ?? false));
+        if (res.data.name) {
+          localStorage.setItem("userName", res.data.name);
+        }
+        window.dispatchEvent(new Event("auth-change"));
       }
       setMessage("Login successful! Redirecting...");
       setTimeout(() => {
         router.push("/");
-      }, 1200);
+      }, 800);
     } catch (err) {
       const errMsg = err?.response?.data?.error || "Login failed. Please check your email and password.";
       setMessage(errMsg);
