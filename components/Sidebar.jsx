@@ -37,12 +37,10 @@ export default function Sidebar({ isOpen, onClose }) {
     { title: "Government", href: "/aadhaar", icon: FaLandmark },
     { title: "Insurance", href: "/utility/lic-premium", icon: FaShieldAlt },
     { title: "Shopping", href: "/sell-earn", icon: FaShoppingCart },
-    { title: "E-Gift Card", href: "/ott", icon: FaGift },
     { title: "OTT Subscription", href: "/ott", icon: FaPlayCircle },
   ];
 
   const toolsMenu = [
-    { title: "Reports", href: "/transactions", icon: FaChartBar },
     { title: "Transactions", href: "/transactions", icon: FaExchangeAlt },
     { title: "Support", action: () => setShowSupportModal(true), icon: FaHeadset },
   ];
@@ -59,20 +57,18 @@ export default function Sidebar({ isOpen, onClose }) {
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed left-0 top-[68px] h-[calc(100vh-68px)] w-64 bg-[#081a42] text-white z-40 flex flex-col justify-between transition-transform duration-300 ease-in-out select-none shadow-xl ${
-          isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
-        }`}
+        className={`fixed left-0 top-[68px] h-[calc(100vh-68px)] w-64 bg-[#081a42] text-white z-40 flex flex-col justify-between transition-transform duration-300 ease-in-out select-none shadow-xl ${isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+          }`}
       >
         <div className="flex-1 overflow-y-auto px-3.5 py-4 space-y-4 scrollbar-thin scrollbar-thumb-white/10">
           {/* Main Dashboard Active Button */}
           <Link
             href="/"
             onClick={onClose}
-            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${
-              pathname === "/"
-                ? "bg-[#1d68f6] text-white shadow-md shadow-blue-600/30"
-                : "text-slate-300 hover:bg-white/10 hover:text-white"
-            }`}
+            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-150 ${pathname === "/"
+              ? "bg-[#1d68f6] text-white shadow-md shadow-blue-600/30"
+              : "text-slate-300 hover:bg-white/10 hover:text-white"
+              }`}
           >
             <FaHome size={18} />
             <span>Dashboard</span>
@@ -94,11 +90,10 @@ export default function Sidebar({ isOpen, onClose }) {
                     key={idx}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
-                      isActive
-                        ? "bg-[#1d68f6] text-white shadow-md shadow-blue-600/30"
-                        : "text-slate-300 hover:bg-white/10 hover:text-white"
-                    }`}
+                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${isActive
+                      ? "bg-[#1d68f6] text-white shadow-md shadow-blue-600/30"
+                      : "text-slate-300 hover:bg-white/10 hover:text-white"
+                      }`}
                   >
                     <Icon
                       size={15}
@@ -140,11 +135,10 @@ export default function Sidebar({ isOpen, onClose }) {
                     key={idx}
                     href={item.href}
                     onClick={onClose}
-                    className={`flex items-center gap-3.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${
-                      isActive
-                        ? "bg-white/15 text-white font-semibold"
-                        : "text-slate-300 hover:bg-white/10 hover:text-white"
-                    }`}
+                    className={`flex items-center gap-3.5 px-3.5 py-2 rounded-xl text-xs font-medium transition-all ${isActive
+                      ? "bg-white/15 text-white font-semibold"
+                      : "text-slate-300 hover:bg-white/10 hover:text-white"
+                      }`}
                   >
                     <Icon size={15} className="text-slate-400 shrink-0" />
                     <span className="truncate">{item.title}</span>
