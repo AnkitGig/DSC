@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import {
   FaIdCard,
@@ -31,9 +31,23 @@ import {
   FaCheck,
   FaDownload,
   FaRedoAlt,
+  FaCalendarAlt,
+  FaChevronDown,
 } from "react-icons/fa";
 import { MdSensors, MdOutlineFingerprint, MdVerifiedUser } from "react-icons/md";
 import { RiQrCodeLine, RiShieldCheckFill } from "react-icons/ri";
+
+const biometricDevicesList = [
+  { id: "morpho_1300", name: "Morpho MSO 1300 E3", category: "fingerprint", badge: "UIDAI L0", desc: "USB RD v3.0.1 (Optical)" },
+  { id: "mantra_mfs100", name: "Mantra MFS100", category: "fingerprint", badge: "Popular", desc: "UIDAI Certified Optical Sensor" },
+  { id: "mantra_mfs110", name: "Mantra MFS110 L1", category: "fingerprint", badge: "L1 Advanced", desc: "UIDAI L1 Advanced Cryptographic" },
+  { id: "startek_fm220", name: "Startek FM220U", category: "fingerprint", badge: "Certified", desc: "ACPL RD Service Certified" },
+  { id: "secugen_pro20", name: "SecuGen Hamster Pro 20", category: "fingerprint", badge: "Optical", desc: "Optical Sensor RD v1.0.4" },
+  { id: "aratek_a600", name: "Aratek A600", category: "fingerprint", badge: "FBI PIV", desc: "FBI PIV & UIDAI Certified" },
+  { id: "cogent_csd200", name: "3M Cogent CSD200", category: "fingerprint", badge: "Precision", desc: "Precision Optical Scanner" },
+  { id: "mantra_mis100v2", name: "Mantra MIS100V2", category: "iris", badge: "Iris Scanner", desc: "Single/Dual Iris Camera" },
+  { id: "iritech_dual", name: "IriTech IriShield", category: "iris", badge: "Dual Iris", desc: "UIDAI Certified Iris Camera" },
+];
 
 const aadhaarServicesList = [
   {
@@ -79,18 +93,18 @@ const aadhaarServicesList = [
     requiredDocs: ["Electricity Bill", "Bank Passbook", "Rent Agreement", "Voter ID"],
   },
   {
-    id: "email",
+    id: "dob",
     category: "demographic",
-    title: "Email ID Updation",
-    hindiTitle: "ईमेल आईडी अपडेट",
-    description: "Link or update email address to receive digital certificates and monthly security alerts.",
-    icon: FaEnvelope,
+    title: "Date of Birth Updation",
+    hindiTitle: "जन्म तिथि संशोधन",
+    description: "Update or correct Date of Birth with valid Birth Certificate, SSLC Marksheet or Passport.",
+    icon: FaCalendarAlt,
     iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
-    badge: "OTP Verified",
+    badge: "DOB Proof Required",
     badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
     fee: "₹50.00",
-    sla: "24 Hours",
-    requiredDocs: ["No Document Required (Email OTP + Biometric)"],
+    sla: "3-7 Days",
+    requiredDocs: ["Birth Certificate", "10th / SSLC Marksheet", "Passport", "PAN Card"],
   },
   {
     id: "photo_biometric",
@@ -209,6 +223,19 @@ export default function Aadhaar() {
   const [selectedDevice, setSelectedDevice] = useState("Morpho MSO 1300 E3");
   const [deviceTestState, setDeviceTestState] = useState("idle"); // 'idle' | 'scanning' | 'success'
   const [deviceQuality, setDeviceQuality] = useState(0);
+  const [deviceCategoryFilter, setDeviceCategoryFilter] = useState("all");
+  const [isDeviceDropdownOpen, setIsDeviceDropdownOpen] = useState(false);
+  const deviceDropdownRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (deviceDropdownRef.current && !deviceDropdownRef.current.contains(event.target)) {
+        setIsDeviceDropdownOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Application Modal state
   const [selectedService, setSelectedService] = useState(null);
@@ -221,6 +248,7 @@ export default function Aadhaar() {
     email: "",
     newMobile: "",
     newAddress: "",
+    newDob: "1995-08-15",
     pinCode: "",
     district: "New Delhi",
     state: "Delhi",
@@ -254,6 +282,7 @@ export default function Aadhaar() {
       email: "rajesh.k@gmail.com",
       newMobile: "",
       newAddress: "",
+      newDob: "1995-08-15",
       pinCode: "110001",
       district: "Central Delhi",
       state: "Delhi",
@@ -629,11 +658,11 @@ export default function Aadhaar() {
       {/* ========================================================================= */}
       {showApplyModal && selectedService && (
         <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4 overflow-y-auto"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-3 sm:p-4 overflow-y-auto"
           onClick={() => setShowApplyModal(false)}
         >
           <div
-            className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-6 sm:p-7 border border-slate-100 relative my-8"
+            className="bg-white rounded-3xl shadow-2xl max-w-xl w-full p-5 sm:p-7 border border-slate-100 relative my-auto max-h-[92vh] overflow-y-auto scrollbar-thin"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
@@ -848,6 +877,36 @@ export default function Aadhaar() {
                   </div>
                 )}
 
+                {selectedService.id === "dob" && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        New / Correct Date of Birth <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.newDob || "1995-08-15"}
+                        onChange={(e) => setFormData({ ...formData, newDob: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Proof of Date of Birth (PDB) Document Attached <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={formData.selectedProof}
+                        onChange={(e) => setFormData({ ...formData, selectedProof: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      >
+                        {selectedService.requiredDocs.map((doc, idx) => (
+                          <option key={idx} value={doc}>{doc}</option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
+
                 {selectedService.id === "name" && (
                   <div className="space-y-3">
                     <div>
@@ -972,9 +1031,14 @@ export default function Aadhaar() {
 
             {/* Step 3: Biometric Authentication Simulation */}
             {applyStep === 3 && (
-              <div className="text-center py-2 space-y-4">
-                <div className="w-20 h-20 rounded-3xl bg-blue-50 border-2 border-blue-200 text-blue-600 flex items-center justify-center mx-auto relative overflow-hidden shadow-inner">
-                  <FaFingerprint className={`text-4xl ${isScanning ? "animate-pulse scale-110" : ""}`} />
+              <div className="text-center py-1 space-y-3.5">
+                {/* Fingerprint / Iris Scanner Graphic */}
+                <div className="w-16 h-16 rounded-2xl bg-blue-50 border-2 border-blue-200 text-blue-600 flex items-center justify-center mx-auto relative overflow-hidden shadow-inner">
+                  {biometricDevicesList.find((d) => d.name === selectedDevice)?.category === "iris" ? (
+                    <FaEye className={`text-3xl ${isScanning ? "animate-pulse scale-110" : ""}`} />
+                  ) : (
+                    <FaFingerprint className={`text-3xl ${isScanning ? "animate-pulse scale-110" : ""}`} />
+                  )}
                   {isScanning && (
                     <div
                       className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 animate-bounce"
@@ -984,17 +1048,100 @@ export default function Aadhaar() {
                 </div>
 
                 <div>
-                  <h4 className="font-extrabold text-slate-900 text-base">
+                  <h4 className="font-black text-slate-900 text-base leading-tight">
                     {isScanning ? "Scanning Resident Biometrics..." : "Place Finger on Biometric Scanner"}
                   </h4>
-                  <p className="text-xs text-slate-500 mt-1">
-                    Connected Device: <span className="font-bold text-slate-800">{selectedDevice}</span>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Click a machine below to switch connected RD device
                   </p>
+                </div>
+
+                {/* Biometric Machines Grid Container */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-left">
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-xs font-bold text-slate-800">
+                      Select Connected RD Device:
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-full border border-emerald-300">
+                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                      Driver Ready
+                    </span>
+                  </div>
+
+                  {/* Filter Pills */}
+                  <div className="flex items-center gap-2 mb-3">
+                    {[
+                      { id: "all", label: "All Devices" },
+                      { id: "fingerprint", label: "Fingerprint" },
+                      { id: "iris", label: "Iris Scanner" },
+                    ].map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setDeviceCategoryFilter(tab.id)}
+                        className={`text-xs font-bold px-3 py-1 rounded-lg transition cursor-pointer ${
+                          deviceCategoryFilter === tab.id
+                            ? "bg-blue-600 text-white shadow-xs"
+                            : "bg-white text-slate-600 hover:bg-slate-200 border border-slate-200"
+                        }`}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Clean Scrollable Machine Card Grid */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-44 overflow-y-auto pr-1">
+                    {biometricDevicesList
+                      .filter((d) => deviceCategoryFilter === "all" || d.category === deviceCategoryFilter)
+                      .map((dev) => {
+                        const isSelected = selectedDevice === dev.name;
+                        return (
+                          <div
+                            key={dev.id}
+                            onClick={() => !isScanning && setSelectedDevice(dev.name)}
+                            className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer flex items-center justify-between ${
+                              isSelected
+                                ? "bg-blue-50/70 border-blue-600 ring-2 ring-blue-500/20 shadow-xs"
+                                : "bg-white hover:bg-slate-100 border-slate-200 text-slate-700"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2.5 min-w-0">
+                              <div
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm ${
+                                  isSelected
+                                    ? "bg-blue-600 text-white shadow-xs"
+                                    : "bg-slate-100 text-slate-600"
+                                }`}
+                              >
+                                {dev.category === "iris" ? <FaEye /> : <FaFingerprint />}
+                              </div>
+                              <div className="min-w-0">
+                                <div className="text-xs font-black text-slate-900 truncate leading-tight">
+                                  {dev.name}
+                                </div>
+                                <div className="text-[10px] text-slate-500 truncate mt-0.5 font-medium">
+                                  {dev.badge} • {dev.desc}
+                                </div>
+                              </div>
+                            </div>
+
+                            {isSelected ? (
+                              <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0 ml-2 shadow-xs">
+                                <FaCheck />
+                              </div>
+                            ) : (
+                              <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0 ml-2" />
+                            )}
+                          </div>
+                        );
+                      })}
+                  </div>
                 </div>
 
                 {/* Progress bar */}
                 {isScanning && (
-                  <div className="max-w-xs mx-auto space-y-1.5">
+                  <div className="max-w-xs mx-auto space-y-1">
                     <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
                       <div
                         className="bg-blue-600 h-2 rounded-full transition-all duration-300"
@@ -1008,19 +1155,25 @@ export default function Aadhaar() {
                   </div>
                 )}
 
-                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 max-w-sm mx-auto text-left text-xs text-slate-600 space-y-1">
-                  <p className="font-bold text-slate-800">Verification Summary:</p>
-                  <p>• Service: <span className="font-semibold text-slate-900">{selectedService.title}</span></p>
-                  <p>• Resident: <span className="font-semibold text-slate-900">{formData.residentName}</span></p>
-                  <p>• Aadhaar: <span className="font-mono font-semibold text-slate-900">{formData.aadhaarNumber}</span></p>
+                {/* Verification Summary */}
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-left text-xs text-slate-600 grid grid-cols-2 gap-2">
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold block">Service:</span>
+                    <span className="font-bold text-slate-900 truncate block">{selectedService.title}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 font-bold block">Resident:</span>
+                    <span className="font-bold text-slate-900 truncate block">{formData.residentName} ({formData.aadhaarNumber})</span>
+                  </div>
                 </div>
 
-                <div className="pt-3 flex items-center justify-center gap-3">
+                {/* Action Buttons */}
+                <div className="pt-2 flex items-center justify-center gap-3">
                   <button
                     type="button"
                     disabled={isScanning}
                     onClick={() => setApplyStep(2)}
-                    className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
+                    className="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
                   >
                     Back
                   </button>
@@ -1029,16 +1182,16 @@ export default function Aadhaar() {
                     type="button"
                     disabled={isScanning}
                     onClick={handleStartBiometricScan}
-                    className="px-7 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
+                    className="px-6 py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-extrabold transition shadow-md shadow-blue-500/25 flex items-center gap-2 cursor-pointer disabled:opacity-60"
                   >
                     {isScanning ? (
                       <>
-                        <FaSyncAlt className="animate-spin" />
-                        <span>Verifying...</span>
+                        <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span>Capturing...</span>
                       </>
                     ) : (
                       <>
-                        <MdOutlineFingerprint className="text-base" />
+                        <FaFingerprint size={14} />
                         <span>Capture & Submit</span>
                       </>
                     )}
