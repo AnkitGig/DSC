@@ -12,204 +12,624 @@ const Signup = () => {
     phone: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
+
   const router = useRouter();
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
-  const handleSignup = async () => {
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    if (!form.name || !form.email || !form.phone || !form.password) {
+      setMessage("Please fill in all required fields.");
+      return;
+    }
+
     setLoading(true);
     setMessage("");
+
     try {
       const res = await API.post("/users/signup", form);
-      alert(res.data.message || "Signup successful. Please login after admin verification.");
+
+      alert(
+        res.data.message ||
+        "Signup successful. Please login after admin verification."
+      );
+
       router.push("/login");
     } catch (err) {
-      const errMsg = err?.response?.data?.error || "Signup failed. Please try again.";
-      alert(errMsg);
+      const errMsg =
+        err?.response?.data?.error ||
+        "Signup failed. Please try again.";
+
       setMessage(errMsg);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative bg-gradient-to-br from-cyan-400 via-blue-500 to-indigo-600 overflow-hidden">
-      <div className="absolute w-96 h-96 bg-gradient-to-tr from-pink-400 via-cyan-400 to-blue-500 rounded-full opacity-30 blur-3xl top-[-8rem] left-[-8rem] z-0 animate-pulse"></div>
-      <div className="absolute w-80 h-80 bg-gradient-to-br from-yellow-300 via-pink-400 to-blue-400 rounded-full opacity-20 blur-2xl bottom-[-6rem] right-[-6rem] z-0 animate-pulse"></div>
-      <div
-        className="w-full max-w-md p-8 rounded-2xl shadow-2xl relative z-10"
-        style={{
-          background: "rgba(255, 255, 255, 0.15)",
-          backdropFilter: "blur(16px) saturate(180%)",
-          border: "1px solid rgba(255,255,255,0.2)",
-          boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
-        }}
-      >
-        <div className="flex flex-col items-center mb-6">
-          <img
-            src="/assets/logo1.png"
-            alt="Logo"
-            className="w-20 h-20 object-contain shadow-lg mb-2 border-4 border-white bg-white rounded-xl"
-          />
-          <h2 className="text-4xl font-extrabold text-center mb-1 text-white drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-            Sign Up
-          </h2>
-          <span className="text-white font-semibold text-lg tracking-wide drop-shadow-[0_2px_2px_rgba(0,0,0,0.8)]">
-            Digital Service Centre
-          </span>
-        </div>
-
-        <div className="mb-4 relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-            <svg
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 12h14M12 5l7 7-7 7" />
-            </svg>
-          </span>
-          <input
-            name="name"
-            placeholder="Name*"
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/80 text-gray-800 shadow-sm transition"
-            value={form.name}
-            autoComplete="name"
-          />
-        </div>
-
-        <div className="mb-4 relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-            <svg
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M16 12a4 4 0 1 0-8 0 4 4 0 0 0 8 0Z" />
-              <path d="M12 2v2m0 16v2m10-10h-2M4 12H2m15.07 7.07-1.42-1.42M6.34 6.34 4.93 4.93m12.02 0-1.41 1.41M6.34 17.66l-1.41 1.41" />
-            </svg>
-          </span>
-          <input
-            name="email"
-            placeholder="Email*"
-            type="email"
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/80 text-gray-800 shadow-sm transition"
-            value={form.email}
-            autoComplete="email"
-          />
-        </div>
-
-        <div className="mb-4 relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-            <svg
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <path d="M3 10a9 9 0 0 1 18 0c0 4.97-4.03 9-9 9s-9-4.03-9-9Z" />
-              <path d="M12 14v2m0-6v2" />
-            </svg>
-          </span>
-          <input
-            name="phone"
-            placeholder="Phone*"
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/80 text-gray-800 shadow-sm transition"
-            value={form.phone}
-            autoComplete="tel"
-          />
-        </div>
-
-        <div className="mb-4 relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-            <svg
-              width="20"
-              height="20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              viewBox="0 0 24 24"
-            >
-              <rect x="3" y="11" width="18" height="11" rx="2" />
-              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-            </svg>
-          </span>
-          <input
-            name="password"
-            placeholder="Password*"
-            type="password"
-            onChange={handleChange}
-            className="w-full pl-10 pr-4 py-2 border border-blue-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 bg-white/80 text-gray-800 shadow-sm transition"
-            value={form.password}
-            autoComplete="new-password"
-          />
-        </div>
-
-        <button
-          onClick={handleSignup}
-          className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 text-white font-bold py-2 rounded-lg shadow-lg transition duration-200 text-lg tracking-wide"
-          disabled={loading}
-          style={{ boxShadow: "0 4px 14px 0 rgba(0, 118, 255, 0.39)" }}
-        >
-          {loading ? (
-            <span className="flex items-center justify-center">
-              <svg
-                className="animate-spin mr-2 h-5 w-5 text-white"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8z"
-                ></path>
-              </svg>
-              Signing up...
-            </span>
-          ) : (
-            "Sign Up"
-          )}
-        </button>
-
-        {message && (
-          <div className="mt-4 text-center font-semibold text-red-600">
-            {message}
-          </div>
-        )}
-
-        <div className="text-center mt-6">
-          <span className="text-white">Already have an account? </span>
-          <Link
-            href="/login"
-            className="text-yellow-300 font-semibold hover:underline transition"
-          >
-            Log In
-          </Link>
-        </div>
+    <main className="h-screen w-full relative bg-[#eef7ff] overflow-hidden">
+      {/* ================= BACKGROUND ================= */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -left-40 w-[450px] h-[450px] rounded-full bg-blue-100/70 blur-3xl" />
+        <div className="absolute -bottom-40 -right-40 w-[450px] h-[450px] rounded-full bg-cyan-100/70 blur-3xl" />
+        <div className="absolute top-[10%] right-[30%] w-24 h-24 bg-blue-200/20 rotate-45 rounded-3xl" />
       </div>
+
+      {/* ================= MAIN CONTAINER ================= */}
+      <div className="relative z-10 h-full w-full max-w-[1500px] mx-auto grid lg:grid-cols-[1.35fr_0.85fr]">
+        {/* ======================================================
+            LEFT SIDE
+        ====================================================== */}
+        <section className="relative h-full overflow-hidden px-6 sm:px-10 lg:px-12 xl:px-16 py-5 flex flex-col justify-between">
+          <div>
+            {/* Logo */}
+            <div className="flex items-center shrink-0">
+              <div className="w-[48px] h-[48px] rounded-xl bg-white border border-blue-200 shadow-sm flex items-center justify-center overflow-hidden">
+                <img
+                  src="/assets/logo1.png"
+                  alt="DSC Pay"
+                  className="w-full h-full object-contain p-1"
+                />
+              </div>
+
+              <div className="ml-3">
+                <h1 className="text-[24px] sm:text-[27px] font-extrabold leading-none tracking-tight text-[#073b91]">
+                  DSC PAY
+                </h1>
+                <p className="text-[11px] sm:text-xs text-[#687891] font-medium mt-1">
+                  Digital Service Centre
+                </p>
+              </div>
+            </div>
+
+            {/* Main content */}
+            <div className="mt-5 max-w-[560px]">
+              {/* Badge */}
+              <div className="inline-flex items-center gap-2 rounded-full bg-white border border-blue-100 shadow-sm px-3 py-1.5">
+                <span className="text-[11px] sm:text-xs font-bold text-[#164ba3]">
+                  🇮🇳 Digital India
+                </span>
+                <span className="text-gray-300">•</span>
+                <span className="text-[11px] sm:text-xs font-medium text-gray-500">
+                  Digital Seva
+                </span>
+              </div>
+
+              {/* Heading */}
+              <div className="mt-4">
+                <h2 className="text-[32px] sm:text-[40px] lg:text-[45px] xl:text-[50px] leading-[0.98] font-extrabold text-[#09265e]">
+                  Start Your Digital
+                  <span className="block text-[#087cf0] mt-1">
+                    Journey With Us
+                  </span>
+                </h2>
+
+                <div className="flex items-center gap-2.5 mt-3 text-[#687891] text-xs sm:text-sm font-medium">
+                  <span>Fast</span>
+                  <span>|</span>
+                  <span>Secure</span>
+                  <span>|</span>
+                  <span>Reliable</span>
+                </div>
+
+                <p className="mt-3 text-[#64728b] text-xs sm:text-sm lg:text-[15px] leading-5 max-w-[500px]">
+                  Create your DSC Pay account and access multiple digital
+                  services from one trusted platform.
+                </p>
+              </div>
+
+              {/* ================= BENEFITS ================= */}
+              <div className="mt-5 space-y-2.5 max-w-[510px]">
+                {/* Benefit 1 */}
+                <BenefitItem
+                  icon={
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M12 3 20 6v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3Z" />
+                      <path d="m9 12 2 2 4-4" />
+                    </svg>
+                  }
+                  bg="bg-gradient-to-br from-blue-500 to-cyan-400"
+                  title="Safe & Secure"
+                  description="Your account and information stay protected"
+                />
+
+                {/* Benefit 2 */}
+                <BenefitItem
+                  icon={
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8Z" />
+                    </svg>
+                  }
+                  bg="bg-gradient-to-br from-green-500 to-emerald-400"
+                  title="Quick Digital Services"
+                  description="Access services quickly from one place"
+                />
+
+                {/* Benefit 3 */}
+                <BenefitItem
+                  icon={
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <rect x="3" y="4" width="18" height="16" rx="2" />
+                      <path d="M8 9h8M8 13h5" />
+                    </svg>
+                  }
+                  bg="bg-gradient-to-br from-violet-500 to-indigo-500"
+                  title="Easy To Use"
+                  description="Simple and user-friendly digital platform"
+                />
+
+                {/* Benefit 4 */}
+                <BenefitItem
+                  icon={
+                    <svg
+                      width="18"
+                      height="18"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                    >
+                      <path d="M12 2a10 10 0 1 0 10 10" />
+                      <path d="M12 6v6l4 2" />
+                    </svg>
+                  }
+                  bg="bg-gradient-to-br from-orange-400 to-yellow-400"
+                  title="Trusted Services"
+                  description="Built for modern digital service centres"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* ================= DESK VISUAL ================= */}
+          <div className="hidden lg:block absolute right-[-15px] bottom-[10px] w-[500px] h-[285px] pointer-events-none">
+            {/* Desk */}
+            <div className="absolute bottom-0 left-0 w-full h-[75px] bg-gradient-to-t from-[#d5af88] to-[#eed4b5] rounded-t-[70px] rotate-[-2deg]" />
+
+            {/* Laptop */}
+            <div className="absolute left-[50px] bottom-[48px] w-[340px]">
+              <div className="h-[195px] bg-gradient-to-br from-[#3b485c] to-[#151d2a] rounded-[15px] border-[6px] border-[#283545] shadow-2xl rotate-[-4deg]">
+                <div className="m-2 h-[169px] rounded-lg bg-[#eaf5ff] overflow-hidden">
+                  <div className="h-7 bg-[#123e88] flex items-center px-2.5 gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/80" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/60" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-white/40" />
+                  </div>
+
+                  <div className="p-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="w-16 h-3 bg-blue-200 rounded-full" />
+                      <div className="w-8 h-3 bg-blue-100 rounded-full" />
+                    </div>
+
+                    <div className="grid grid-cols-3 gap-2">
+                      <div className="h-10 rounded-md bg-white shadow-sm" />
+                      <div className="h-10 rounded-md bg-white shadow-sm" />
+                      <div className="h-10 rounded-md bg-white shadow-sm" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mx-auto w-[365px] h-[14px] bg-gradient-to-b from-[#abb4c1] to-[#667181] rounded-b-[30px] shadow-xl" />
+            </div>
+
+            {/* Plant */}
+            <div className="absolute right-[10px] bottom-[58px]">
+              <div className="w-[62px] h-[70px] bg-white rounded-b-[24px] rounded-t-lg shadow-lg" />
+              <div className="absolute bottom-[60px] left-[29px] w-[4px] h-[90px] bg-green-700 rounded-full" />
+              <div className="absolute bottom-[100px] left-[4px] w-11 h-6 bg-green-500 rounded-[100%_0_100%_0] rotate-[-35deg]" />
+              <div className="absolute bottom-[125px] left-[30px] w-11 h-6 bg-green-600 rounded-[0_100%_0_100%] rotate-[30deg]" />
+            </div>
+          </div>
+
+          {/* Security */}
+          <div className="mt-auto mb-1 flex items-center gap-2.5 text-[#355078] z-10">
+            <div className="w-8 h-8 rounded-lg bg-white shadow-sm border border-blue-100 flex items-center justify-center">
+              <svg
+                width="17"
+                height="17"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <path d="M12 3 20 6v5c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10V6l8-3Z" />
+                <path d="m9 12 2 2 4-4" />
+              </svg>
+            </div>
+
+            <div>
+              <p className="font-bold text-[11px]">100% Safe & Secure</p>
+              <p className="text-[9px] text-gray-500">
+                Powered by Digital India 🇮🇳
+              </p>
+            </div>
+          </div>
+
+          {/* Bottom curve */}
+          <div className="absolute -bottom-[145px] -left-[70px] w-[600px] h-[190px] bg-[#0069d9] rounded-[50%] opacity-95 pointer-events-none" />
+        </section>
+
+        {/* ======================================================
+            RIGHT SIDE - SIGNUP CARD
+        ====================================================== */}
+        <section className="relative h-full flex items-center justify-center px-4 sm:px-6 py-4 lg:py-0 z-10">
+          <div className="relative w-full max-w-[430px] rounded-[21px] bg-white shadow-[0_16px_45px_rgba(20,69,130,0.14)] border border-white p-5 sm:p-6">
+            {/* Logo */}
+            <div className="flex justify-center mb-2">
+              <div className="w-[50px] h-[50px] rounded-xl border border-blue-200 bg-white shadow-sm overflow-hidden">
+                <img
+                  src="/assets/logo1.png"
+                  alt="DSC Pay"
+                  className="w-full h-full object-contain p-1"
+                />
+              </div>
+            </div>
+
+            {/* Heading */}
+            <div className="text-center">
+              <h2 className="text-[25px] sm:text-[28px] font-extrabold text-[#09265e] leading-tight">
+                Create Account 🚀
+              </h2>
+
+              <p className="mt-1 text-gray-500 text-xs sm:text-sm">
+                Register to access DSC Pay services
+              </p>
+            </div>
+
+            {/* ================= FORM ================= */}
+            <form onSubmit={handleSignup} className="mt-3.5">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                {/* NAME */}
+                <div>
+                  <label className="block text-xs font-semibold text-[#31466b] mb-1">
+                    Full Name
+                  </label>
+
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#7d8eaa]">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <circle cx="12" cy="8" r="4" />
+                        <path d="M4 21c0-4.2 3.6-7 8-7s8 2.8 8 7" />
+                      </svg>
+                    </div>
+
+                    <input
+                      name="name"
+                      type="text"
+                      value={form.name}
+                      onChange={handleChange}
+                      placeholder="Full name"
+                      autoComplete="name"
+                      required
+                      className="w-full h-9 pl-9 pr-2.5 text-xs rounded-lg border border-[#d8e2f0] bg-[#fbfdff] text-[#243b61] placeholder:text-[#9aa8bc] outline-none transition-all focus:border-[#1682f4] focus:ring-2 focus:ring-blue-100"
+                    />
+                  </div>
+                </div>
+
+                {/* EMAIL */}
+                <div>
+                  <label className="block text-xs font-semibold text-[#31466b] mb-1">
+                    Email Address
+                  </label>
+
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#7d8eaa]">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <rect x="3" y="5" width="18" height="14" rx="2" />
+                        <path d="m3 7 9 6 9-6" />
+                      </svg>
+                    </div>
+
+                    <input
+                      name="email"
+                      type="email"
+                      value={form.email}
+                      onChange={handleChange}
+                      placeholder="Email address"
+                      autoComplete="email"
+                      required
+                      className="w-full h-9 pl-9 pr-2.5 text-xs rounded-lg border border-[#d8e2f0] bg-[#fbfdff] text-[#243b61] placeholder:text-[#9aa8bc] outline-none transition-all focus:border-[#1682f4] focus:ring-2 focus:ring-blue-100"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-2.5">
+                {/* PHONE */}
+                <div>
+                  <label className="block text-xs font-semibold text-[#31466b] mb-1">
+                    Phone Number
+                  </label>
+
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#7d8eaa]">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <rect x="6" y="2.5" width="12" height="19" rx="2" />
+                        <path d="M10 18.5h4" />
+                      </svg>
+                    </div>
+
+                    <input
+                      name="phone"
+                      type="tel"
+                      value={form.phone}
+                      onChange={handleChange}
+                      placeholder="Phone number"
+                      autoComplete="tel"
+                      required
+                      className="w-full h-9 pl-9 pr-2.5 text-xs rounded-lg border border-[#d8e2f0] bg-[#fbfdff] text-[#243b61] placeholder:text-[#9aa8bc] outline-none transition-all focus:border-[#1682f4] focus:ring-2 focus:ring-blue-100"
+                    />
+                  </div>
+                </div>
+
+                {/* PASSWORD */}
+                <div>
+                  <label className="block text-xs font-semibold text-[#31466b] mb-1">
+                    Password
+                  </label>
+
+                  <div className="relative">
+                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#7d8eaa]">
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      >
+                        <rect x="3" y="10" width="18" height="11" rx="2" />
+                        <path d="M7 10V7a5 5 0 0 1 10 0v3" />
+                      </svg>
+                    </div>
+
+                    <input
+                      name="password"
+                      type={showPassword ? "text" : "password"}
+                      value={form.password}
+                      onChange={handleChange}
+                      placeholder="Password"
+                      autoComplete="new-password"
+                      required
+                      className="w-full h-9 pl-9 pr-8 text-xs rounded-lg border border-[#d8e2f0] bg-[#fbfdff] text-[#243b61] placeholder:text-[#9aa8bc] outline-none transition-all focus:border-[#1682f4] focus:ring-2 focus:ring-blue-100"
+                    />
+
+                    {/* Show Password */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setShowPassword((prev) => !prev)
+                      }
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#7d8eaa] hover:text-[#147bf2] transition"
+                      aria-label={
+                        showPassword
+                          ? "Hide password"
+                          : "Show password"
+                      }
+                    >
+                      {showPassword ? (
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path d="M3 3l18 18" />
+                          <path d="M10.6 10.6a2 2 0 0 0 2.8 2.8" />
+                          <path d="M9.9 4.4A9.6 9.6 0 0 1 12 4c5 0 9 4 10 8a10.6 10.6 0 0 1-3.1 5" />
+                          <path d="M6.6 6.6A10.3 10.3 0 0 0 2 12c1 4 5 8 10 8 1.7 0 3.2-.4 4.6-1.1" />
+                        </svg>
+                      ) : (
+                        <svg
+                          width="15"
+                          height="15"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.8"
+                        >
+                          <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z" />
+                          <circle cx="12" cy="12" r="2.5" />
+                        </svg>
+                      )}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* TERMS */}
+              <div className="flex items-start gap-2 mb-3">
+                <input
+                  type="checkbox"
+                  required
+                  className="w-3.5 h-3.5 mt-0.5 accent-[#1682f4]"
+                />
+
+                <p className="text-[10px] leading-4 text-gray-500">
+                  I agree to the{" "}
+                  <Link
+                    href="/terms"
+                    className="text-[#087cf0] font-semibold hover:underline"
+                  >
+                    Terms & Conditions
+                  </Link>{" "}
+                  and{" "}
+                  <Link
+                    href="/privacy"
+                    className="text-[#087cf0] font-semibold hover:underline"
+                  >
+                    Privacy Policy
+                  </Link>
+                  .
+                </p>
+              </div>
+
+              {/* SIGNUP BUTTON */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full h-9.5 sm:h-10 rounded-lg bg-gradient-to-r from-[#087cf0] to-[#0c65dc] hover:from-[#086ee0] hover:to-[#0958c5] text-white font-bold text-xs sm:text-sm shadow-[0_4px_14px_rgba(10,115,240,0.22)] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg
+                      className="animate-spin h-3.5 w-3.5"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                    >
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="9"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        opacity=".3"
+                      />
+
+                      <path
+                        d="M21 12a9 9 0 0 0-9-9"
+                        stroke="currentColor"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                      />
+                    </svg>
+                    Creating Account...
+                  </span>
+                ) : (
+                  <span className="flex items-center justify-center gap-1.5">
+                    Create Account
+                    <span className="text-sm">→</span>
+                  </span>
+                )}
+              </button>
+
+              {/* MESSAGE */}
+              {message && (
+                <div className="mt-2 text-center text-xs font-semibold text-red-500">
+                  {message}
+                </div>
+              )}
+
+              {/* OR */}
+              <div className="flex items-center gap-3 my-2.5">
+                <div className="h-px bg-[#e5ebf4] flex-1" />
+
+                <span className="text-[10px] font-semibold text-gray-400">
+                  OR
+                </span>
+
+                <div className="h-px bg-[#e5ebf4] flex-1" />
+              </div>
+
+              {/* LOGIN */}
+              <div className="text-center mt-3">
+                <span className="text-xs text-[#7c8ba2]">
+                  Already have an account?{" "}
+                </span>
+
+                <Link
+                  href="/login"
+                  className="text-[#087cf0] font-bold text-xs hover:underline"
+                >
+                  Log In
+                </Link>
+              </div>
+            </form>
+          </div>
+        </section>
+      </div>
+    </main>
+  );
+};
+
+/* ============================================================
+   BENEFIT ITEM
+============================================================ */
+
+const BenefitItem = ({
+  icon,
+  bg,
+  title,
+  description,
+}) => {
+  return (
+    <div className="flex items-center gap-3 group">
+      <div
+        className={`w-9 h-9 shrink-0 rounded-lg ${bg} flex items-center justify-center text-white shadow-sm`}
+      >
+        {icon}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <h3 className="font-bold text-xs sm:text-sm text-[#183057] leading-tight">
+          {title}
+        </h3>
+
+        <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">
+          {description}
+        </p>
+      </div>
+
+      <span className="text-[#284b7c] text-lg transition-transform group-hover:translate-x-1">
+        →
+      </span>
     </div>
   );
 };
