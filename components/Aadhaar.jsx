@@ -408,14 +408,6 @@ export default function Aadhaar() {
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans pb-16">
       {/* 1. TOP HEADER & PROMO BANNER */}
       <div className="max-w-7xl mx-auto mb-5">
-        {/* Breadcrumb */}
-        <div className="flex items-center gap-2 text-xs font-semibold text-slate-400 mb-2">
-          <Link href="/" className="hover:text-blue-600 transition">Home</Link>
-          <span className="text-slate-300">&gt;</span>
-          <span className="text-slate-400">Government</span>
-          <span className="text-slate-300">&gt;</span>
-          <span className="text-blue-600">Aadhaar Services</span>
-        </div>
 
         {/* Header Content Row */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
@@ -425,10 +417,6 @@ export default function Aadhaar() {
               <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
                 Aadhaar Services
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-extrabold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                UIDAI Live
-              </span>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
               Official UIDAI Aadhaar Update, Demographic Correction & Biometric Portal
@@ -455,14 +443,12 @@ export default function Aadhaar() {
         </div>
       </div>
 
-      {/* 2. MAIN 2-COLUMN LAYOUT */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-5">
-        {/* ========================================================================= */}
-        {/* LEFT COLUMN: 8 Service Cards Grid, Hardware Banner, 4 Badges (8 Cols) */}
-        {/* ========================================================================= */}
-        <div className="lg:col-span-8 space-y-5">
-          {/* Section Header & Search Row */}
-          <div>
+      {/* 2. MAIN LAYOUT */}
+      <div className="max-w-7xl mx-auto space-y-5">
+        {/* TOP ROW: 8 Service Cards (Left 8 Cols) & Recent Applications (Right 4 Cols) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+          {/* Service Cards Grid (8 Cols) */}
+          <div className="lg:col-span-8">
             <div className="flex items-center justify-between mb-3">
               <h2 className="text-sm sm:text-base font-bold text-[#0a1e4d]">
                 Select Aadhaar Service
@@ -479,7 +465,7 @@ export default function Aadhaar() {
               </div>
             </div>
 
-            {/* 8 Cards Grid (2 rows x 4 cols on desktop matching Insurance page) */}
+            {/* 8 Cards Grid (2 rows x 4 cols on desktop) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               {filteredServices.map((service) => {
                 const IconComponent = service.icon;
@@ -522,114 +508,115 @@ export default function Aadhaar() {
             </div>
           </div>
 
-          {/* Supported Biometric Devices Banner - Light Theme Matching DSC Design */}
-          <div className="bg-gradient-to-r from-[#e3f0fc] via-[#edf6fe] to-[#e0effd] border border-blue-200/80 rounded-3xl p-5 sm:p-6 shadow-xs relative overflow-hidden transition-all duration-200">
-            <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
-              <div className="space-y-1.5 max-w-lg">
-                <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100/80 text-[#1d68f6] text-[10px] font-bold border border-blue-200/80">
-                  <MdVerifiedUser className="text-xs" />
-                  <span>UIDAI Certified RD Service Compatible</span>
+          {/* Right Column: Recent Applications (4 Cols) */}
+          <div className="lg:col-span-4">
+            <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs h-full flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
+                    <FaHistory className="text-blue-600 text-xs" />
+                    Recent Applications
+                  </h3>
+                  <span className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer">
+                    View All
+                  </span>
                 </div>
-                <h4 className="text-base sm:text-lg font-black text-[#0a1e4d] leading-tight">
-                  Certified 5-Finger & Dual-Iris Biometric Hardware
-                </h4>
-                <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                  Works seamlessly with Morpho, Mantra MFS100, Startek FM220, SecuGen & Iris scanners. Auto-detects driver status instantly.
-                </p>
-              </div>
 
-              <div className="flex items-center gap-3 shrink-0">
-                <button
-                  onClick={() => setShowDeviceModal(true)}
-                  className="px-5 py-2.5 bg-[#1d68f6] hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
-                >
-                  <MdSensors className="text-sm" />
-                  <span>Configure Scanner</span>
-                </button>
-              </div>
-            </div>
-          </div>
+                <div className="space-y-3">
+                  {mockRecentRequests.map((item, idx) => (
+                    <div
+                      key={idx}
+                      className="p-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-100 hover:border-blue-200 transition-colors"
+                    >
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <div>
+                          <p className="text-xs font-bold text-slate-800">{item.resident}</p>
+                          <p className="text-[10px] text-slate-400 font-medium">{item.service}</p>
+                        </div>
+                        <span
+                          className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${item.status === "Success"
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : item.status === "Processing"
+                              ? "bg-amber-50 text-amber-700 border border-amber-200"
+                              : "bg-blue-50 text-blue-700 border border-blue-200"
+                            }`}
+                        >
+                          {item.status}
+                        </span>
+                      </div>
 
-          {/* Bottom 4 Trust & Feature Badges inside Left Column (Single Brand Blue Palette) */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
-              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-                <FaBolt />
+                      <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200/60 font-mono">
+                        <span>URN: {item.urn}</span>
+                        <span className="font-bold text-slate-700">{item.fee}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Instant URN</h5>
-              <p className="text-[10px] text-slate-400 font-medium">Real-time sync slip</p>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
-              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-                <FaShieldAlt />
-              </div>
-              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">256-Bit Secure</h5>
-              <p className="text-[10px] text-slate-400 font-medium">UIDAI certified vault</p>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
-              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-                <FaIdCard />
-              </div>
-              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Govt Rates</h5>
-              <p className="text-[10px] text-slate-400 font-medium">Zero extra surcharges</p>
-            </div>
-
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
-              <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
-                <FaHeadset />
-              </div>
-              <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">24/7 Support</h5>
-              <p className="text-[10px] text-slate-400 font-medium">Operator desk helpline</p>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Operator Terminal, Recent Updates & UIDAI Guidelines (4 Cols) */}
-        <div className="lg:col-span-4 space-y-4">
-          {/* Recent Update Requests / Live Queue */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-1.5">
-                <FaHistory className="text-blue-600 text-xs" />
-                Recent Applications
-              </h3>
-              <span className="text-[11px] font-bold text-blue-600 hover:underline cursor-pointer">
-                View All
-              </span>
+        {/* FULL WIDTH: Supported Biometric Devices Banner */}
+        <div className="bg-gradient-to-r from-[#e3f0fc] via-[#edf6fe] to-[#e0effd] border border-blue-200/80 rounded-3xl p-5 sm:p-6 shadow-xs relative overflow-hidden transition-all duration-200 w-full">
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100/80 text-[#1d68f6] text-[10px] font-bold border border-blue-200/80">
+                <MdVerifiedUser className="text-xs" />
+                <span>UIDAI Certified RD Service Compatible</span>
+              </div>
+              <h4 className="text-base sm:text-lg font-black text-[#0a1e4d] leading-tight">
+                Certified 5-Finger & Dual-Iris Biometric Hardware
+              </h4>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                Works seamlessly with Morpho, Mantra MFS100, Startek FM220, SecuGen & Iris scanners. Auto-detects driver status instantly.
+              </p>
             </div>
 
-            <div className="space-y-3">
-              {mockRecentRequests.map((item, idx) => (
-                <div
-                  key={idx}
-                  className="p-3 rounded-2xl bg-slate-50 hover:bg-blue-50/40 border border-slate-100 hover:border-blue-200 transition-colors"
-                >
-                  <div className="flex items-start justify-between gap-2 mb-1.5">
-                    <div>
-                      <p className="text-xs font-bold text-slate-800">{item.resident}</p>
-                      <p className="text-[10px] text-slate-400 font-medium">{item.service}</p>
-                    </div>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${item.status === "Success"
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                        : item.status === "Processing"
-                          ? "bg-amber-50 text-amber-700 border border-amber-200"
-                          : "bg-blue-50 text-blue-700 border border-blue-200"
-                        }`}
-                    >
-                      {item.status}
-                    </span>
-                  </div>
-
-                  <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200/60 font-mono">
-                    <span>URN: {item.urn}</span>
-                    <span className="font-bold text-slate-700">{item.fee}</span>
-                  </div>
-                </div>
-              ))}
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                onClick={() => setShowDeviceModal(true)}
+                className="px-5 py-2.5 bg-[#1d68f6] hover:bg-blue-700 active:scale-95 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
+              >
+                <MdSensors className="text-sm" />
+                <span>Configure Scanner</span>
+              </button>
             </div>
+          </div>
+        </div>
+
+        {/* FULL WIDTH: Bottom 4 Trust & Feature Badges */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 w-full">
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+              <FaBolt />
+            </div>
+            <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Instant URN</h5>
+            <p className="text-[10px] text-slate-400 font-medium">Real-time sync slip</p>
+          </div>
+
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+              <FaShieldAlt />
+            </div>
+            <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">256-Bit Secure</h5>
+            <p className="text-[10px] text-slate-400 font-medium">UIDAI certified vault</p>
+          </div>
+
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+              <FaIdCard />
+            </div>
+            <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Govt Rates</h5>
+            <p className="text-[10px] text-slate-400 font-medium">Zero extra surcharges</p>
+          </div>
+
+          <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
+            <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
+              <FaHeadset />
+            </div>
+            <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">24/7 Support</h5>
+            <p className="text-[10px] text-slate-400 font-medium">Operator desk helpline</p>
           </div>
         </div>
       </div>
