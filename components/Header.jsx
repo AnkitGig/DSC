@@ -107,10 +107,10 @@ export default function Header({ onToggleSidebar }) {
 
         <Link href="/" className="flex items-center gap-2.5 group">
           <div className="h-10 flex items-center">
-            <img 
-              src="/assets/logo1.png" 
-              alt="DSC PAY Logo" 
-              className="h-9 w-auto object-contain shrink-0 group-hover:scale-102 transition-transform duration-200" 
+            <img
+              src="/assets/logo1.png"
+              alt="DSC PAY Logo"
+              className="h-9 w-auto object-contain shrink-0 group-hover:scale-102 transition-transform duration-200"
             />
           </div>
         </Link>
@@ -249,7 +249,7 @@ export default function Header({ onToggleSidebar }) {
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition cursor-pointer"
                 >
                   <FaMoneyBillWave size={11} className="text-slate-400" />
-                  <span>Withdrawal Services</span>
+                  <span>Withdrawal Fund</span>
                 </button>
                 <button
                   onClick={() => {
