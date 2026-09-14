@@ -60,7 +60,7 @@ const aadhaarServicesList = [
     iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "POI Required",
     badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
-    fee: "₹50.00",
+    fee: "₹75.00",
     sla: "3-7 Days",
     requiredDocs: ["PAN Card", "Passport", "Voter ID", "Driving License"],
   },
@@ -74,7 +74,7 @@ const aadhaarServicesList = [
     iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "Biometric Auth",
     badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
-    fee: "₹50.00",
+    fee: "₹75.00",
     sla: "24-48 Hours",
     requiredDocs: ["No Document Required (Only Biometric Verification)"],
   },
@@ -88,7 +88,7 @@ const aadhaarServicesList = [
     iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "POA Required",
     badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
-    fee: "₹50.00",
+    fee: "₹75.00",
     sla: "5-10 Days",
     requiredDocs: ["Electricity Bill", "Bank Passbook", "Rent Agreement", "Voter ID"],
   },
@@ -102,7 +102,7 @@ const aadhaarServicesList = [
     iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
     badge: "DOB Proof Required",
     badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
-    fee: "₹50.00",
+    fee: "₹75.00",
     sla: "3-7 Days",
     requiredDocs: ["Birth Certificate", "10th / SSLC Marksheet", "Passport", "PAN Card"],
   },
@@ -1079,11 +1079,10 @@ export default function Aadhaar() {
                         key={tab.id}
                         type="button"
                         onClick={() => setDeviceCategoryFilter(tab.id)}
-                        className={`text-xs font-bold px-3 py-1 rounded-lg transition cursor-pointer ${
-                          deviceCategoryFilter === tab.id
-                            ? "bg-blue-600 text-white shadow-xs"
-                            : "bg-white text-slate-600 hover:bg-slate-200 border border-slate-200"
-                        }`}
+                        className={`text-xs font-bold px-3 py-1 rounded-lg transition cursor-pointer ${deviceCategoryFilter === tab.id
+                          ? "bg-blue-600 text-white shadow-xs"
+                          : "bg-white text-slate-600 hover:bg-slate-200 border border-slate-200"
+                          }`}
                       >
                         {tab.label}
                       </button>
@@ -1100,19 +1099,17 @@ export default function Aadhaar() {
                           <div
                             key={dev.id}
                             onClick={() => !isScanning && setSelectedDevice(dev.name)}
-                            className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer flex items-center justify-between ${
-                              isSelected
-                                ? "bg-blue-50/70 border-blue-600 ring-2 ring-blue-500/20 shadow-xs"
-                                : "bg-white hover:bg-slate-100 border-slate-200 text-slate-700"
-                            }`}
+                            className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer flex items-center justify-between ${isSelected
+                              ? "bg-blue-50/70 border-blue-600 ring-2 ring-blue-500/20 shadow-xs"
+                              : "bg-white hover:bg-slate-100 border-slate-200 text-slate-700"
+                              }`}
                           >
                             <div className="flex items-center gap-2.5 min-w-0">
                               <div
-                                className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm ${
-                                  isSelected
-                                    ? "bg-blue-600 text-white shadow-xs"
-                                    : "bg-slate-100 text-slate-600"
-                                }`}
+                                className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm ${isSelected
+                                  ? "bg-blue-600 text-white shadow-xs"
+                                  : "bg-slate-100 text-slate-600"
+                                  }`}
                               >
                                 {dev.category === "iris" ? <FaEye /> : <FaFingerprint />}
                               </div>
