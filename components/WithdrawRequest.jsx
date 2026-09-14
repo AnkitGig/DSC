@@ -29,7 +29,7 @@ export default function WithdrawRequest() {
     amount: "",
   });
 
-  const [balance, setBalance] = useState(12450.0);
+  const [balance, setBalance] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdated, setLastUpdated] = useState("Today, 10:32 AM");
   const [loading, setLoading] = useState(false);
@@ -37,6 +37,36 @@ export default function WithdrawRequest() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [recentTxn, setRecentTxn] = useState(null);
   const [requestsList, setRequestsList] = useState(initialRequests);
+
+  const fetchBalance = async () => {
+    try {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || sessionStorage.getItem("token")
+          : null;
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+          : null;
+      if (!token || !userId) return;
+
+      const res = await fetch(`/api/users/profile/${userId}`, {
+        headers: { Authorization: token },
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user && data.user.wallet_balance !== undefined) {
+          setBalance(data.user.wallet_balance);
+        }
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  React.useEffect(() => {
+    fetchBalance();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,18 +76,19 @@ export default function WithdrawRequest() {
     }));
   };
 
-  const handleRefreshBalance = () => {
+  const handleRefreshBalance = async () => {
     setIsRefreshing(true);
+    await fetchBalance();
     setTimeout(() => {
       setIsRefreshing(false);
       setLastUpdated(
         "Today, " +
           new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
       );
-    }, 600);
+    }, 400);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!form.name.trim()) {
@@ -82,14 +113,50 @@ export default function WithdrawRequest() {
       return;
     }
 
+    const token =
+      typeof window !== "undefined"
+        ? localStorage.getItem("token") || sessionStorage.getItem("token")
+        : null;
+    const userId =
+      typeof window !== "undefined"
+        ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+        : null;
+
     setLoading(true);
     setMessage("");
 
-    setTimeout(() => {
-      setLoading(false);
-      const newBalance = balance - amt;
-      setBalance(newBalance);
+    try {
+      if (token && userId) {
+        const res = await fetch("/api/wallet/deduct", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            userId,
+            amount: amt,
+            serviceName: "Withdraw Request",
+            description: `Withdraw Request payout to A/C XXXX${form.accountNumber.slice(-4)} (${form.ifscCode})`,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setMessage(data.error || "Failed to process withdrawal request deduction.");
+          setLoading(false);
+          return;
+        }
+        if (data.balance !== undefined) {
+          setBalance(data.balance);
+        }
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("auth-change"));
+        }
+      } else {
+        setBalance((prev) => Math.max(0, prev - amt));
+      }
 
+      setLoading(false);
       const newReq = {
         id: `WR-${Math.floor(1000 + Math.random() * 9000)}`,
         date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }),
@@ -112,7 +179,10 @@ export default function WithdrawRequest() {
         accountNumber: "",
         amount: "",
       });
-    }, 1000);
+    } catch (err) {
+      setMessage(err.message || "Withdrawal request failed");
+      setLoading(false);
+    }
   };
 
   return (

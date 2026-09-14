@@ -265,8 +265,51 @@ export default function BillPayment() {
     setShowPaymentModal(true);
   };
 
-  const handleExecutePayment = () => {
+  const handleExecutePayment = async () => {
     if (!activePayingBill) return;
+
+    const amountToDeduct = Number(activePayingBill.amount) || 0;
+    if (amountToDeduct > 0) {
+      try {
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("token") || sessionStorage.getItem("token")
+            : null;
+        const userId =
+          typeof window !== "undefined"
+            ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+            : null;
+
+        if (token && userId) {
+          const res = await fetch("/api/wallet/deduct", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+            body: JSON.stringify({
+              userId,
+              amount: amountToDeduct,
+              serviceName: "Bill Payment",
+              description: `Bill Payment of ₹${amountToDeduct} for ${
+                activePayingBill.provider || activePayingBill.title || "Bill"
+              }`,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || "Failed to process wallet deduction.");
+            return;
+          }
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("auth-change"));
+          }
+        }
+      } catch (err) {
+        console.error("Deduction error:", err);
+      }
+    }
+
     setIsProcessingPayment(true);
     setTimeout(() => {
       setIsProcessingPayment(false);

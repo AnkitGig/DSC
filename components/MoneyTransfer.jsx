@@ -150,7 +150,7 @@ export default function MoneyTransfer() {
   };
 
   // Handle Transfer Submission
-  const handleProceedTransfer = (e) => {
+  const handleProceedTransfer = async (e) => {
     if (e) e.preventDefault();
 
     if (activeTab === "bank") {
@@ -177,6 +177,47 @@ export default function MoneyTransfer() {
     if (!amt || isNaN(amt) || amt <= 0) {
       alert("Please enter a valid transfer amount");
       return;
+    }
+
+    try {
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || sessionStorage.getItem("token")
+          : null;
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+          : null;
+
+      if (token && userId) {
+        const res = await fetch("/api/wallet/deduct", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: token,
+          },
+          body: JSON.stringify({
+            userId,
+            amount: amt,
+            serviceName: "Money Transfer",
+            description: `Money Transfer of ₹${amt} to ${
+              activeTab === "bank"
+                ? form.beneficiaryName
+                : form.mobileNumber || "Recipient"
+            }`,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          alert(data.error || "Failed to process wallet deduction.");
+          return;
+        }
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("auth-change"));
+        }
+      }
+    } catch (err) {
+      console.error("Deduction error:", err);
     }
 
     setIsProcessing(true);

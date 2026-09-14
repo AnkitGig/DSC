@@ -42,8 +42,14 @@ export default function ServicePacks() {
   useEffect(() => {
     async function fetchUserProfile() {
       try {
-        const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-        const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("token") || sessionStorage.getItem("token")
+            : null;
+        const userId =
+          typeof window !== "undefined"
+            ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+            : null;
         if (!token || !userId) return;
 
         const res = await fetch(`/api/users/profile/${userId}`, {
@@ -62,6 +68,21 @@ export default function ServicePacks() {
       }
     }
     fetchUserProfile();
+
+    const handleAuthChange = () => {
+      fetchUserProfile();
+    };
+
+    window.addEventListener("auth-change", handleAuthChange);
+    window.addEventListener("focus", handleAuthChange);
+
+    const interval = setInterval(fetchUserProfile, 5000);
+
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+      window.removeEventListener("focus", handleAuthChange);
+      clearInterval(interval);
+    };
   }, []);
 
   // Update greeting based on time of day
@@ -261,8 +282,14 @@ export default function ServicePacks() {
               <span className="text-xs font-semibold text-slate-400 block">
                 Wallet Balance
               </span>
-              <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] block">
-                ₹ 12,450
+              <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] block font-mono">
+                ₹{" "}
+                {user?.wallet_balance !== undefined && user?.wallet_balance !== null
+                  ? Number(user.wallet_balance).toLocaleString("en-IN", {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })
+                  : "0.00"}
               </span>
             </div>
           </div>

@@ -284,7 +284,47 @@ export default function Recharge() {
     setShowConfirmModal(true);
   };
 
-  const handleExecuteRecharge = () => {
+  const handleExecuteRecharge = async () => {
+    const amountToDeduct = selectedPlanForRecharge?.amount || customAmount || 0;
+    if (amountToDeduct > 0) {
+      try {
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("token") || sessionStorage.getItem("token")
+            : null;
+        const userId =
+          typeof window !== "undefined"
+            ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+            : null;
+
+        if (token && userId) {
+          const res = await fetch("/api/wallet/deduct", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+            body: JSON.stringify({
+              userId,
+              amount: Number(amountToDeduct),
+              serviceName: "Mobile Recharge",
+              description: `Mobile Recharge of ₹${amountToDeduct} for ${mobileNumber || "Mobile"} (${selectedOperator})`,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || "Failed to process wallet deduction.");
+            return;
+          }
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("auth-change"));
+          }
+        }
+      } catch (err) {
+        console.error("Deduction error:", err);
+      }
+    }
+
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);

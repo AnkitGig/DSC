@@ -306,7 +306,48 @@ export default function Aadhaar() {
     return raw.replace(/(\d{4})(?=\d)/g, "$1 ");
   };
 
-  const handleStartBiometricScan = () => {
+  const handleStartBiometricScan = async () => {
+    const feeAmount = Number((selectedService?.fee || "0").replace(/[^0-9.]/g, "")) || 0;
+
+    if (feeAmount > 0) {
+      try {
+        const token =
+          typeof window !== "undefined"
+            ? localStorage.getItem("token") || sessionStorage.getItem("token")
+            : null;
+        const userId =
+          typeof window !== "undefined"
+            ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+            : null;
+
+        if (token && userId) {
+          const res = await fetch("/api/wallet/deduct", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: token,
+            },
+            body: JSON.stringify({
+              userId,
+              amount: feeAmount,
+              serviceName: selectedService?.title || "Aadhaar Service",
+              description: `Fee deducted for ${selectedService?.title || "Aadhaar Service"}`,
+            }),
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            alert(data.error || "Failed to process wallet deduction.");
+            return;
+          }
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("auth-change"));
+          }
+        }
+      } catch (err) {
+        console.error("Deduction error:", err);
+      }
+    }
+
     setIsScanning(true);
     setScanProgress(10);
     const interval = setInterval(() => {
@@ -314,27 +355,6 @@ export default function Aadhaar() {
         if (prev >= 100) {
           clearInterval(interval);
           setIsScanning(false);
-          // Generate URN & Receipt
-          const generatedURN = `0000/${Math.floor(10000 + Math.random() * 90000)}/${Math.floor(10000 + Math.random() * 90000)}`;
-          setApplicationReceipt({
-            urn: generatedURN,
-            service: selectedService?.title,
-            residentName: formData.residentName || "N/A",
-            aadhaar: formData.aadhaarNumber || "N/A",
-            date: new Date().toLocaleString("en-IN", {
-              day: "2-digit",
-              month: "short",
-              year: "numeric",
-              hour: "2-digit",
-              minute: "2-digit",
-            }),
-            fee: selectedService?.fee || "₹50.00",
-            operatorId: "ASK-DSC-772910",
-            kioskName: "DSC Digital Seva Kendra #104",
-            deviceUsed: selectedDevice,
-            qualityScore: "94% (High Quality Match)",
-            status: "Submitted to UIDAI Portal",
-          });
           setApplyStep(4);
           return 100;
         }
@@ -568,51 +588,6 @@ export default function Aadhaar() {
 
         {/* Right Column: Operator Terminal, Recent Updates & UIDAI Guidelines (4 Cols) */}
         <div className="lg:col-span-4 space-y-4">
-          {/* Operator Terminal Card */}
-          <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs">
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base font-bold">
-                  <FaIdCard />
-                </div>
-                <div>
-                  <h3 className="text-sm font-extrabold text-slate-900 leading-tight">
-                    Aadhaar Seva Kendra
-                  </h3>
-                  <p className="text-[10px] font-semibold text-slate-400">
-                    Operator ID: ASK-DSC-772910
-                  </p>
-                </div>
-              </div>
-              <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold border border-emerald-200">
-                Certified
-              </span>
-            </div>
-
-            {/* Operator Details & Quota */}
-            <div className="space-y-2.5 mb-4">
-              <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                <span className="text-slate-500 font-medium">Supervisor:</span>
-                <span className="font-bold text-slate-800">Rohit Kumar (UIDAI Level 2)</span>
-              </div>
-              <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                <span className="text-slate-500 font-medium">Station Balance:</span>
-                <span className="font-extrabold text-emerald-600">₹34,500.00</span>
-              </div>
-              <div className="flex items-center justify-between text-xs bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                <span className="text-slate-500 font-medium">Today's Tokens:</span>
-                <span className="font-bold text-blue-600">24 / 50 Processed</span>
-              </div>
-            </div>
-
-            <div className="bg-blue-50/70 border border-blue-100 rounded-2xl p-3 flex items-center gap-2.5">
-              <RiShieldCheckFill className="text-xl text-blue-600 shrink-0" />
-              <p className="text-[11px] text-blue-900 font-medium leading-relaxed">
-                Terminal connected to UIDAI Production Server through secure VPN gateway.
-              </p>
-            </div>
-          </div>
-
           {/* Recent Update Requests / Live Queue */}
           <div className="bg-white rounded-3xl p-5 border border-slate-200/90 shadow-2xs">
             <div className="flex items-center justify-between mb-4">

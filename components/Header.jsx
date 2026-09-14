@@ -32,8 +32,14 @@ export default function Header({ onToggleSidebar }) {
 
   const fetchUserProfile = async () => {
     try {
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || sessionStorage.getItem("token")
+          : null;
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+          : null;
       if (!token || !userId) return;
 
       const res = await fetch(`/api/users/profile/${userId}`, {
@@ -60,7 +66,15 @@ export default function Header({ onToggleSidebar }) {
     };
 
     window.addEventListener("auth-change", handleAuthChange);
-    return () => window.removeEventListener("auth-change", handleAuthChange);
+    window.addEventListener("focus", handleAuthChange);
+
+    const interval = setInterval(fetchUserProfile, 5000);
+
+    return () => {
+      window.removeEventListener("auth-change", handleAuthChange);
+      window.removeEventListener("focus", handleAuthChange);
+      clearInterval(interval);
+    };
   }, []);
 
   useEffect(() => {
@@ -131,7 +145,11 @@ export default function Header({ onToggleSidebar }) {
       {/* 3. RIGHT: Live Wallet Badge, Quick Actions & User Profile */}
       <div className="flex items-center gap-2.5 sm:gap-3.5">
         {/* Wallet Balance Widget Pill */}
-        <div className="hidden sm:flex items-center gap-2.5 bg-gradient-to-r from-blue-50/80 to-indigo-50/70 border border-blue-200/80 px-3.5 py-1.5 rounded-2xl shadow-2xs">
+        <div
+          onClick={fetchUserProfile}
+          title="Click to refresh wallet balance"
+          className="hidden sm:flex items-center gap-2.5 bg-gradient-to-r from-blue-50/80 to-indigo-50/70 hover:from-blue-100/90 hover:to-indigo-100/90 border border-blue-200/80 px-3.5 py-1.5 rounded-2xl shadow-2xs cursor-pointer transition"
+        >
           <div className="w-6 h-6 rounded-xl bg-[#1d68f6] text-white flex items-center justify-center text-[10px] shadow-xs">
             <FaWallet />
           </div>
@@ -140,7 +158,13 @@ export default function Header({ onToggleSidebar }) {
               Wallet
             </span>
             <span className="text-xs font-black text-[#0a1e4d] font-mono leading-tight">
-              ₹12,450.00
+              ₹
+              {user?.wallet_balance !== undefined && user?.wallet_balance !== null
+                ? Number(user.wallet_balance).toLocaleString("en-IN", {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
+                : "0.00"}
             </span>
           </div>
         </div>
