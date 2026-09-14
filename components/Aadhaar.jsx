@@ -34,6 +34,7 @@ import {
   FaCalendarAlt,
   FaChevronDown,
   FaCloudUploadAlt,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import { MdSensors, MdOutlineFingerprint, MdVerifiedUser } from "react-icons/md";
 import { RiQrCodeLine, RiShieldCheckFill } from "react-icons/ri";
@@ -1277,75 +1278,54 @@ export default function Aadhaar() {
               </div>
             )}
 
-            {/* Step 4: Stamped Official Receipt */}
-            {applyStep === 4 && applicationReceipt && (
-              <div className="space-y-4">
-                <div className="text-center">
-                  <div className="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-2xl border border-emerald-200">
-                    <FaCheckCircle />
-                  </div>
-                  <h4 className="text-lg font-black text-slate-900">
-                    Update Request Submitted!
+            {/* Step 4: Customer Support Confirmation Modal */}
+            {applyStep === 4 && (
+              <div className="text-center py-2 space-y-4">
+                <div className="w-14 h-14 rounded-2xl bg-blue-50 text-blue-600 border border-blue-100 flex items-center justify-center mx-auto shadow-2xs">
+                  <FaHeadset size={26} />
+                </div>
+
+                <div>
+                  <h4 className="text-lg font-black text-slate-900 leading-tight">
+                    Your Request Has Been Submitted
                   </h4>
-                  <p className="text-xs text-slate-500">
-                    Acknowledgment generated with official Update Request Number (URN).
+                  <p className="text-xs text-slate-500 font-medium mt-1.5 leading-relaxed max-w-sm mx-auto">
+                    Your request has been submitted. Please contact customer support for further processing.
                   </p>
                 </div>
 
-                {/* Stamped Receipt Box */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-2.5 font-sans">
-                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
-                    <div>
-                      <p className="text-[10px] text-slate-400 font-bold uppercase">URN Number</p>
-                      <p className="text-sm font-black font-mono text-blue-700">{applicationReceipt.urn}</p>
+                <div className="space-y-2.5 text-xs text-left max-w-sm mx-auto pt-2">
+                  <div className="flex items-center gap-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100 shadow-2xs">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                      <FaPhoneAlt />
                     </div>
-                    <div className="text-right">
-                      <p className="text-[10px] text-slate-400 font-bold uppercase">Date & Time</p>
-                      <p className="text-xs font-bold text-slate-800">{applicationReceipt.date}</p>
+                    <div>
+                      <div className="font-bold text-slate-700 text-xs">Helpline</div>
+                      <div className="text-slate-900 font-mono font-bold text-xs mt-0.5">
+                        +91-9285356192
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-2 text-xs py-1">
-                    <div>
-                      <span className="text-slate-400 font-medium block text-[10px]">Resident Name</span>
-                      <span className="font-bold text-slate-800">{applicationReceipt.residentName}</span>
+                  <div className="flex items-center gap-3 p-3.5 bg-slate-50 rounded-2xl border border-slate-100 shadow-2xs">
+                    <div className="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-sm shrink-0">
+                      <FaEnvelope />
                     </div>
-                    <div>
-                      <span className="text-slate-400 font-medium block text-[10px]">Aadhaar Number</span>
-                      <span className="font-mono font-bold text-slate-800">{applicationReceipt.aadhaar}</span>
+                    <div className="overflow-hidden">
+                      <div className="font-bold text-slate-700 text-xs">Email</div>
+                      <div className="text-slate-900 font-bold text-xs truncate mt-0.5">
+                        teamdigitalservicecenter@gmail.com
+                      </div>
                     </div>
-                    <div>
-                      <span className="text-slate-400 font-medium block text-[10px]">Service Applied</span>
-                      <span className="font-bold text-slate-800">{applicationReceipt.service}</span>
-                    </div>
-                    <div>
-                      <span className="text-slate-400 font-medium block text-[10px]">Govt Fee Paid</span>
-                      <span className="font-extrabold text-emerald-600">{applicationReceipt.fee}</span>
-                    </div>
-                  </div>
-
-                  <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[10px] text-slate-500">
-                    <span>Kiosk: {applicationReceipt.kioskName}</span>
-                    <span className="text-emerald-600 font-bold">● {applicationReceipt.qualityScore}</span>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 pt-2">
-                  <button
-                    onClick={() => {
-                      window.print();
-                    }}
-                    className="py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 cursor-pointer"
-                  >
-                    <FaPrint />
-                    <span>Print Receipt</span>
-                  </button>
-
+                <div className="pt-2 max-w-sm mx-auto">
                   <button
                     onClick={() => setShowApplyModal(false)}
-                    className="py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center justify-center gap-2 cursor-pointer"
+                    className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-2xl text-xs font-black transition shadow-md shadow-blue-500/20 cursor-pointer"
                   >
-                    <span>Done</span>
+                    Close
                   </button>
                 </div>
               </div>
