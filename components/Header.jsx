@@ -244,7 +244,7 @@ export default function Header({ onToggleSidebar }) {
                 <button
                   onClick={() => {
                     setShowProfile(false);
-                    router.push("/withdrawal");
+                    router.push("/withdraw-request");
                   }}
                   className="w-full flex items-center gap-2.5 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-blue-50 hover:text-blue-700 rounded-xl transition cursor-pointer"
                 >
