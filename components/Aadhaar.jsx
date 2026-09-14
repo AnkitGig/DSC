@@ -33,6 +33,7 @@ import {
   FaRedoAlt,
   FaCalendarAlt,
   FaChevronDown,
+  FaCloudUploadAlt,
 } from "react-icons/fa";
 import { MdSensors, MdOutlineFingerprint, MdVerifiedUser } from "react-icons/md";
 import { RiQrCodeLine, RiShieldCheckFill } from "react-icons/ri";
@@ -248,15 +249,17 @@ export default function Aadhaar() {
     email: "",
     newMobile: "",
     newAddress: "",
-    newDob: "1995-08-15",
+    newDob: "",
     pinCode: "",
-    district: "New Delhi",
-    state: "Delhi",
+    district: "",
+    state: "",
     panNumber: "",
     childName: "",
     childDob: "",
     parentAadhaar: "",
-    selectedProof: "PAN Card",
+    selectedProof: "",
+    documentFile: null,
+    documentName: "",
   });
   const [scanProgress, setScanProgress] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
@@ -276,21 +279,23 @@ export default function Aadhaar() {
     setSelectedService(service);
     setApplyStep(1);
     setFormData({
-      aadhaarNumber: "5482 9102 4321",
-      residentName: "Rajesh Kumar",
-      mobileNumber: "9876543210",
-      email: "rajesh.k@gmail.com",
+      aadhaarNumber: "",
+      residentName: "",
+      mobileNumber: "",
+      email: "",
       newMobile: "",
       newAddress: "",
-      newDob: "1995-08-15",
-      pinCode: "110001",
-      district: "Central Delhi",
-      state: "Delhi",
-      panNumber: "ABCDE1234F",
+      newDob: "",
+      pinCode: "",
+      district: "",
+      state: "",
+      panNumber: "",
       childName: "",
-      childDob: "2024-05-12",
-      parentAadhaar: "5482 9102 4321",
-      selectedProof: service.requiredDocs[0] || "Valid Proof Document",
+      childDob: "",
+      parentAadhaar: "",
+      selectedProof: service?.requiredDocs?.[0] || "",
+      documentFile: null,
+      documentName: "",
     });
     setShowApplyModal(true);
   };
@@ -313,8 +318,8 @@ export default function Aadhaar() {
           setApplicationReceipt({
             urn: generatedURN,
             service: selectedService?.title,
-            residentName: formData.residentName || "Rajesh Kumar",
-            aadhaar: formData.aadhaarNumber || "5482 9102 4321",
+            residentName: formData.residentName || "N/A",
+            aadhaar: formData.aadhaarNumber || "N/A",
             date: new Date().toLocaleString("en-IN", {
               day: "2-digit",
               month: "short",
@@ -885,7 +890,7 @@ export default function Aadhaar() {
                       </label>
                       <input
                         type="date"
-                        value={formData.newDob || "1995-08-15"}
+                        value={formData.newDob || ""}
                         onChange={(e) => setFormData({ ...formData, newDob: e.target.value })}
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
                       />
@@ -1001,6 +1006,75 @@ export default function Aadhaar() {
                   </div>
                 )}
 
+                {/* Document Upload Section */}
+                <div className="space-y-1.5 pt-1">
+                  <label className="block text-xs font-bold text-slate-700">
+                    Upload Supporting Document (POI / POA / Birth Certificate) <span className="text-red-500">*</span>
+                  </label>
+
+                  <div className="relative border-2 border-dashed border-blue-200 hover:border-blue-500 rounded-2xl bg-blue-50/40 hover:bg-blue-50/80 p-4 transition text-center cursor-pointer group">
+                    <input
+                      type="file"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setFormData((prev) => ({
+                            ...prev,
+                            documentFile: file,
+                            documentName: file.name,
+                          }));
+                        }
+                      }}
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
+                    />
+
+                    {formData.documentName ? (
+                      <div className="flex items-center justify-between px-2">
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <div className="w-8 h-8 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs shrink-0 shadow-xs">
+                            <FaCheck />
+                          </div>
+                          <div className="text-left min-w-0">
+                            <p className="text-xs font-bold text-slate-800 truncate">
+                              {formData.documentName}
+                            </p>
+                            <p className="text-[10px] font-semibold text-emerald-600">
+                              Document Uploaded Successfully
+                            </p>
+                          </div>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setFormData((prev) => ({
+                              ...prev,
+                              documentFile: null,
+                              documentName: "",
+                            }));
+                          }}
+                          className="z-20 text-slate-400 hover:text-red-500 p-1 text-xs font-bold transition"
+                        >
+                          <FaTimes />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-1">
+                        <div className="w-10 h-10 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-base mb-1.5 group-hover:scale-110 transition shadow-2xs">
+                          <FaCloudUploadAlt />
+                        </div>
+                        <p className="text-xs font-bold text-slate-800">
+                          Click or Drag file here to upload
+                        </p>
+                        <p className="text-[10px] text-slate-400 font-medium mt-0.5">
+                          Supports PDF, JPG, JPEG, PNG (Max 5MB)
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
                 {/* General Note */}
                 <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-3 flex items-start gap-2 text-xs text-amber-800">
                   <FaInfoCircle className="mt-0.5 shrink-0 text-amber-600" />
@@ -1019,7 +1093,13 @@ export default function Aadhaar() {
                   </button>
                   <button
                     type="button"
-                    onClick={() => setApplyStep(3)}
+                    onClick={() => {
+                      if (!formData.documentName) {
+                        alert("Please upload the supporting document before proceeding.");
+                        return;
+                      }
+                      setApplyStep(3);
+                    }}
                     className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
                   >
                     <span>Proceed to Biometric Capture</span>
