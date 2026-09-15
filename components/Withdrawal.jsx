@@ -21,6 +21,7 @@ import {
   FaMoneyBillWave,
   FaArrowRight,
   FaLock,
+  FaPhoneAlt,
 } from "react-icons/fa";
 import { RiQrCodeLine, RiBankFill } from "react-icons/ri";
 import { MdOutlineFingerprint, MdSensors } from "react-icons/md";
@@ -106,27 +107,7 @@ export default function Withdrawal() {
     setTimeout(() => {
       setScanningState("captured");
       setTimeout(() => {
-        setScanningState("success");
-        const amt = Number(amount);
-        const newBalance = Math.max(0, balance - amt);
-        setBalance(newBalance);
-
-        const receipt = {
-          txnId: `DSC-AEPS-${Math.floor(100000 + Math.random() * 900000)}`,
-          rrn: `5299${Math.floor(10000000 + Math.random() * 90000000)}`,
-          bank: selectedBank.name,
-          aadhaar: `XXXX XXXX ${aadhaarNumber.slice(-4)}`,
-          authMode: authMethod === "biometric" ? "Biometric (Fingerprint)" : "Iris Scan",
-          amount: amt,
-          commission: (amt * 0.0025).toFixed(2),
-          remainingBalance: newBalance,
-          date:
-            new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) +
-            ", " +
-            new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-          status: "Success",
-        };
-        setWithdrawalReceipt(receipt);
+        setScanningState("not_found");
       }, 1000);
     }, 1500);
   };
@@ -682,19 +663,22 @@ export default function Withdrawal() {
         </div>
       )}
 
-      {/* MODAL 3: BIOMETRIC SCAN & RECEIPT MODAL */}
+      {/* MODAL 3: BIOMETRIC SCAN & NOT FOUND MODAL */}
       {showBiometricModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full border border-slate-100 text-center">
-            {scanningState !== "success" ? (
+          {scanningState !== "not_found" ? (
+            <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full border border-slate-100 text-center">
               <div>
                 <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
                   <h3 className="text-base font-black text-[#0a1e4d]">
                     AePS Authentication
                   </h3>
                   <button
-                    onClick={() => setShowBiometricModal(false)}
-                    className="text-slate-400 hover:text-slate-600"
+                    onClick={() => {
+                      setShowBiometricModal(false);
+                      setScanningState("idle");
+                    }}
+                    className="text-slate-400 hover:text-slate-600 cursor-pointer"
                   >
                     <FaTimes size={16} />
                   </button>
@@ -703,12 +687,13 @@ export default function Withdrawal() {
                 {/* Fingerprint Scanner Graphic */}
                 <div className="my-6 relative flex items-center justify-center">
                   <div
-                    className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${scanningState === "scanning"
+                    className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${
+                      scanningState === "scanning"
                         ? "bg-blue-50 ring-4 ring-blue-500/30 text-blue-600 animate-pulse scale-105"
                         : scanningState === "captured"
-                          ? "bg-emerald-50 ring-4 ring-emerald-500/30 text-emerald-600 scale-105"
-                          : "bg-slate-100 text-slate-400"
-                      }`}
+                        ? "bg-emerald-50 ring-4 ring-emerald-500/30 text-emerald-600 scale-105"
+                        : "bg-slate-100 text-slate-400"
+                    }`}
                   >
                     <FaFingerprint size={56} />
                   </div>
@@ -739,77 +724,70 @@ export default function Withdrawal() {
                   </div>
                 )}
               </div>
-            ) : (
-              /* SUCCESS RECEIPT VIEW */
-              withdrawalReceipt && (
-                <div>
-                  <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-sm">
-                    <FaCheckCircle size={28} />
-                  </div>
+            </div>
+          ) : (
+            /* CUSTOMER NOT FOUND MODAL CARD */
+            <div className="bg-[#fff8f8] rounded-3xl shadow-2xl p-6 sm:p-7 max-w-sm sm:max-w-md w-full border border-red-200 text-center relative animate-in zoom-in-95">
+              <button
+                onClick={() => {
+                  setShowBiometricModal(false);
+                  setScanningState("idle");
+                }}
+                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition cursor-pointer"
+                title="Close"
+              >
+                <FaTimes size={16} />
+              </button>
 
-                  <h3 className="text-lg font-black text-[#0a1e4d]">
-                    Withdrawal Successful!
-                  </h3>
-                  <p className="text-xs font-medium text-slate-400 mt-0.5">
-                    Cash dispensed via AePS Service
-                  </p>
+              {/* Red Circle Exclamation Icon */}
+              <div className="w-13 h-13 rounded-full border-[2.5px] border-red-500 text-red-500 flex items-center justify-center mx-auto mb-3">
+                <span className="text-2xl font-black leading-none -mt-0.5">!</span>
+              </div>
 
-                  <div className="text-2xl font-black text-slate-900 my-4 font-mono">
-                    ₹{withdrawalReceipt.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                  </div>
+              {/* Title */}
+              <h3 className="text-lg sm:text-xl font-black text-[#0a1e4d] mb-1.5">
+                Customer Not Found
+              </h3>
 
-                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 text-left mb-5">
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 font-medium">Bank:</span>
-                      <span className="font-bold text-slate-800">{withdrawalReceipt.bank}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 font-medium">Aadhaar No:</span>
-                      <span className="font-mono font-bold text-slate-800">{withdrawalReceipt.aadhaar}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 font-medium">Bank RRN:</span>
-                      <span className="font-mono font-bold text-slate-800">{withdrawalReceipt.rrn}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 font-medium">Txn ID:</span>
-                      <span className="font-mono font-bold text-blue-600">{withdrawalReceipt.txnId}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 font-medium">Remaining Balance:</span>
-                      <span className="font-mono font-bold text-emerald-700">
-                        ₹{withdrawalReceipt.remainingBalance.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-slate-500 font-medium">Date & Time:</span>
-                      <span className="text-slate-600 font-medium">{withdrawalReceipt.date}</span>
-                    </div>
-                  </div>
+              {/* Description */}
+              <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto mb-4 font-medium">
+                The details you entered do not match with our records.
+                <br />
+                Please check the Consumer Number / Account Number and try again.
+              </p>
 
-                  <div className="flex gap-2.5">
-                    <button
-                      onClick={() => window.print()}
-                      className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 cursor-pointer"
-                    >
-                      <FaPrint size={13} />
-                      <span>Print Receipt</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowBiometricModal(false);
-                        setWithdrawalReceipt(null);
-                        setAmount("");
-                      }}
-                      className="flex-1 py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
-                    >
-                      Done
-                    </button>
-                  </div>
+              {/* OR Divider */}
+              <div className="flex items-center justify-center my-4 text-xs font-bold text-slate-400 gap-3">
+                <div className="h-[1px] bg-slate-200/80 flex-1"></div>
+                <span className="text-[11px] font-semibold text-slate-400 tracking-wider">OR</span>
+                <div className="h-[1px] bg-slate-200/80 flex-1"></div>
+              </div>
+
+              {/* Help Box */}
+              <div className="bg-[#fcebeb] border border-red-100 rounded-2xl p-3.5 flex items-center gap-3 text-left mb-5">
+                <div className="w-9 h-9 rounded-full bg-blue-50 text-[#1d68f6] flex items-center justify-center shrink-0">
+                  <FaHeadset size={18} />
                 </div>
-              )
-            )}
-          </div>
+                <p className="text-xs text-slate-700 leading-snug">
+                  If you are still facing the issue, please contact our{" "}
+                  <span className="font-bold text-slate-900">Customer Team</span> for further assistance.
+                </p>
+              </div>
+
+              {/* Action Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  setShowBiometricModal(false);
+                  setScanningState("idle");
+                }}
+                className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+              >
+                <FaPhoneAlt size={12} />
+                <span>Contact Customer Team</span>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>
