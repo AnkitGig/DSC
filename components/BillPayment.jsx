@@ -24,6 +24,7 @@ import {
   FaBullhorn,
 } from "react-icons/fa";
 import { MdOutlineReceiptLong, MdSatelliteAlt } from "react-icons/md";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 // 12 Category Tiles configuration
 const billCategories = [
@@ -225,6 +226,10 @@ export default function BillPayment() {
   const [dueBills, setDueBills] = useState(initialDueBills);
   const [billHistory, setBillHistory] = useState(mockBillHistory);
   const [showAllBillsModal, setShowAllBillsModal] = useState(false);
+  const [showCustomerNotFoundModal, setShowCustomerNotFoundModal] = useState(false);
+  const [errorDescription, setErrorDescription] = useState(
+    "The details you entered do not match with our records.\nPlease check the Consumer Number / Account Number and try again."
+  );
 
   const handleCategorySelect = (catId) => {
     setSelectedCategory(catId);
@@ -265,85 +270,18 @@ export default function BillPayment() {
     setShowPaymentModal(true);
   };
 
-  const handleExecutePayment = async () => {
+  const handleExecutePayment = () => {
     if (!activePayingBill) return;
-
-    const amountToDeduct = Number(activePayingBill.amount) || 0;
-    if (amountToDeduct > 0) {
-      try {
-        const token =
-          typeof window !== "undefined"
-            ? localStorage.getItem("token") || sessionStorage.getItem("token")
-            : null;
-        const userId =
-          typeof window !== "undefined"
-            ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
-            : null;
-
-        if (token && userId) {
-          const res = await fetch("/api/wallet/deduct", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-            body: JSON.stringify({
-              userId,
-              amount: amountToDeduct,
-              serviceName: "Bill Payment",
-              description: `Bill Payment of ₹${amountToDeduct} for ${
-                activePayingBill.provider || activePayingBill.title || "Bill"
-              }`,
-            }),
-          });
-          const data = await res.json();
-          if (!res.ok) {
-            alert(data.error || "Failed to process wallet deduction.");
-            return;
-          }
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(new Event("auth-change"));
-          }
-        }
-      } catch (err) {
-        console.error("Deduction error:", err);
-      }
-    }
 
     setIsProcessingPayment(true);
     setTimeout(() => {
       setIsProcessingPayment(false);
-      const receipt = {
-        txnId: `DSC-BP-${Math.floor(100000 + Math.random() * 900000)}`,
-        bbpsRef: `BBPS${Math.floor(1000000000 + Math.random() * 9000000000)}`,
-        billerName: activePayingBill.provider || activePayingBill.title,
-        consumerNumber: activePayingBill.consumerNumber || consumerNumber || "1234567890",
-        consumerName: activePayingBill.consumerName || "Rajesh Kumar",
-        amount: activePayingBill.amount,
-        date: new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) + ", " + new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        status: "Success",
-      };
-
-      setPaymentReceipt(receipt);
-
-      if (activePayingBill.id) {
-        setDueBills((prev) => prev.filter((b) => b.id !== activePayingBill.id));
-      }
-
-      const newHistoryItem = {
-        id: "h_" + Date.now(),
-        title: activePayingBill.title || `${activePayingBill.provider} Bill`,
-        account: `Consumer No: ${receipt.consumerNumber}`,
-        date: receipt.date,
-        amount: activePayingBill.amount,
-        status: "Paid",
-        logoType: activePayingBill.logoType || "electricity",
-      };
-      setBillHistory([newHistoryItem, ...billHistory]);
-
       setShowPaymentModal(false);
-      setFetchedBill(null);
-    }, 1100);
+      setErrorDescription(
+        "The details you entered do not match with our records.\nPlease check the Consumer Number / Account Number and try again."
+      );
+      setShowCustomerNotFoundModal(true);
+    }, 1000);
   };
 
   const activeCategoryObj = billCategories.find((c) => c.id === selectedCategory) || billCategories[0];
@@ -1026,53 +964,13 @@ export default function BillPayment() {
         </div>
       )}
 
-      {/* MODAL: PAYMENT SUCCESS RECEIPT */}
-      {paymentReceipt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-slate-100 text-center">
-            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-sm">
-              <FaCheckCircle size={28} />
-            </div>
-
-            <h3 className="text-lg font-black text-[#0a1e4d]">
-              Bill Paid Successfully!
-            </h3>
-            <p className="text-xs font-medium text-slate-400 mt-0.5">
-              Instant BBPS Confirmation Received
-            </p>
-
-            <div className="text-2xl font-black text-slate-900 my-4 font-mono">
-              ₹{paymentReceipt.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 text-left mb-5">
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Biller:</span>
-                <span className="font-bold text-slate-800">{paymentReceipt.billerName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Consumer ID:</span>
-                <span className="font-mono font-bold text-slate-800">{paymentReceipt.consumerNumber}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">BBPS Ref No:</span>
-                <span className="font-mono font-bold text-blue-600">{paymentReceipt.bbpsRef}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Date & Time:</span>
-                <span className="text-slate-600 font-medium">{paymentReceipt.date}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setPaymentReceipt(null)}
-              className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      )}
+      {/* ================= CUSTOMER NOT FOUND MODAL ================= */}
+      <CustomerNotFoundModal
+        isOpen={showCustomerNotFoundModal}
+        onClose={() => setShowCustomerNotFoundModal(false)}
+        title="Customer Not Found"
+        description={errorDescription}
+      />
 
       {/* MODAL: VIEW ALL MY BILLS */}
       {showAllBillsModal && (

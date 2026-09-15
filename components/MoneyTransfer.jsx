@@ -18,6 +18,7 @@ import {
   FaBullhorn,
 } from "react-icons/fa";
 import { RiBankFill } from "react-icons/ri";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const initialSavedBeneficiaries = [
   {
@@ -129,7 +130,7 @@ export default function MoneyTransfer() {
   const [newBeneficiary, setNewBeneficiary] = useState({ name: "", bank: "", accountNumber: "", ifsc: "" });
   const [showFindIfscModal, setShowFindIfscModal] = useState(false);
   const [selectedIfscBank, setSelectedIfscBank] = useState("SBI");
-  const [showTransferSuccessModal, setShowTransferSuccessModal] = useState(false);
+  const [showCustomerNotFoundModal, setShowCustomerNotFoundModal] = useState(false);
   const [transferReceipt, setTransferReceipt] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -150,7 +151,7 @@ export default function MoneyTransfer() {
   };
 
   // Handle Transfer Submission
-  const handleProceedTransfer = async (e) => {
+  const handleProceedTransfer = (e) => {
     if (e) e.preventDefault();
 
     if (activeTab === "bank") {
@@ -179,98 +180,10 @@ export default function MoneyTransfer() {
       return;
     }
 
-    try {
-      const token =
-        typeof window !== "undefined"
-          ? localStorage.getItem("token") || sessionStorage.getItem("token")
-          : null;
-      const userId =
-        typeof window !== "undefined"
-          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
-          : null;
-
-      if (token && userId) {
-        const res = await fetch("/api/wallet/deduct", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: token,
-          },
-          body: JSON.stringify({
-            userId,
-            amount: amt,
-            serviceName: "Money Transfer",
-            description: `Money Transfer of ₹${amt} to ${
-              activeTab === "bank"
-                ? form.beneficiaryName
-                : form.mobileNumber || "Recipient"
-            }`,
-          }),
-        });
-        const data = await res.json();
-        if (!res.ok) {
-          alert(data.error || "Failed to process wallet deduction.");
-          return;
-        }
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("auth-change"));
-        }
-      }
-    } catch (err) {
-      console.error("Deduction error:", err);
-    }
-
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
-      const recipientName =
-        activeTab === "bank"
-          ? form.beneficiaryName
-          : activeTab === "mobile"
-            ? `Mobile (${form.mobileNumber})`
-            : "Self Account (HDFC Bank)";
-
-      const bankName =
-        activeTab === "bank"
-          ? form.ifscCode.slice(0, 4).toUpperCase() + " Bank"
-          : activeTab === "mobile"
-            ? "UPI Instant"
-            : "Self A/C";
-
-      const receipt = {
-        txnId: `DSC-MT-${Math.floor(100000 + Math.random() * 900000)}`,
-        utr: `5299${Math.floor(10000000 + Math.random() * 90000000)}`,
-        recipient: recipientName,
-        bank: bankName,
-        account: form.accountNumber ? `•••• ${form.accountNumber.slice(-4)}` : form.mobileNumber || "Self",
-        amount: amt,
-        date:
-          new Date().toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" }) +
-          ", " +
-          new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        status: "Success",
-      };
-
-      setTransferReceipt(receipt);
-      setShowTransferSuccessModal(true);
-
-      // Add to recent transfers
-      const newTxn = {
-        id: Date.now(),
-        initials: recipientName.slice(0, 2).toUpperCase(),
-        name: recipientName,
-        details: `${bankName} • ${form.accountNumber ? form.accountNumber.slice(-10) : form.mobileNumber || "Transfer"}`,
-        accountNumber: form.accountNumber || "N/A",
-        bank: bankName,
-        amount: amt,
-        date: receipt.date,
-        status: "Success",
-        color: "bg-[#dbeafe] text-[#1d4ed8]",
-      };
-      setRecentTransfers([newTxn, ...recentTransfers]);
-
-      // Reset form amount
-      setForm((prev) => ({ ...prev, amount: "", remarks: "" }));
+      setShowCustomerNotFoundModal(true);
     }, 1000);
   };
 
@@ -1144,57 +1057,13 @@ export default function MoneyTransfer() {
         </div>
       )}
 
-      {/* MODAL: TRANSFER RECEIPT / SUCCESS */}
-      {showTransferSuccessModal && transferReceipt && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-in fade-in">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-slate-100 text-center">
-            <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-sm">
-              <FaCheckCircle size={28} />
-            </div>
-
-            <h3 className="text-lg font-black text-[#0a1e4d]">
-              Transfer Successful!
-            </h3>
-            <p className="text-xs font-medium text-slate-400 mt-0.5">
-              Money sent instantly via DSC PAY IMPS
-            </p>
-
-            <div className="text-2xl font-black text-slate-900 my-4 font-mono">
-              ₹{transferReceipt.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-            </div>
-
-            <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 text-left mb-5">
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">To Beneficiary:</span>
-                <span className="font-bold text-slate-800">{transferReceipt.recipient}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Bank / Mode:</span>
-                <span className="font-semibold text-slate-800">{transferReceipt.bank}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Txn ID:</span>
-                <span className="font-mono font-bold text-blue-600">{transferReceipt.txnId}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Bank UTR:</span>
-                <span className="font-mono font-bold text-slate-800">{transferReceipt.utr}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500 font-medium">Date & Time:</span>
-                <span className="text-slate-600 font-medium">{transferReceipt.date}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setShowTransferSuccessModal(false)}
-              className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer"
-            >
-              Done
-            </button>
-          </div>
-        </div>
-      )}
+      {/* MODAL: CUSTOMER NOT FOUND */}
+      <CustomerNotFoundModal
+        isOpen={showCustomerNotFoundModal}
+        onClose={() => setShowCustomerNotFoundModal(false)}
+        title="Customer Not Found"
+        description="The details you entered do not match with our records.&#10;Please check the Account Number / IFSC Code and try again."
+      />
     </div>
   );
 }

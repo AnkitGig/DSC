@@ -1,8 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const CashCollection = () => {
+  const [showErrorModal, setShowErrorModal] = useState(false);
+
   return (
     <div className="p-4 md:ml-64 md:p-6">
       <div className="bg-white rounded-xl shadow p-6 mb-6">
@@ -30,7 +33,10 @@ const CashCollection = () => {
             className="border rounded px-3 py-2 flex-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Transaction Id or Account Number or Reference No."
           />
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded shadow transition-all">
+          <button
+            onClick={() => setShowErrorModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded shadow transition-all cursor-pointer"
+          >
             SEARCH
           </button>
         </div>
@@ -58,6 +64,13 @@ const CashCollection = () => {
           </a>
         </div>
       </div>
+
+      <CustomerNotFoundModal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        title="Customer Not Found"
+        description={`The details you entered do not match with our records.\nPlease check the Transaction ID / Account Number and try again.`}
+      />
     </div>
   );
 };

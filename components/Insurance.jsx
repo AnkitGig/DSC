@@ -42,6 +42,7 @@ import {
   RiPlaneFill,
   RiHomeHeartFill,
 } from "react-icons/ri";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const insuranceCategories = [
   {
@@ -272,6 +273,7 @@ export default function Insurance() {
   const [myPolicies, setMyPolicies] = useState(initialPolicies);
   const [viewingPolicy, setViewingPolicy] = useState(null);
   const [renewalLoading, setRenewalLoading] = useState(false);
+  const [showCustomerNotFoundModal, setShowCustomerNotFoundModal] = useState(false);
 
   // Active Category Object
   const currentCategory = insuranceCategories.find((c) => c.id === selectedType) || insuranceCategories[0];
@@ -307,50 +309,17 @@ export default function Insurance() {
   };
 
   const handleConfirmPurchase = () => {
-    const newPolicyNo = `DSC-INS-${Math.floor(100000 + Math.random() * 900000)}`;
-    const newPol = {
-      id: `pol-${Date.now()}`,
-      type: currentCategory.title,
-      provider: selectedPlanDetails.insurer,
-      policyNo: newPolicyNo,
-      validTill: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000).toLocaleDateString("en-GB", {
-        day: "2-digit",
-        month: "short",
-        year: "numeric",
-      }),
-      status: "Active",
-      cover: selectedPlanDetails.cover,
-      premium: selectedPlanDetails.premium,
-      icon: currentCategory.icon,
-      iconColor: currentCategory.iconColor,
-      iconBg: currentCategory.iconBg,
-      badgeStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
-    };
-
-    setGeneratedPolicy(newPol);
-    setMyPolicies([newPol, ...myPolicies]);
-    setPurchaseStep("success");
+    setShowQuoteModal(false);
+    setShowCustomerNotFoundModal(true);
   };
 
   const handleRenewPolicy = (policy) => {
     setRenewalLoading(true);
     setTimeout(() => {
-      setMyPolicies(
-        myPolicies.map((p) =>
-          p.id === policy.id
-            ? {
-              ...p,
-              status: "Active",
-              badgeStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
-              validTill: "18 Aug 2027",
-            }
-            : p
-        )
-      );
       setViewingPolicy(null);
       setRenewalLoading(false);
-      alert(`Policy ${policy.policyNo} successfully renewed for 1 full year!`);
-    }, 1000);
+      setShowCustomerNotFoundModal(true);
+    }, 800);
   };
 
   return (
@@ -1180,6 +1149,14 @@ export default function Insurance() {
           </div>
         </div>
       )}
+
+      {/* MODAL: CUSTOMER NOT FOUND */}
+      <CustomerNotFoundModal
+        isOpen={showCustomerNotFoundModal}
+        onClose={() => setShowCustomerNotFoundModal(false)}
+        title="Customer Not Found"
+        description="The details you entered do not match with our records.&#10;Please check the Policy Number / Mobile Number and try again."
+      />
     </div>
   );
 }

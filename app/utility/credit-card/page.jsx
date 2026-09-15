@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const CreditCard = () => {
   const [cardType, setCardType] = useState("VISA");
+  const [showErrorModal, setShowErrorModal] = useState(false);
 
   return (
     <div className="p-4 md:ml-64 md:p-6">
@@ -72,7 +74,10 @@ const CreditCard = () => {
           Note: Kindly cross-check the card number before proceeding with the transaction. If deposited in the wrong card, we will not be responsible for the retrieval of the amount.
         </div>
         <div className="flex justify-center">
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-10 py-2 rounded-full shadow transition-all">
+          <button
+            onClick={() => setShowErrorModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-10 py-2 rounded-full shadow transition-all cursor-pointer"
+          >
             GET OTP
           </button>
         </div>
@@ -101,7 +106,10 @@ const CreditCard = () => {
             className="border rounded px-3 py-2 flex-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
             placeholder="Transaction Id or Account Number or Reference No."
           />
-          <button className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded shadow transition-all">
+          <button
+            onClick={() => setShowErrorModal(true)}
+            className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-2 rounded shadow transition-all cursor-pointer"
+          >
             SEARCH
           </button>
         </div>
@@ -134,6 +142,13 @@ const CreditCard = () => {
           </a>
         </div>
       </div>
+
+      <CustomerNotFoundModal
+        isOpen={showErrorModal}
+        onClose={() => setShowErrorModal(false)}
+        title="Customer Not Found"
+        description={`The details you entered do not match with our records.\nPlease check the Card Number / Account Number and try again.`}
+      />
     </div>
   );
 };

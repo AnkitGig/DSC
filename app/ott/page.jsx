@@ -28,6 +28,7 @@ import {
   RiPlayCircleLine,
   RiShieldCheckFill,
 } from "react-icons/ri";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 // 8 Symmetrical OTT Providers with pure React SVG Icons & DSC Brand Blue Single Color
 const ottProviders = [
@@ -207,6 +208,7 @@ export default function OTTPage() {
   const [transactions, setTransactions] = useState(initialTransactions);
   const [receiptModal, setReceiptModal] = useState(null);
   const [copied, setCopied] = useState(false);
+  const [showCustomerNotFoundModal, setShowCustomerNotFoundModal] = useState(false);
 
   const currentOp = ottProviders.find((op) => op.id === selectedOperator) || ottProviders[0];
   const currentPlan = currentOp.plans.find((p) => p.id === selectedPlanId) || currentOp.plans[0];
@@ -230,32 +232,7 @@ export default function OTTPage() {
     setLoading(true);
     setTimeout(() => {
       setLoading(false);
-      const randomVoucher = `${currentOp.code}-${currentPlan.price}-${Math.floor(
-        1000 + Math.random() * 9000
-      )}-${Math.random().toString(36).substring(2, 4).toUpperCase()}`;
-
-      const newTxn = {
-        sr: transactions.length + 1,
-        txnId: `DSC-OTT-${Math.floor(100000 + Math.random() * 900000)}`,
-        operator: currentOp.name,
-        planName: currentPlan.name,
-        validity: currentPlan.validity,
-        mobile: customerMobile,
-        email: customerEmail || "-",
-        amount: currentPlan.price,
-        comm: currentPlan.comm,
-        voucher: randomVoucher,
-        date:
-          new Date().toLocaleDateString("en-GB") +
-          " " +
-          new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        status: "Success",
-      };
-
-      setTransactions([newTxn, ...transactions]);
-      setReceiptModal(newTxn);
-      setCustomerMobile("");
-      setCustomerEmail("");
+      setShowCustomerNotFoundModal(true);
     }, 800);
   };
 
@@ -737,74 +714,13 @@ export default function OTTPage() {
         </div>
       </div>
 
-      {/* RECEIPT MODAL */}
-      {receiptModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 border border-slate-200 text-center animate-in fade-in zoom-in duration-150">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200 flex items-center justify-center mx-auto mb-2.5 text-xl">
-              <FaCheckCircle />
-            </div>
-
-            <h3 className="text-base font-black text-slate-900">Subscription Activated</h3>
-            <p className="text-xs text-slate-500 font-mono">Txn ID: {receiptModal.txnId}</p>
-
-            {/* Voucher Box */}
-            <div className="my-3.5 bg-blue-50/70 border border-blue-200/80 rounded-2xl p-3 text-center">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">
-                Subscription Voucher Code
-              </span>
-              <div className="flex items-center justify-center gap-2 mt-1">
-                <span className="text-sm font-black font-mono text-[#1d68f6]">
-                  {receiptModal.voucher}
-                </span>
-                <button
-                  onClick={() => handleCopyCode(receiptModal.voucher)}
-                  className="p-1 text-slate-500 hover:text-blue-600 cursor-pointer"
-                  title="Copy"
-                >
-                  <FaCopy size={12} />
-                </button>
-              </div>
-              {copied && (
-                <span className="text-[10px] font-bold text-emerald-600 block mt-1">
-                  ✓ Copied to clipboard
-                </span>
-              )}
-            </div>
-
-            {/* Details */}
-            <div className="space-y-1.5 text-xs text-slate-600 mb-4 pb-2 border-b border-slate-100 text-left">
-              <div className="flex justify-between">
-                <span>Operator:</span>
-                <span className="font-bold text-slate-900">{receiptModal.operator}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Plan:</span>
-                <span className="font-semibold text-slate-800">{receiptModal.planName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Customer Mobile:</span>
-                <span className="font-mono font-bold text-slate-900">{receiptModal.mobile}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Retailer Margin:</span>
-                <span className="font-bold text-emerald-700">{receiptModal.comm}</span>
-              </div>
-              <div className="flex justify-between font-black text-slate-900 pt-1 border-t border-slate-100">
-                <span>Amount Paid:</span>
-                <span className="text-[#1d68f6]">₹{receiptModal.amount}</span>
-              </div>
-            </div>
-
-            <button
-              onClick={() => setReceiptModal(null)}
-              className="w-full py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition cursor-pointer"
-            >
-              Done & Close
-            </button>
-          </div>
-        </div>
-      )}
+      {/* MODAL: CUSTOMER NOT FOUND */}
+      <CustomerNotFoundModal
+        isOpen={showCustomerNotFoundModal}
+        onClose={() => setShowCustomerNotFoundModal(false)}
+        title="Customer Not Found"
+        description="The details you entered do not match with our records.&#10;Please check the Customer Mobile Number and try again."
+      />
     </div>
   );
 }

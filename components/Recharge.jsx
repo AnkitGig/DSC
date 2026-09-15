@@ -24,6 +24,7 @@ import {
   FaUsers,
 } from "react-icons/fa";
 import { MdSwapVert } from "react-icons/md";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 export default function Recharge() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function Recharge() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectedPlanForRecharge, setSelectedPlanForRecharge] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
-  const [rechargeSuccess, setRechargeSuccess] = useState(false);
+  const [showCustomerNotFoundModal, setShowCustomerNotFoundModal] = useState(false);
 
   const operators = [
     { id: "Jio", name: "Reliance Jio", logo: "Jio", color: "bg-[#0a2885] text-white", border: "border-[#0a2885]" },
@@ -284,56 +285,12 @@ export default function Recharge() {
     setShowConfirmModal(true);
   };
 
-  const handleExecuteRecharge = async () => {
-    const amountToDeduct = selectedPlanForRecharge?.amount || customAmount || 0;
-    if (amountToDeduct > 0) {
-      try {
-        const token =
-          typeof window !== "undefined"
-            ? localStorage.getItem("token") || sessionStorage.getItem("token")
-            : null;
-        const userId =
-          typeof window !== "undefined"
-            ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
-            : null;
-
-        if (token && userId) {
-          const res = await fetch("/api/wallet/deduct", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: token,
-            },
-            body: JSON.stringify({
-              userId,
-              amount: Number(amountToDeduct),
-              serviceName: "Mobile Recharge",
-              description: `Mobile Recharge of ₹${amountToDeduct} for ${mobileNumber || "Mobile"} (${selectedOperator})`,
-            }),
-          });
-          const data = await res.json();
-          if (!res.ok) {
-            alert(data.error || "Failed to process wallet deduction.");
-            return;
-          }
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(new Event("auth-change"));
-          }
-        }
-      } catch (err) {
-        console.error("Deduction error:", err);
-      }
-    }
-
+  const handleExecuteRecharge = () => {
     setIsProcessing(true);
     setTimeout(() => {
       setIsProcessing(false);
-      setRechargeSuccess(true);
-      setTimeout(() => {
-        setRechargeSuccess(false);
-        setShowConfirmModal(false);
-        setSelectedPlanForRecharge(null);
-      }, 1800);
+      setShowConfirmModal(false);
+      setShowCustomerNotFoundModal(true);
     }, 1200);
   };
 
@@ -819,94 +776,87 @@ export default function Recharge() {
           <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full text-slate-800 border border-slate-100 relative">
             <button
               onClick={() => setShowConfirmModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 cursor-pointer"
             >
               <FaTimes size={16} />
             </button>
 
-            {rechargeSuccess ? (
-              <div className="text-center py-4">
-                <div className="w-14 h-14 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-3 shadow-xs">
-                  <FaCheck size={24} />
+            <div>
+              <div className="text-center pb-4 border-b border-slate-100 mb-4">
+                <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2 shadow-2xs">
+                  <FaMobileAlt size={20} />
                 </div>
-                <h3 className="text-lg font-black text-slate-900 mb-1">
-                  Recharge Successful!
+                <h3 className="text-base font-black text-slate-900">
+                  Confirm Recharge
                 </h3>
-                <p className="text-xs text-slate-500 mb-2">
-                  ₹{selectedPlanForRecharge.amount} plan activated for{" "}
-                  {mobileNumber || "9876543210"}.
+                <p className="text-xs text-slate-400">
+                  {selectedOperator} • {selectedCircle}
                 </p>
-                <div className="text-xs font-mono font-bold text-blue-600">
-                  Txn ID: DSC-RC-{Math.floor(100000 + Math.random() * 900000)}
+              </div>
+
+              <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 mb-5">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Mobile Number:</span>
+                  <span className="font-bold text-slate-800 font-mono">
+                    {mobileNumber || "9876543210"}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Validity:</span>
+                  <span className="font-semibold text-slate-800">
+                    {selectedPlanForRecharge.validity}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Data & Benefits:</span>
+                  <span className="font-semibold text-slate-800">
+                    {selectedPlanForRecharge.data}
+                  </span>
+                </div>
+                <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-2 text-sm">
+                  <span>Recharge Amount:</span>
+                  <span className="text-blue-600 font-mono">
+                    ₹{selectedPlanForRecharge.amount}
+                  </span>
                 </div>
               </div>
-            ) : (
-              <div>
-                <div className="text-center pb-4 border-b border-slate-100 mb-4">
-                  <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-2 shadow-2xs">
-                    <FaMobileAlt size={20} />
-                  </div>
-                  <h3 className="text-base font-black text-slate-900">
-                    Confirm Recharge
-                  </h3>
-                  <p className="text-xs text-slate-400">
-                    {selectedOperator} • {selectedCircle}
-                  </p>
-                </div>
 
-                <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4 text-xs space-y-2 mb-5">
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Mobile Number:</span>
-                    <span className="font-bold text-slate-800 font-mono">
-                      {mobileNumber || "9876543210"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Validity:</span>
-                    <span className="font-semibold text-slate-800">
-                      {selectedPlanForRecharge.validity}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-slate-500">Data & Benefits:</span>
-                    <span className="font-semibold text-slate-800">
-                      {selectedPlanForRecharge.data}
-                    </span>
-                  </div>
-                  <div className="flex justify-between font-bold text-slate-900 border-t border-slate-200 pt-2 text-sm">
-                    <span>Recharge Amount:</span>
-                    <span className="text-blue-600 font-mono">
-                      ₹{selectedPlanForRecharge.amount}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmModal(false)}
-                    className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleExecuteRecharge}
-                    disabled={isProcessing}
-                    className="flex-1 py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
-                  >
-                    {isProcessing ? (
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <span>Pay ₹{selectedPlanForRecharge.amount}</span>
-                    )}
-                  </button>
-                </div>
+              <div className="flex gap-3">
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={handleExecuteRecharge}
+                  disabled={isProcessing}
+                  className="flex-1 py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
+                >
+                  {isProcessing ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <span>Pay ₹{selectedPlanForRecharge.amount}</span>
+                  )}
+                </button>
               </div>
-            )}
+            </div>
           </div>
         </div>
       )}
+
+      {/* ================= CUSTOMER NOT FOUND MODAL ================= */}
+      <CustomerNotFoundModal
+        isOpen={showCustomerNotFoundModal}
+        onClose={() => {
+          setShowCustomerNotFoundModal(false);
+          setSelectedPlanForRecharge(null);
+        }}
+        title="Customer Not Found"
+        description={`The details you entered do not match with our records.\nPlease check the Mobile Number / Operator and try again.`}
+      />
 
       {/* ================= ALL PLANS BROWSE MODAL ================= */}
       {showPlansModal && (
