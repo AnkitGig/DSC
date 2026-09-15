@@ -156,7 +156,7 @@ const Transactions = () => {
           if (data.transactions && data.transactions.length > 0) {
             const formatted = data.transactions.map((t) => ({
               ...t,
-              status: t.status || (t.type === "debit" ? "Pending" : "Success"),
+              status: t.type === "credit" ? "Success" : (t.status || "Pending"),
             }));
             setTransactions(formatted);
           }
@@ -481,10 +481,10 @@ const Transactions = () => {
                         })}
                       </td>
                       <td className="py-3 px-3 text-center">
-                        {t.status?.toLowerCase() === "pending" ? (
-                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                            <FaClock size={9} />
-                            <span>Pending</span>
+                        {t.type === "credit" || t.status?.toLowerCase() === "success" ? (
+                          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <FaCheckCircle size={9} />
+                            <span>Success</span>
                           </span>
                         ) : t.status?.toLowerCase() === "failed" ? (
                           <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-700 border border-rose-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
@@ -492,9 +492,9 @@ const Transactions = () => {
                             <span>Failed</span>
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                            <FaCheckCircle size={9} />
-                            <span>{t.status || "Success"}</span>
+                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <FaClock size={9} />
+                            <span>Pending</span>
                           </span>
                         )}
                       </td>
@@ -536,19 +536,19 @@ const Transactions = () => {
             <div className="text-center pb-3 border-b border-slate-100">
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                  receiptModal.status?.toLowerCase() === "pending"
-                    ? "bg-amber-100 text-amber-600"
+                  receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success"
+                    ? "bg-emerald-100 text-emerald-600"
                     : receiptModal.status?.toLowerCase() === "failed"
                     ? "bg-rose-100 text-rose-600"
-                    : "bg-emerald-100 text-emerald-600"
+                    : "bg-amber-100 text-amber-600"
                 }`}
               >
-                {receiptModal.status?.toLowerCase() === "pending" ? (
-                  <FaClock size={20} />
+                {receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success" ? (
+                  <FaCheckCircle size={20} />
                 ) : receiptModal.status?.toLowerCase() === "failed" ? (
                   <FaTimesCircle size={20} />
                 ) : (
-                  <FaCheckCircle size={20} />
+                  <FaClock size={20} />
                 )}
               </div>
               <h3 className="text-base font-bold text-slate-900">Transaction Receipt</h3>
@@ -562,14 +562,14 @@ const Transactions = () => {
                 <span>Status:</span>
                 <span
                   className={`font-bold ${
-                    receiptModal.status?.toLowerCase() === "pending"
-                      ? "text-amber-600"
+                    receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success"
+                      ? "text-emerald-600"
                       : receiptModal.status?.toLowerCase() === "failed"
                       ? "text-rose-600"
-                      : "text-emerald-600"
+                      : "text-amber-600"
                   }`}
                 >
-                  {receiptModal.status || "Success"}
+                  {receiptModal.type === "credit" ? "Success" : (receiptModal.status || "Pending")}
                 </span>
               </div>
               <div className="flex justify-between">

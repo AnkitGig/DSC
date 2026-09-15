@@ -25,6 +25,7 @@ import {
 } from "react-icons/fa";
 import { RiQrCodeLine, RiBankFill } from "react-icons/ri";
 import { MdOutlineFingerprint, MdSensors } from "react-icons/md";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const bankList = [
   { id: "sbi", name: "State Bank of India (SBI)", code: "SBIN", logoColor: "#0077c8" },
@@ -663,133 +664,78 @@ export default function Withdrawal() {
         </div>
       )}
 
-      {/* MODAL 3: BIOMETRIC SCAN & NOT FOUND MODAL */}
-      {showBiometricModal && (
+      {/* MODAL 3: BIOMETRIC SCAN POPUP */}
+      {showBiometricModal && scanningState !== "not_found" && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4 animate-in fade-in">
-          {scanningState !== "not_found" ? (
-            <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full border border-slate-100 text-center">
-              <div>
-                <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
-                  <h3 className="text-base font-black text-[#0a1e4d]">
-                    AePS Authentication
-                  </h3>
-                  <button
-                    onClick={() => {
-                      setShowBiometricModal(false);
-                      setScanningState("idle");
-                    }}
-                    className="text-slate-400 hover:text-slate-600 cursor-pointer"
-                  >
-                    <FaTimes size={16} />
-                  </button>
-                </div>
-
-                {/* Fingerprint Scanner Graphic */}
-                <div className="my-6 relative flex items-center justify-center">
-                  <div
-                    className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${
-                      scanningState === "scanning"
-                        ? "bg-blue-50 ring-4 ring-blue-500/30 text-blue-600 animate-pulse scale-105"
-                        : scanningState === "captured"
-                        ? "bg-emerald-50 ring-4 ring-emerald-500/30 text-emerald-600 scale-105"
-                        : "bg-slate-100 text-slate-400"
-                    }`}
-                  >
-                    <FaFingerprint size={56} />
-                  </div>
-                </div>
-
-                <div className="text-sm font-bold text-slate-800 mb-1">
-                  {scanningState === "idle" && "Place Finger on Biometric Scanner"}
-                  {scanningState === "scanning" && "Scanning Biometric Data..."}
-                  {scanningState === "captured" && "Fingerprint Captured! Verifying with UIDAI..."}
-                </div>
-                <p className="text-xs text-slate-400 mb-5">
-                  Device: Mantra MFS100 / Morpho Ready
-                </p>
-
-                {scanningState === "idle" ? (
-                  <button
-                    type="button"
-                    onClick={handleStartFingerprintScan}
-                    className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <FaFingerprint size={14} />
-                    <span>Capture Fingerprint</span>
-                  </button>
-                ) : (
-                  <div className="w-full py-3 bg-slate-100 text-slate-500 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
-                    <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                    <span>Processing...</span>
-                  </div>
-                )}
-              </div>
-            </div>
-          ) : (
-            /* CUSTOMER NOT FOUND MODAL CARD */
-            <div className="bg-[#fff8f8] rounded-3xl shadow-2xl p-6 sm:p-7 max-w-sm sm:max-w-md w-full border border-red-200 text-center relative animate-in zoom-in-95">
+          <div className="bg-white rounded-3xl shadow-2xl p-6 max-w-sm w-full border border-slate-100 text-center">
+            <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100">
+              <h3 className="text-base font-black text-[#0a1e4d]">
+                AePS Authentication
+              </h3>
               <button
                 onClick={() => {
                   setShowBiometricModal(false);
                   setScanningState("idle");
                 }}
-                className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition cursor-pointer"
-                title="Close"
+                className="text-slate-400 hover:text-slate-600 cursor-pointer"
               >
                 <FaTimes size={16} />
               </button>
+            </div>
 
-              {/* Red Circle Exclamation Icon */}
-              <div className="w-13 h-13 rounded-full border-[2.5px] border-red-500 text-red-500 flex items-center justify-center mx-auto mb-3">
-                <span className="text-2xl font-black leading-none -mt-0.5">!</span>
+            {/* Fingerprint Scanner Graphic */}
+            <div className="my-6 relative flex items-center justify-center">
+              <div
+                className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${
+                  scanningState === "scanning"
+                    ? "bg-blue-50 ring-4 ring-blue-500/30 text-blue-600 animate-pulse scale-105"
+                    : scanningState === "captured"
+                    ? "bg-emerald-50 ring-4 ring-emerald-500/30 text-emerald-600 scale-105"
+                    : "bg-slate-100 text-slate-400"
+                }`}
+              >
+                <FaFingerprint size={56} />
               </div>
+            </div>
 
-              {/* Title */}
-              <h3 className="text-lg sm:text-xl font-black text-[#0a1e4d] mb-1.5">
-                Customer Not Found
-              </h3>
+            <div className="text-sm font-bold text-slate-800 mb-1">
+              {scanningState === "idle" && "Place Finger on Biometric Scanner"}
+              {scanningState === "scanning" && "Scanning Biometric Data..."}
+              {scanningState === "captured" && "Fingerprint Captured! Verifying with UIDAI..."}
+            </div>
+            <p className="text-xs text-slate-400 mb-5">
+              Device: Mantra MFS100 / Morpho Ready
+            </p>
 
-              {/* Description */}
-              <p className="text-xs text-slate-600 leading-relaxed max-w-xs mx-auto mb-4 font-medium">
-                The details you entered do not match with our records.
-                <br />
-                Please check the Consumer Number / Account Number and try again.
-              </p>
-
-              {/* OR Divider */}
-              <div className="flex items-center justify-center my-4 text-xs font-bold text-slate-400 gap-3">
-                <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-                <span className="text-[11px] font-semibold text-slate-400 tracking-wider">OR</span>
-                <div className="h-[1px] bg-slate-200/80 flex-1"></div>
-              </div>
-
-              {/* Help Box */}
-              <div className="bg-[#fcebeb] border border-red-100 rounded-2xl p-3.5 flex items-center gap-3 text-left mb-5">
-                <div className="w-9 h-9 rounded-full bg-blue-50 text-[#1d68f6] flex items-center justify-center shrink-0">
-                  <FaHeadset size={18} />
-                </div>
-                <p className="text-xs text-slate-700 leading-snug">
-                  If you are still facing the issue, please contact our{" "}
-                  <span className="font-bold text-slate-900">Customer Team</span> for further assistance.
-                </p>
-              </div>
-
-              {/* Action Button */}
+            {scanningState === "idle" ? (
               <button
                 type="button"
-                onClick={() => {
-                  setShowBiometricModal(false);
-                  setScanningState("idle");
-                }}
-                className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm cursor-pointer"
+                onClick={handleStartFingerprintScan}
+                className="w-full py-3 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-xs cursor-pointer flex items-center justify-center gap-2"
               >
-                <FaPhoneAlt size={12} />
-                <span>Contact Customer Team</span>
+                <FaFingerprint size={14} />
+                <span>Capture Fingerprint</span>
               </button>
-            </div>
-          )}
+            ) : (
+              <div className="w-full py-3 bg-slate-100 text-slate-500 rounded-xl text-xs font-bold flex items-center justify-center gap-2">
+                <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                <span>Processing...</span>
+              </div>
+            )}
+          </div>
         </div>
       )}
+
+      {/* REUSABLE CUSTOMER NOT FOUND MODAL */}
+      <CustomerNotFoundModal
+        isOpen={showBiometricModal && scanningState === "not_found"}
+        onClose={() => {
+          setShowBiometricModal(false);
+          setScanningState("idle");
+        }}
+        title="Customer Not Found"
+        description={`The details you entered do not match with our records.\nPlease check the Consumer Number / Account Number and try again.`}
+      />
     </div>
   );
 }
