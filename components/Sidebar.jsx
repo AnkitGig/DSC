@@ -150,7 +150,7 @@ export default function Sidebar({ isOpen, onClose }) {
 
           {/* + Add Service Button */}
           <button
-            onClick={() => setShowAddServiceModal(true)}
+            // onClick={() => setShowAddServiceModal(true)}
             className="w-full py-2.5 px-4 bg-[#1d68f6] hover:bg-blue-600 text-white text-xs font-bold rounded-xl flex items-center justify-center gap-2 shadow-sm transition-all"
           >
             <FaPlus size={12} />

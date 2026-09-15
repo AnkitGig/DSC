@@ -234,8 +234,8 @@ export default function Withdrawal() {
                     type="button"
                     onClick={() => setAuthMethod("biometric")}
                     className={`py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer border ${authMethod === "biometric"
-                        ? "border-blue-500 bg-blue-50/70 text-blue-700 ring-2 ring-blue-500/20 shadow-xs font-black"
-                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                      ? "border-blue-500 bg-blue-50/70 text-blue-700 ring-2 ring-blue-500/20 shadow-xs font-black"
+                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                       }`}
                   >
                     <div
@@ -252,8 +252,8 @@ export default function Withdrawal() {
                     type="button"
                     onClick={() => setAuthMethod("iris")}
                     className={`py-3 px-4 rounded-xl text-xs font-bold flex items-center justify-center gap-2.5 transition-all cursor-pointer border ${authMethod === "iris"
-                        ? "border-blue-500 bg-blue-50/70 text-blue-700 ring-2 ring-blue-500/20 shadow-xs font-black"
-                        : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+                      ? "border-blue-500 bg-blue-50/70 text-blue-700 ring-2 ring-blue-500/20 shadow-xs font-black"
+                      : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                       }`}
                   >
                     <div
@@ -298,8 +298,8 @@ export default function Withdrawal() {
                           type="button"
                           onClick={() => handleAmountSelect(val)}
                           className={`px-3 py-2.5 rounded-xl text-xs font-bold transition cursor-pointer whitespace-nowrap ${isSelected
-                              ? "bg-blue-600 text-white shadow-xs"
-                              : "bg-[#eff6ff] hover:bg-blue-100/70 text-blue-600 border border-blue-100"
+                            ? "bg-blue-600 text-white shadow-xs"
+                            : "bg-[#eff6ff] hover:bg-blue-100/70 text-blue-600 border border-blue-100"
                             }`}
                         >
                           ₹{val.toLocaleString()}
@@ -405,78 +405,7 @@ export default function Withdrawal() {
 
         {/* ================= RIGHT COLUMN ================= */}
         <div className="lg:col-span-5 xl:col-span-5 space-y-6 min-w-0">
-          {/* CARD 1: ACCOUNT INFORMATION */}
-          <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
-            {/* Header */}
-            <div className="flex items-center justify-between pb-3 border-b border-slate-100 mb-4">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center text-xs shrink-0">
-                  <FaUniversity />
-                </div>
-                <h3 className="text-sm font-black text-[#0a1e4d]">
-                  Account Information
-                </h3>
-              </div>
 
-              <button
-                type="button"
-                onClick={() => setShowBankModal(true)}
-                className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-xl border border-blue-200 transition cursor-pointer"
-              >
-                Change Bank
-              </button>
-            </div>
-
-            {/* Account Profile Preview */}
-            <div className="flex items-center gap-3.5 mb-4">
-              <div className="w-11 h-11 rounded-full bg-[#0a2885] text-white flex items-center justify-center text-lg shadow-xs shrink-0">
-                <FaUniversity />
-              </div>
-              <div>
-                <div className="text-base font-black text-[#0a1e4d] font-mono tracking-wider">
-                  XXXX XXXX 4321
-                </div>
-                <div className="text-xs font-medium text-slate-400 mt-0.5">
-                  {selectedBank.name}
-                </div>
-              </div>
-            </div>
-
-            {/* Available Balance Box */}
-            <div className="bg-[#f8fafc] border border-slate-200/90 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xs">
-              <div>
-                <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                  Available Balance
-                </div>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <span className="text-xl font-black text-[#0a1e4d] font-mono">
-                    ₹ {balance.toLocaleString("en-IN", { minimumFractionDigits: 2 })}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={handleRefreshBalance}
-                    className={`text-slate-400 hover:text-blue-600 transition cursor-pointer p-1 ${isRefreshing ? "animate-spin text-blue-600" : ""
-                      }`}
-                    title="Refresh Balance"
-                  >
-                    <FaSyncAlt size={12} />
-                  </button>
-                </div>
-                <div className="text-[10px] font-medium text-slate-400 mt-0.5">
-                  Last updated: {lastUpdated}
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setShowStatementModal(true)}
-                className="text-xs font-bold text-blue-600 hover:text-blue-700 bg-white hover:bg-blue-50 border border-blue-200 px-3.5 py-2 rounded-xl transition shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer justify-center"
-              >
-                <span>View Statement</span>
-                <span>&rarr;</span>
-              </button>
-            </div>
-          </div>
 
           {/* CARD 2: IMPORTANT INFORMATION */}
           <div className="bg-white rounded-3xl p-5 sm:p-6 border border-slate-200/90 shadow-2xs">
@@ -586,8 +515,8 @@ export default function Withdrawal() {
                     setShowBankModal(false);
                   }}
                   className={`flex items-center justify-between p-3 rounded-xl border text-xs font-bold transition cursor-pointer ${selectedBank.id === b.id
-                      ? "bg-blue-50 border-blue-500 text-blue-700"
-                      : "bg-white border-slate-100 hover:bg-slate-50 text-slate-700"
+                    ? "bg-blue-50 border-blue-500 text-blue-700"
+                    : "bg-white border-slate-100 hover:bg-slate-50 text-slate-700"
                     }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -686,13 +615,12 @@ export default function Withdrawal() {
             {/* Fingerprint Scanner Graphic */}
             <div className="my-6 relative flex items-center justify-center">
               <div
-                className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${
-                  scanningState === "scanning"
+                className={`w-28 h-28 rounded-3xl flex items-center justify-center transition-all ${scanningState === "scanning"
                     ? "bg-blue-50 ring-4 ring-blue-500/30 text-blue-600 animate-pulse scale-105"
                     : scanningState === "captured"
-                    ? "bg-emerald-50 ring-4 ring-emerald-500/30 text-emerald-600 scale-105"
-                    : "bg-slate-100 text-slate-400"
-                }`}
+                      ? "bg-emerald-50 ring-4 ring-emerald-500/30 text-emerald-600 scale-105"
+                      : "bg-slate-100 text-slate-400"
+                  }`}
               >
                 <FaFingerprint size={56} />
               </div>

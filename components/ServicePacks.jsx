@@ -187,7 +187,7 @@ export default function ServicePacks() {
       desc: "Add money to wallet",
       icon: FaHandHoldingUsd,
       iconBg: "bg-amber-500",
-      route: "/withdrawal",
+      route: "/money-transfer",
       category: "Financial",
     },
     {
@@ -223,7 +223,7 @@ export default function ServicePacks() {
       desc: "Secure your future",
       icon: FaShieldAlt,
       iconBg: "bg-indigo-600",
-      route: "/recharge/mobile",
+      route: "/utility/lic-premium",
       category: "Financial",
     },
     {
@@ -232,7 +232,7 @@ export default function ServicePacks() {
       desc: "Recharge DTH",
       icon: FaSatelliteDish,
       iconBg: "bg-blue-600",
-      route: "/recharge/mobile",
+      route: "/recharge/dth",
       category: "Utility",
     },
     {
