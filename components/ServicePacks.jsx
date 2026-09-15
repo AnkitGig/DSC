@@ -286,9 +286,9 @@ export default function ServicePacks() {
                 ₹{" "}
                 {user?.wallet_balance !== undefined && user?.wallet_balance !== null
                   ? Number(user.wallet_balance).toLocaleString("en-IN", {
-                      minimumFractionDigits: 2,
-                      maximumFractionDigits: 2,
-                    })
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })
                   : "0.00"}
               </span>
             </div>
@@ -315,10 +315,7 @@ export default function ServicePacks() {
             </div>
             <div>
               <span className="text-xs font-semibold text-slate-400 block">
-                Today's Transactions
-              </span>
-              <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] block">
-                24
+                Transactions
               </span>
             </div>
           </div>
@@ -376,7 +373,7 @@ export default function ServicePacks() {
                 E-Gift Balance
               </span>
               <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] block">
-                ₹ 2,500
+                ₹ 0
               </span>
             </div>
           </div>

@@ -33,6 +33,7 @@ export async function PUT(request, { params }) {
       user: user._id,
       amount: amount,
       type: "credit",
+      status: "Success",
       description: "Funds added by admin",
     });
 

@@ -45,7 +45,7 @@ const defaultTransactions = [
     description: "Recharge 9876543210 (28 Days Plan)",
     amount: 299.0,
     closingBalance: 45271.03,
-    status: "Success",
+    status: "Pending",
   },
   {
     _id: "TXN-982885",
@@ -57,7 +57,7 @@ const defaultTransactions = [
     description: "Super Annual Subscription Voucher generated for 9123456780",
     amount: 899.0,
     closingBalance: 45570.03,
-    status: "Success",
+    status: "Pending",
   },
   {
     _id: "TXN-982840",
@@ -81,7 +81,7 @@ const defaultTransactions = [
     description: "IMPS Payout to SBI A/C ...8219 (UTR: 425488192019)",
     amount: 15000.0,
     closingBalance: 36469.03,
-    status: "Success",
+    status: "Pending",
   },
   {
     _id: "TXN-982750",
@@ -93,7 +93,7 @@ const defaultTransactions = [
     description: "Aadhaar Address Verification Service charge",
     amount: 50.0,
     closingBalance: 51469.03,
-    status: "Success",
+    status: "Pending",
   },
   {
     _id: "TXN-982680",
@@ -105,7 +105,7 @@ const defaultTransactions = [
     description: "DTH Smartcard Recharge 3004829102",
     amount: 450.0,
     closingBalance: 51519.03,
-    status: "Success",
+    status: "Pending",
   },
   {
     _id: "TXN-982610",
@@ -154,7 +154,11 @@ const Transactions = () => {
         if (res.ok) {
           const data = await res.json();
           if (data.transactions && data.transactions.length > 0) {
-            setTransactions(data.transactions);
+            const formatted = data.transactions.map((t) => ({
+              ...t,
+              status: t.status || (t.type === "debit" ? "Pending" : "Success"),
+            }));
+            setTransactions(formatted);
           }
         }
       } catch (err) {
@@ -477,10 +481,22 @@ const Transactions = () => {
                         })}
                       </td>
                       <td className="py-3 px-3 text-center">
-                        <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
-                          <FaCheckCircle size={9} />
-                          <span>{t.status || "Success"}</span>
-                        </span>
+                        {t.status?.toLowerCase() === "pending" ? (
+                          <span className="inline-flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <FaClock size={9} />
+                            <span>Pending</span>
+                          </span>
+                        ) : t.status?.toLowerCase() === "failed" ? (
+                          <span className="inline-flex items-center gap-1 bg-rose-50 text-rose-700 border border-rose-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <FaTimesCircle size={9} />
+                            <span>Failed</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-300 px-2 py-0.5 rounded-full text-[10px] font-bold">
+                            <FaCheckCircle size={9} />
+                            <span>{t.status || "Success"}</span>
+                          </span>
+                        )}
                       </td>
                       <td className="py-3 px-3 text-center">
                         <button
@@ -518,8 +534,22 @@ const Transactions = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 backdrop-blur-xs p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 border border-slate-200">
             <div className="text-center pb-3 border-b border-slate-100">
-              <div className="w-10 h-10 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center mx-auto mb-2">
-                <FaCheckCircle size={20} />
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
+                  receiptModal.status?.toLowerCase() === "pending"
+                    ? "bg-amber-100 text-amber-600"
+                    : receiptModal.status?.toLowerCase() === "failed"
+                    ? "bg-rose-100 text-rose-600"
+                    : "bg-emerald-100 text-emerald-600"
+                }`}
+              >
+                {receiptModal.status?.toLowerCase() === "pending" ? (
+                  <FaClock size={20} />
+                ) : receiptModal.status?.toLowerCase() === "failed" ? (
+                  <FaTimesCircle size={20} />
+                ) : (
+                  <FaCheckCircle size={20} />
+                )}
               </div>
               <h3 className="text-base font-bold text-slate-900">Transaction Receipt</h3>
               <p className="text-xs text-slate-500 font-mono">
@@ -528,6 +558,20 @@ const Transactions = () => {
             </div>
 
             <div className="space-y-2 text-xs text-slate-600 my-4 pb-2 border-b border-slate-100">
+              <div className="flex justify-between">
+                <span>Status:</span>
+                <span
+                  className={`font-bold ${
+                    receiptModal.status?.toLowerCase() === "pending"
+                      ? "text-amber-600"
+                      : receiptModal.status?.toLowerCase() === "failed"
+                      ? "text-rose-600"
+                      : "text-emerald-600"
+                  }`}
+                >
+                  {receiptModal.status || "Success"}
+                </span>
+              </div>
               <div className="flex justify-between">
                 <span>Date & Time:</span>
                 <span className="font-semibold text-slate-800">

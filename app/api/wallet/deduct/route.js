@@ -51,6 +51,7 @@ export async function POST(request) {
       user: user._id,
       amount: numAmount,
       type: "debit",
+      status: "Pending",
       description: description || serviceName || "Service Fee Deduction",
     });
 
