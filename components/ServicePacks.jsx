@@ -196,7 +196,7 @@ export default function ServicePacks() {
       desc: "Apply for PAN",
       icon: FaIdCard,
       iconBg: "bg-blue-500",
-      route: "/aadhaar",
+      route: "/aadhaar?tab=pan",
       category: "Government",
     },
     {
@@ -205,7 +205,7 @@ export default function ServicePacks() {
       desc: "Aadhaar update & more",
       icon: FaFingerprint,
       iconBg: "bg-pink-500",
-      route: "/aadhaar",
+      route: "/aadhaar?tab=aadhaar",
       category: "Government",
     },
     {

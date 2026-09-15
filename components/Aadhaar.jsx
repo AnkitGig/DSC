@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   FaIdCard,
   FaMobileAlt,
@@ -35,9 +36,11 @@ import {
   FaChevronDown,
   FaCloudUploadAlt,
   FaPhoneAlt,
+  FaEdit,
+  FaCreditCard,
 } from "react-icons/fa";
 import { MdSensors, MdOutlineFingerprint, MdVerifiedUser } from "react-icons/md";
-import { RiQrCodeLine, RiShieldCheckFill } from "react-icons/ri";
+import { RiQrCodeLine, RiShieldCheckFill, RiGovernmentLine } from "react-icons/ri";
 
 const biometricDevicesList = [
   { id: "morpho_1300", name: "Morpho MSO 1300 E3", category: "fingerprint", badge: "UIDAI L0", desc: "USB RD v3.0.1 (Optical)" },
@@ -51,10 +54,12 @@ const biometricDevicesList = [
   { id: "iritech_dual", name: "IriTech IriShield", category: "iris", badge: "Dual Iris", desc: "UIDAI Certified Iris Camera" },
 ];
 
-const aadhaarServicesList = [
+const governmentServicesList = [
+  // ================= AADHAAR SERVICES =================
   {
     id: "name",
-    category: "demographic",
+    category: "aadhaar",
+    subCategory: "demographic",
     title: "Name Updation",
     hindiTitle: "नाम संशोधन",
     description: "Update or correct spelling in legal name with valid Proof of Identity (POI).",
@@ -68,7 +73,8 @@ const aadhaarServicesList = [
   },
   {
     id: "mobile",
-    category: "demographic",
+    category: "aadhaar",
+    subCategory: "demographic",
     title: "Mobile Number Updation",
     hindiTitle: "मोबाइल नंबर लिंक / अपडेट",
     description: "Link or update active mobile number for receiving UIDAI OTPs and mAadhaar access.",
@@ -82,7 +88,8 @@ const aadhaarServicesList = [
   },
   {
     id: "address",
-    category: "demographic",
+    category: "aadhaar",
+    subCategory: "demographic",
     title: "Address Updation",
     hindiTitle: "पता संशोधन",
     description: "Change permanent or current residential address with valid Proof of Address (POA).",
@@ -96,7 +103,8 @@ const aadhaarServicesList = [
   },
   {
     id: "dob",
-    category: "demographic",
+    category: "aadhaar",
+    subCategory: "demographic",
     title: "Date of Birth Updation",
     hindiTitle: "जन्म तिथि संशोधन",
     description: "Update or correct Date of Birth with valid Birth Certificate, SSLC Marksheet or Passport.",
@@ -110,7 +118,8 @@ const aadhaarServicesList = [
   },
   {
     id: "photo_biometric",
-    category: "biometric",
+    category: "aadhaar",
+    subCategory: "biometric",
     title: "Photo & Biometrics Update",
     hindiTitle: "फोटो एवं बायोमेट्रिक अपडेट",
     description: "Update facial photo, 10 fingerprints and dual iris scan for adults or mandatory 5/15 age updates.",
@@ -124,7 +133,8 @@ const aadhaarServicesList = [
   },
   {
     id: "blue_card",
-    category: "special",
+    category: "aadhaar",
+    subCategory: "special",
     title: "Bal Aadhaar (Blue Card)",
     hindiTitle: "बाल आधार (नीला कार्ड)",
     description: "Apply for Blue Aadhaar Card for newborns and children below 5 years (No biometric required).",
@@ -138,7 +148,8 @@ const aadhaarServicesList = [
   },
   {
     id: "pvc_card",
-    category: "cards",
+    category: "aadhaar",
+    subCategory: "cards",
     title: "Order Aadhaar PVC Card",
     hindiTitle: "पीवीसी आधार कार्ड ऑर्डर",
     description: "Order high-security, weather-resistant plastic PVC Smart Aadhaar card with hologram & QR code.",
@@ -152,7 +163,8 @@ const aadhaarServicesList = [
   },
   {
     id: "pan_link",
-    category: "verification",
+    category: "aadhaar",
+    subCategory: "verification",
     title: "Aadhaar - PAN Link Status",
     hindiTitle: "आधार-पैन लिंक स्थिति",
     description: "Check instant linking status between Aadhaar and PAN card for income tax compliance.",
@@ -163,6 +175,68 @@ const aadhaarServicesList = [
     fee: "₹0.00 (Free)",
     sla: "Instant",
     requiredDocs: ["12-Digit Aadhaar + 10-Digit PAN Number"],
+  },
+
+  // ================= PAN CARD SERVICES (NEW SECTION) =================
+  {
+    id: "pan_new",
+    category: "pan",
+    subCategory: "pan_services",
+    title: "New PAN Card (Form 49A)",
+    hindiTitle: "नया पैन कार्ड (New Apply)",
+    description: "Apply for fresh PAN Card for Indian citizens with Aadhaar e-KYC paperless instant processing.",
+    icon: FaIdCard,
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
+    badge: "Form 49A • e-KYC",
+    badgeColor: "bg-emerald-50 text-emerald-700 border-emerald-200/80",
+    fee: "₹107.00",
+    sla: "2-4 Days",
+    requiredDocs: ["Aadhaar Card (For e-KYC)", "Proof of Identity", "Proof of Address"],
+  },
+  {
+    id: "pan_correction",
+    category: "pan",
+    subCategory: "pan_services",
+    title: "PAN Card Correction",
+    hindiTitle: "पैन संशोधन (Correction)",
+    description: "Update or correct Name, Father's Name, DOB, Photo, Signature or Address in existing PAN.",
+    icon: FaEdit,
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
+    badge: "Correction CSF",
+    badgeColor: "bg-blue-50 text-blue-700 border-blue-200/80",
+    fee: "₹107.00",
+    sla: "3-5 Days",
+    requiredDocs: ["Existing PAN Copy", "Proof of Identity", "Proof of Corrected Data"],
+  },
+  {
+    id: "pan_minor",
+    category: "pan",
+    subCategory: "pan_services",
+    title: "Minor PAN Card",
+    hindiTitle: "नाबालिग पैन कार्ड (Minor Pan)",
+    description: "Apply for Minor PAN Card for children below 18 years with parent / guardian representative proof.",
+    icon: FaBaby,
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
+    badge: "Age < 18 Yrs",
+    badgeColor: "bg-purple-50 text-purple-700 border-purple-200/80",
+    fee: "₹107.00",
+    sla: "4-7 Days",
+    requiredDocs: ["Minor Birth Certificate / Aadhaar", "Guardian Aadhaar Card", "Guardian Signature"],
+  },
+  {
+    id: "pan_pvc",
+    category: "pan",
+    subCategory: "pan_services",
+    title: "PVC Online (Reprint PAN)",
+    hindiTitle: "पीवीसी पैन कार्ड ऑनलाइन (PVC Online)",
+    description: "Order high-durability plastic PVC Smart PAN card online with QR code & security hologram.",
+    icon: FaCreditCard,
+    iconColor: "text-[#1d68f6] bg-blue-50/80 border-blue-100/90",
+    badge: "Speed Post Delivery",
+    badgeColor: "bg-amber-50 text-amber-700 border-amber-200/80",
+    fee: "₹50.00",
+    sla: "5-7 Days Delivery",
+    requiredDocs: ["10-Digit PAN Number", "Aadhaar Card / Registered Mobile"],
   },
 ];
 
@@ -179,42 +253,57 @@ const mockRecentRequests = [
   },
   {
     id: "URN-5829104819",
-    service: "Address Updation",
+    service: "New PAN Card (Form 49A)",
     resident: "Sunita Devi",
     aadhaar: "XXXX XXXX 1048",
     date: "Today, 09:30 AM",
     status: "Processing",
-    urn: "0000/29401/58291",
-    fee: "₹50.00",
+    urn: "PAN/29401/58291",
+    fee: "₹107.00",
   },
   {
     id: "URN-7192840192",
-    service: "Bal Aadhaar (Blue Card)",
-    resident: "Aarav Singh (Child)",
-    aadhaar: "New Enrolment",
+    service: "Minor PAN Card",
+    resident: "Aarav Singh (Minor)",
+    aadhaar: "Guardian: V. Singh",
     date: "Yesterday, 04:15 PM",
     status: "Generated",
     urn: "1092/49102/71928",
-    fee: "₹0.00",
+    fee: "₹107.00",
   },
   {
     id: "URN-3829104918",
-    service: "Photo & Biometrics",
+    service: "PVC PAN Card Online",
     resident: "Vikram Malhotra",
-    aadhaar: "XXXX XXXX 4918",
+    aadhaar: "PAN: ABCPM4918K",
     date: "11 Sep 2026",
     status: "Success",
-    urn: "0000/84920/38291",
-    fee: "₹100.00",
+    urn: "PVC/84920/38291",
+    fee: "₹50.00",
   },
 ];
 
-export default function Aadhaar() {
-  const [activeTab, setActiveTab] = useState("all");
+export default function Aadhaar({ initialTab = null }) {
+  const searchParams = useSearchParams();
+  const tabParam = searchParams ? searchParams.get("tab") : null;
+  const initialCategory = initialTab || (tabParam === "pan" ? "pan" : tabParam === "aadhaar" ? "aadhaar" : "all");
+
+  const [selectedCategoryTab, setSelectedCategoryTab] = useState(initialCategory); // 'all' | 'aadhaar' | 'pan'
   const [searchQuery, setSearchQuery] = useState("");
 
+  useEffect(() => {
+    const active = initialTab || (searchParams ? searchParams.get("tab") : null);
+    if (active === "pan") {
+      setSelectedCategoryTab("pan");
+    } else if (active === "aadhaar") {
+      setSelectedCategoryTab("aadhaar");
+    } else if (active === "all") {
+      setSelectedCategoryTab("all");
+    }
+  }, [searchParams, initialTab]);
+
   // Status check bar state
-  const [lookupType, setLookupType] = useState("aadhaar"); // 'aadhaar' | 'urn'
+  const [lookupType, setLookupType] = useState("aadhaar"); // 'aadhaar' | 'urn' | 'pan'
   const [lookupValue, setLookupValue] = useState("");
   const [showStatusModal, setShowStatusModal] = useState(false);
   const [statusResult, setStatusResult] = useState(null);
@@ -225,24 +314,11 @@ export default function Aadhaar() {
   const [selectedDevice, setSelectedDevice] = useState("Morpho MSO 1300 E3");
   const [deviceTestState, setDeviceTestState] = useState("idle"); // 'idle' | 'scanning' | 'success'
   const [deviceQuality, setDeviceQuality] = useState(0);
-  const [deviceCategoryFilter, setDeviceCategoryFilter] = useState("all");
-  const [isDeviceDropdownOpen, setIsDeviceDropdownOpen] = useState(false);
-  const deviceDropdownRef = useRef(null);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (deviceDropdownRef.current && !deviceDropdownRef.current.contains(event.target)) {
-        setIsDeviceDropdownOpen(false);
-      }
-    }
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   // Application Modal state
   const [selectedService, setSelectedService] = useState(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
-  const [applyStep, setApplyStep] = useState(1); // 1: Resident Info, 2: Update Data, 3: Biometric Auth, 4: Stamped Receipt
+  const [applyStep, setApplyStep] = useState(1); // 1: Info, 2: Specific Data, 3: Auth, 4: Receipt
   const [formData, setFormData] = useState({
     aadhaarNumber: "",
     residentName: "",
@@ -255,25 +331,32 @@ export default function Aadhaar() {
     district: "",
     state: "",
     panNumber: "",
+    fatherName: "",
+    motherName: "",
+    gender: "Male",
     childName: "",
     childDob: "",
     parentAadhaar: "",
+    guardianName: "",
+    guardianRelation: "Father",
+    correctionField: "Name",
+    correctedValue: "",
     selectedProof: "",
     documentFile: null,
     documentName: "",
   });
   const [scanProgress, setScanProgress] = useState(0);
   const [isScanning, setIsScanning] = useState(false);
-  const [applicationReceipt, setApplicationReceipt] = useState(null);
 
   // Filter services
-  const filteredServices = aadhaarServicesList.filter((service) => {
-    const matchesTab = activeTab === "all" || service.category === activeTab;
+  const filteredServices = governmentServicesList.filter((service) => {
+    const matchesCategory =
+      selectedCategoryTab === "all" || service.category === selectedCategoryTab;
     const matchesSearch =
       service.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      service.hindiTitle.includes(searchQuery) ||
+      service.hindiTitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
       service.description.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
+    return matchesCategory && matchesSearch;
   });
 
   const handleOpenService = (service) => {
@@ -291,9 +374,16 @@ export default function Aadhaar() {
       district: "",
       state: "",
       panNumber: "",
+      fatherName: "",
+      motherName: "",
+      gender: "Male",
       childName: "",
       childDob: "",
       parentAadhaar: "",
+      guardianName: "",
+      guardianRelation: "Father",
+      correctionField: "Name",
+      correctedValue: "",
       selectedProof: service?.requiredDocs?.[0] || "",
       documentFile: null,
       documentName: "",
@@ -330,8 +420,8 @@ export default function Aadhaar() {
             body: JSON.stringify({
               userId,
               amount: feeAmount,
-              serviceName: selectedService?.title || "Aadhaar Service",
-              description: `Fee deducted for ${selectedService?.title || "Aadhaar Service"}`,
+              serviceName: selectedService?.title || "Government Service",
+              description: `Fee deducted for ${selectedService?.title || "Government Service"}`,
             }),
           });
           const data = await res.json();
@@ -366,7 +456,7 @@ export default function Aadhaar() {
   const handleStatusCheck = (e) => {
     e.preventDefault();
     if (!lookupValue.trim()) {
-      alert("Please enter a valid Aadhaar number or Update Request Number (URN)");
+      alert("Please enter a valid Aadhaar number, PAN number, or Request Number (URN)");
       return;
     }
     setIsCheckingStatus(true);
@@ -375,7 +465,7 @@ export default function Aadhaar() {
       setStatusResult({
         query: lookupValue,
         type: lookupType,
-        validity: "Active & Valid Aadhaar",
+        validity: "Active & Valid Record",
         residentName: "Rajesh K*** S*****",
         gender: "Male",
         ageBand: "30 - 40 Years",
@@ -383,7 +473,7 @@ export default function Aadhaar() {
         mobileLinked: "Yes (Ending in *******3210)",
         emailLinked: "Yes (r******@gmail.com)",
         lastUpdateDate: "12 Aug 2026",
-        statusMessage: "Your Aadhaar generation/update request is processed successfully.",
+        statusMessage: "Your generation / update request has been processed successfully.",
       });
       setShowStatusModal(true);
     }, 600);
@@ -408,18 +498,15 @@ export default function Aadhaar() {
     <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans pb-16">
       {/* 1. TOP HEADER & PROMO BANNER */}
       <div className="max-w-7xl mx-auto mb-5">
-
-        {/* Header Content Row */}
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-          {/* Left Title & Subtitle */}
           <div>
             <div className="flex items-center gap-2.5">
               <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
-                Aadhaar Services
+                Government & Identity Services
               </h1>
             </div>
             <p className="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
-              Official UIDAI Aadhaar Update, Demographic Correction & Biometric Portal
+              Official UIDAI Aadhaar & NSDL / UTIITSL PAN Card Processing Portal
             </p>
           </div>
 
@@ -431,7 +518,7 @@ export default function Aadhaar() {
               </div>
               <div>
                 <h3 className="text-sm sm:text-base font-black text-[#0a1e4d] leading-tight">
-                  Official UIDAI Seva Kendra
+                  Aadhaar & PAN Seva Kendra
                 </h3>
                 <p className="text-[11px] font-semibold text-blue-600 mt-0.5 tracking-wide">
                   Instant Sync &nbsp;|&nbsp; 100% Certified &nbsp;|&nbsp; 256-Bit Secure
@@ -445,27 +532,68 @@ export default function Aadhaar() {
 
       {/* 2. MAIN LAYOUT */}
       <div className="max-w-7xl mx-auto space-y-5">
-        {/* TOP ROW: 8 Service Cards (Left 8 Cols) & Recent Applications (Right 4 Cols) */}
+        
+        {/* TOP ROW: Service Cards (Left 8 Cols) & Recent Applications (Right 4 Cols) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Service Cards Grid (8 Cols) */}
-          <div className="lg:col-span-8">
-            <div className="flex items-center justify-between mb-3">
-              <h2 className="text-sm sm:text-base font-bold text-[#0a1e4d]">
-                Select Aadhaar Service
-              </h2>
-              <div className="relative w-48 sm:w-64">
+          <div className="lg:col-span-8 space-y-3.5">
+            
+            {/* CATEGORY TABS SWITCHER: All / Aadhaar / PAN Section */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200/90 shadow-2xs">
+              <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryTab("all")}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                    selectedCategoryTab === "all"
+                      ? "bg-[#1d68f6] text-white shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  }`}
+                >
+                  All Services ({governmentServicesList.length})
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryTab("aadhaar")}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                    selectedCategoryTab === "aadhaar"
+                      ? "bg-[#1d68f6] text-white shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  }`}
+                >
+                  <FaFingerprint size={12} />
+                  <span>Aadhaar Services (8)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedCategoryTab("pan")}
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
+                    selectedCategoryTab === "pan"
+                      ? "bg-[#1d68f6] text-white shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  }`}
+                >
+                  <FaCreditCard size={12} />
+                  <span>PAN Section (4)</span>
+                </button>
+              </div>
+
+              {/* Search Box */}
+              <div className="relative min-w-[200px]">
                 <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs" />
                 <input
                   type="text"
                   placeholder="Search service..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full bg-white border border-slate-200/90 rounded-xl pl-8 pr-3 py-1.5 text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#1d68f6] shadow-2xs transition"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-8 pr-3 py-1.5 text-xs font-semibold text-slate-700 placeholder-slate-400 focus:outline-none focus:border-[#1d68f6] focus:bg-white shadow-2xs transition"
                 />
               </div>
             </div>
 
-            {/* 8 Cards Grid (2 rows x 4 cols on desktop) */}
+            {/* Service Cards Grid (2 rows x 4 cols on desktop) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
               {filteredServices.map((service) => {
                 const IconComponent = service.icon;
@@ -473,7 +601,7 @@ export default function Aadhaar() {
                   <div
                     key={service.id}
                     onClick={() => handleOpenService(service)}
-                    className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-[#1d68f6] hover:ring-2 hover:ring-blue-500/15 transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[175px] justify-between group hover:-translate-y-0.5"
+                    className="bg-white rounded-2xl p-4 sm:p-5 border border-slate-200/90 shadow-2xs hover:shadow-md hover:border-[#1d68f6] hover:ring-2 hover:ring-blue-500/15 transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[185px] justify-between group hover:-translate-y-0.5"
                   >
                     {/* Circular Icon Container */}
                     <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2.5 transition-all duration-200 border bg-blue-50/80 text-[#1d68f6] border-blue-100/90 group-hover:bg-[#1d68f6] group-hover:text-white group-hover:border-[#1d68f6] group-hover:scale-110 shadow-2xs">
@@ -534,19 +662,20 @@ export default function Aadhaar() {
                           <p className="text-[10px] text-slate-400 font-medium">{item.service}</p>
                         </div>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${item.status === "Success"
-                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                            : item.status === "Processing"
+                          className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${
+                            item.status === "Success"
+                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                              : item.status === "Processing"
                               ? "bg-amber-50 text-amber-700 border border-amber-200"
                               : "bg-blue-50 text-blue-700 border border-blue-200"
-                            }`}
+                          }`}
                         >
                           {item.status}
                         </span>
                       </div>
 
                       <div className="flex items-center justify-between text-[10px] text-slate-500 pt-1.5 border-t border-slate-200/60 font-mono">
-                        <span>URN: {item.urn}</span>
+                        <span>Ref: {item.urn}</span>
                         <span className="font-bold text-slate-700">{item.fee}</span>
                       </div>
                     </div>
@@ -563,13 +692,13 @@ export default function Aadhaar() {
             <div className="space-y-1.5">
               <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100/80 text-[#1d68f6] text-[10px] font-bold border border-blue-200/80">
                 <MdVerifiedUser className="text-xs" />
-                <span>UIDAI Certified RD Service Compatible</span>
+                <span>UIDAI & NSDL Certified RD Service Compatible</span>
               </div>
               <h4 className="text-base sm:text-lg font-black text-[#0a1e4d] leading-tight">
                 Certified 5-Finger & Dual-Iris Biometric Hardware
               </h4>
               <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                Works seamlessly with Morpho, Mantra MFS100, Startek FM220, SecuGen & Iris scanners. Auto-detects driver status instantly.
+                Works seamlessly with Morpho, Mantra MFS100, Startek FM220, SecuGen & Iris scanners for Aadhaar eKYC & PAN verification.
               </p>
             </div>
 
@@ -591,8 +720,8 @@ export default function Aadhaar() {
             <div className="w-10 h-10 rounded-full bg-blue-50 text-[#1d68f6] border border-blue-100/60 flex items-center justify-center mx-auto mb-2 text-base">
               <FaBolt />
             </div>
-            <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Instant URN</h5>
-            <p className="text-[10px] text-slate-400 font-medium">Real-time sync slip</p>
+            <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Instant Sync</h5>
+            <p className="text-[10px] text-slate-400 font-medium">Real-time URN / Ref ID</p>
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
@@ -600,7 +729,7 @@ export default function Aadhaar() {
               <FaShieldAlt />
             </div>
             <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">256-Bit Secure</h5>
-            <p className="text-[10px] text-slate-400 font-medium">UIDAI certified vault</p>
+            <p className="text-[10px] text-slate-400 font-medium">Govt authorized vault</p>
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
@@ -608,7 +737,7 @@ export default function Aadhaar() {
               <FaIdCard />
             </div>
             <h5 className="font-extrabold text-[#0a1e4d] text-xs mb-0.5">Govt Rates</h5>
-            <p className="text-[10px] text-slate-400 font-medium">Zero extra surcharges</p>
+            <p className="text-[10px] text-slate-400 font-medium">Official NSDL & UIDAI fee</p>
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-4 text-center shadow-2xs">
@@ -644,7 +773,7 @@ export default function Aadhaar() {
                     {selectedService.title}
                   </h3>
                   <p className="text-xs text-slate-400 font-medium">
-                    UIDAI Form • Govt Fee: {selectedService.fee}
+                    {selectedService.category === "pan" ? "NSDL / UTIITSL Portal" : "UIDAI Portal"} • Govt Fee: {selectedService.fee}
                   </p>
                 </div>
               </div>
@@ -660,24 +789,26 @@ export default function Aadhaar() {
             {applyStep < 4 && (
               <div className="flex items-center justify-between mb-6 px-2">
                 {[
-                  { step: 1, label: "Resident Details" },
+                  { step: 1, label: selectedService.category === "pan" ? "Applicant Details" : "Resident Details" },
                   { step: 2, label: "Update Info" },
-                  { step: 3, label: "Biometric Auth" },
+                  { step: 3, label: "Auth / e-KYC" },
                 ].map((s) => (
                   <div key={s.step} className="flex items-center gap-2">
                     <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${applyStep === s.step
-                        ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
-                        : applyStep > s.step
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
+                        applyStep === s.step
+                          ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
+                          : applyStep > s.step
                           ? "bg-emerald-500 text-white"
                           : "bg-slate-100 text-slate-400"
-                        }`}
+                      }`}
                     >
                       {applyStep > s.step ? <FaCheck className="text-[10px]" /> : s.step}
                     </div>
                     <span
-                      className={`text-xs font-bold hidden sm:inline ${applyStep === s.step ? "text-slate-900" : "text-slate-400"
-                        }`}
+                      className={`text-xs font-bold hidden sm:inline ${
+                        applyStep === s.step ? "text-slate-900" : "text-slate-400"
+                      }`}
                     >
                       {s.label}
                     </span>
@@ -686,34 +817,54 @@ export default function Aadhaar() {
               </div>
             )}
 
-            {/* Step 1: Resident Details */}
+            {/* Step 1: Resident / Applicant Details */}
             {applyStep === 1 && (
               <div className="space-y-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                    12-Digit Aadhaar Number <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      placeholder="5482 9102 4321"
-                      value={formData.aadhaarNumber}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          aadhaarNumber: handleAadhaarFormat(e.target.value),
-                        })
-                      }
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono font-bold text-slate-800 tracking-wider focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                    />
-                    <FaIdCard className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-base" />
+                {/* Aadhaar or PAN field */}
+                {selectedService.id === "pan_correction" || selectedService.id === "pan_pvc" ? (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      10-Digit Existing PAN Number <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        maxLength={10}
+                        placeholder="ABCDE1234F"
+                        value={formData.panNumber}
+                        onChange={(e) => setFormData({ ...formData, panNumber: e.target.value.toUpperCase() })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono font-bold text-slate-800 tracking-wider uppercase focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      />
+                      <FaCreditCard className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-base" />
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      12-Digit Aadhaar Number (For e-KYC) <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="text"
+                        placeholder="5482 9102 4321"
+                        value={formData.aadhaarNumber}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            aadhaarNumber: handleAadhaarFormat(e.target.value),
+                          })
+                        }
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-mono font-bold text-slate-800 tracking-wider focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      />
+                      <FaIdCard className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-base" />
+                    </div>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                      Resident Full Name (As in Aadhaar) <span className="text-red-500">*</span>
+                      Full Name (As in ID Proof) <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
@@ -734,7 +885,7 @@ export default function Aadhaar() {
                       placeholder="9876543210"
                       value={formData.mobileNumber}
                       onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition font-mono"
                     />
                   </div>
                 </div>
@@ -761,12 +912,17 @@ export default function Aadhaar() {
                   <button
                     type="button"
                     onClick={() => {
-                      if (!formData.aadhaarNumber.replace(/\s/g, "") || formData.aadhaarNumber.replace(/\s/g, "").length !== 12) {
+                      if (
+                        selectedService.id !== "pan_correction" &&
+                        selectedService.id !== "pan_pvc" &&
+                        (!formData.aadhaarNumber.replace(/\s/g, "") ||
+                          formData.aadhaarNumber.replace(/\s/g, "").length !== 12)
+                      ) {
                         alert("Please enter a valid 12-digit Aadhaar Number");
                         return;
                       }
                       if (!formData.residentName.trim()) {
-                        alert("Please enter Resident Name");
+                        alert("Please enter Resident / Applicant Name");
                         return;
                       }
                       setApplyStep(2);
@@ -783,6 +939,176 @@ export default function Aadhaar() {
             {/* Step 2: Specific Update Fields */}
             {applyStep === 2 && (
               <div className="space-y-4">
+                {/* NEW PAN CARD (FORM 49A) */}
+                {selectedService.id === "pan_new" && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                          Father's Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="Father's full name"
+                          value={formData.fatherName}
+                          onChange={(e) => setFormData({ ...formData, fatherName: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                          Gender <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={formData.gender}
+                          onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition cursor-pointer"
+                        >
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                          <option value="Transgender">Transgender</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Date of Birth <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="date"
+                        value={formData.newDob || ""}
+                        onChange={(e) => setFormData({ ...formData, newDob: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* PAN CORRECTION */}
+                {selectedService.id === "pan_correction" && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Select Field to Correct / Update <span className="text-red-500">*</span>
+                      </label>
+                      <select
+                        value={formData.correctionField}
+                        onChange={(e) => setFormData({ ...formData, correctionField: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition cursor-pointer"
+                      >
+                        <option value="Name">Name Correction</option>
+                        <option value="Father Name">Father's Name Correction</option>
+                        <option value="Date of Birth">Date of Birth Correction</option>
+                        <option value="Photo & Signature">Photo & Signature Mismatch</option>
+                        <option value="Address">Address Update on PAN</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Corrected Value (As per official Proof) <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Enter the correct value"
+                        value={formData.correctedValue}
+                        onChange={(e) => setFormData({ ...formData, correctedValue: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* MINOR PAN CARD */}
+                {selectedService.id === "pan_minor" && (
+                  <div className="space-y-3">
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                          Minor Date of Birth <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="date"
+                          value={formData.childDob}
+                          onChange={(e) => setFormData({ ...formData, childDob: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                          Guardian Relationship <span className="text-red-500">*</span>
+                        </label>
+                        <select
+                          value={formData.guardianRelation}
+                          onChange={(e) => setFormData({ ...formData, guardianRelation: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition cursor-pointer"
+                        >
+                          <option value="Father">Father</option>
+                          <option value="Mother">Mother</option>
+                          <option value="Legal Guardian">Legal Guardian</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Guardian Full Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Guardian's full name"
+                        value={formData.guardianName}
+                        onChange={(e) => setFormData({ ...formData, guardianName: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* PVC PAN CARD */}
+                {selectedService.id === "pan_pvc" && (
+                  <div className="space-y-3">
+                    <div>
+                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                        Delivery Dispatch Address <span className="text-red-500">*</span>
+                      </label>
+                      <textarea
+                        rows={2}
+                        placeholder="House No, Street, Landmark, City..."
+                        value={formData.newAddress}
+                        onChange={(e) => setFormData({ ...formData, newAddress: e.target.value })}
+                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition resize-none"
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                          PIN Code <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          maxLength={6}
+                          placeholder="110001"
+                          value={formData.pinCode}
+                          onChange={(e) => setFormData({ ...formData, pinCode: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition font-mono"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                          State
+                        </label>
+                        <input
+                          type="text"
+                          placeholder="State"
+                          value={formData.state}
+                          onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* AADHAAR MOBILE */}
                 {selectedService.id === "mobile" && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
@@ -794,14 +1120,12 @@ export default function Aadhaar() {
                       placeholder="Enter new 10-digit mobile number"
                       value={formData.newMobile}
                       onChange={(e) => setFormData({ ...formData, newMobile: e.target.value })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition font-mono"
                     />
-                    <p className="text-[11px] text-slate-400 mt-1">
-                      An OTP and biometric authorization will be required in the next step.
-                    </p>
                   </div>
                 )}
 
+                {/* AADHAAR ADDRESS */}
                 {selectedService.id === "address" && (
                   <div className="space-y-3">
                     <div>
@@ -816,155 +1140,36 @@ export default function Aadhaar() {
                         className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition resize-none"
                       />
                     </div>
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                          PIN Code <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          maxLength={6}
-                          placeholder="110001"
-                          value={formData.pinCode}
-                          onChange={(e) => setFormData({ ...formData, pinCode: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                          State
-                        </label>
-                        <input
-                          type="text"
-                          value={formData.state}
-                          onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                        />
-                      </div>
-                    </div>
                   </div>
                 )}
 
+                {/* AADHAAR DOB */}
                 {selectedService.id === "dob" && (
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        New / Correct Date of Birth <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="date"
-                        value={formData.newDob || ""}
-                        onChange={(e) => setFormData({ ...formData, newDob: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        Proof of Date of Birth (PDB) Document Attached <span className="text-red-500">*</span>
-                      </label>
-                      <select
-                        value={formData.selectedProof}
-                        onChange={(e) => setFormData({ ...formData, selectedProof: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                      >
-                        {selectedService.requiredDocs.map((doc, idx) => (
-                          <option key={idx} value={doc}>{doc}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {selectedService.id === "name" && (
-                  <div className="space-y-3">
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        New / Corrected Full Name <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Enter correct full legal name"
-                        value={formData.residentName}
-                        onChange={(e) => setFormData({ ...formData, residentName: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        Proof of Identity (POI) Document Attached
-                      </label>
-                      <select
-                        value={formData.selectedProof}
-                        onChange={(e) => setFormData({ ...formData, selectedProof: e.target.value })}
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                      >
-                        {selectedService.requiredDocs.map((doc, idx) => (
-                          <option key={idx} value={doc}>{doc}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                )}
-
-                {selectedService.id === "blue_card" && (
-                  <div className="space-y-3">
-                    <div className="grid grid-cols-2 gap-3">
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                          Child's Full Name <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          placeholder="e.g. Aarav Sharma"
-                          value={formData.childName}
-                          onChange={(e) => setFormData({ ...formData, childName: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                          Date of Birth <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="date"
-                          value={formData.childDob}
-                          onChange={(e) => setFormData({ ...formData, childDob: e.target.value })}
-                          className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                        Parent Aadhaar Number (Father/Mother) <span className="text-red-500">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="5482 9102 4321"
-                        value={formData.parentAadhaar}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            parentAadhaar: handleAadhaarFormat(e.target.value),
-                          })
-                        }
-                        className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {selectedService.id === "pan_link" && (
                   <div>
                     <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                      10-Digit PAN Number <span className="text-red-500">*</span>
+                      New / Correct Date of Birth <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="date"
+                      value={formData.newDob || ""}
+                      onChange={(e) => setFormData({ ...formData, newDob: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                    />
+                  </div>
+                )}
+
+                {/* AADHAAR NAME */}
+                {selectedService.id === "name" && (
+                  <div>
+                    <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                      New / Corrected Full Name <span className="text-red-500">*</span>
                     </label>
                     <input
                       type="text"
-                      maxLength={10}
-                      placeholder="ABCDE1234F"
-                      value={formData.panNumber}
-                      onChange={(e) => setFormData({ ...formData, panNumber: e.target.value.toUpperCase() })}
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-mono font-bold text-slate-800 uppercase focus:outline-none focus:border-blue-500 focus:bg-white transition"
+                      placeholder="Enter correct full legal name"
+                      value={formData.residentName}
+                      onChange={(e) => setFormData({ ...formData, residentName: e.target.value })}
+                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500 focus:bg-white transition"
                     />
                   </div>
                 )}
@@ -972,7 +1177,7 @@ export default function Aadhaar() {
                 {/* Document Upload Section */}
                 <div className="space-y-1.5 pt-1">
                   <label className="block text-xs font-bold text-slate-700">
-                    Upload Supporting Document (POI / POA / Birth Certificate) <span className="text-red-500">*</span>
+                    Upload Supporting Document <span className="text-red-500">*</span>
                   </label>
 
                   <div className="relative border-2 border-dashed border-blue-200 hover:border-blue-500 rounded-2xl bg-blue-50/40 hover:bg-blue-50/80 p-4 transition text-center cursor-pointer group">
@@ -1017,7 +1222,7 @@ export default function Aadhaar() {
                               documentName: "",
                             }));
                           }}
-                          className="z-20 text-slate-400 hover:text-red-500 p-1 text-xs font-bold transition"
+                          className="z-20 text-slate-400 hover:text-red-500 p-1 text-xs font-bold transition cursor-pointer"
                         >
                           <FaTimes />
                         </button>
@@ -1036,14 +1241,6 @@ export default function Aadhaar() {
                       </div>
                     )}
                   </div>
-                </div>
-
-                {/* General Note */}
-                <div className="bg-amber-50 border border-amber-200/80 rounded-2xl p-3 flex items-start gap-2 text-xs text-amber-800">
-                  <FaInfoCircle className="mt-0.5 shrink-0 text-amber-600" />
-                  <span>
-                    Please ensure that the details entered match the official supporting documents exactly.
-                  </span>
                 </div>
 
                 <div className="pt-3 flex items-center justify-between">
@@ -1065,23 +1262,18 @@ export default function Aadhaar() {
                     }}
                     className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-md shadow-blue-500/20 flex items-center gap-2 cursor-pointer"
                   >
-                    <span>Proceed to Biometric Capture</span>
+                    <span>Proceed to Auth & Submit</span>
                     <FaFingerprint />
                   </button>
                 </div>
               </div>
             )}
 
-            {/* Step 3: Biometric Authentication Simulation */}
+            {/* Step 3: Biometric / e-KYC Auth Simulation */}
             {applyStep === 3 && (
               <div className="text-center py-1 space-y-3.5">
-                {/* Fingerprint / Iris Scanner Graphic */}
                 <div className="w-16 h-16 rounded-2xl bg-blue-50 border-2 border-blue-200 text-blue-600 flex items-center justify-center mx-auto relative overflow-hidden shadow-inner">
-                  {biometricDevicesList.find((d) => d.name === selectedDevice)?.category === "iris" ? (
-                    <FaEye className={`text-3xl ${isScanning ? "animate-pulse scale-110" : ""}`} />
-                  ) : (
-                    <FaFingerprint className={`text-3xl ${isScanning ? "animate-pulse scale-110" : ""}`} />
-                  )}
+                  <FaFingerprint className={`text-3xl ${isScanning ? "animate-pulse scale-110" : ""}`} />
                   {isScanning && (
                     <div
                       className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-600 animate-bounce"
@@ -1092,122 +1284,43 @@ export default function Aadhaar() {
 
                 <div>
                   <h4 className="font-black text-slate-900 text-base leading-tight">
-                    {isScanning ? "Scanning Resident Biometrics..." : "Place Finger on Biometric Scanner"}
+                    {isScanning ? "Verifying e-KYC & Biometrics..." : "Place Finger on Scanner or Verify e-KYC"}
                   </h4>
                   <p className="text-xs text-slate-500 mt-0.5">
-                    Click a machine below to switch connected RD device
+                    Authorized device: {selectedDevice}
                   </p>
                 </div>
 
-                {/* Biometric Machines Grid Container */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-left">
-                  <div className="flex items-center justify-between mb-2.5">
-                    <span className="text-xs font-bold text-slate-800">
-                      Select Connected RD Device:
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 text-[10px] font-extrabold text-emerald-700 bg-emerald-100/70 px-2.5 py-0.5 rounded-full border border-emerald-300">
-                      <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                      Driver Ready
-                    </span>
-                  </div>
-
-                  {/* Filter Pills */}
-                  <div className="flex items-center gap-2 mb-3">
-                    {[
-                      { id: "all", label: "All Devices" },
-                      { id: "fingerprint", label: "Fingerprint" },
-                      { id: "iris", label: "Iris Scanner" },
-                    ].map((tab) => (
-                      <button
-                        key={tab.id}
-                        type="button"
-                        onClick={() => setDeviceCategoryFilter(tab.id)}
-                        className={`text-xs font-bold px-3 py-1 rounded-lg transition cursor-pointer ${deviceCategoryFilter === tab.id
-                          ? "bg-blue-600 text-white shadow-xs"
-                          : "bg-white text-slate-600 hover:bg-slate-200 border border-slate-200"
-                          }`}
-                      >
-                        {tab.label}
-                      </button>
-                    ))}
-                  </div>
-
-                  {/* Clean Scrollable Machine Card Grid */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-44 overflow-y-auto pr-1">
-                    {biometricDevicesList
-                      .filter((d) => deviceCategoryFilter === "all" || d.category === deviceCategoryFilter)
-                      .map((dev) => {
-                        const isSelected = selectedDevice === dev.name;
-                        return (
-                          <div
-                            key={dev.id}
-                            onClick={() => !isScanning && setSelectedDevice(dev.name)}
-                            className={`p-2.5 rounded-xl text-left border transition-all cursor-pointer flex items-center justify-between ${isSelected
-                              ? "bg-blue-50/70 border-blue-600 ring-2 ring-blue-500/20 shadow-xs"
-                              : "bg-white hover:bg-slate-100 border-slate-200 text-slate-700"
-                              }`}
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <div
-                                className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 text-sm ${isSelected
-                                  ? "bg-blue-600 text-white shadow-xs"
-                                  : "bg-slate-100 text-slate-600"
-                                  }`}
-                              >
-                                {dev.category === "iris" ? <FaEye /> : <FaFingerprint />}
-                              </div>
-                              <div className="min-w-0">
-                                <div className="text-xs font-black text-slate-900 truncate leading-tight">
-                                  {dev.name}
-                                </div>
-                                <div className="text-[10px] text-slate-500 truncate mt-0.5 font-medium">
-                                  {dev.badge} • {dev.desc}
-                                </div>
-                              </div>
-                            </div>
-
-                            {isSelected ? (
-                              <div className="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] shrink-0 ml-2 shadow-xs">
-                                <FaCheck />
-                              </div>
-                            ) : (
-                              <div className="w-4 h-4 rounded-full border-2 border-slate-300 shrink-0 ml-2" />
-                            )}
-                          </div>
-                        );
-                      })}
-                  </div>
-                </div>
-
-                {/* Progress bar */}
                 {isScanning && (
-                  <div className="max-w-xs mx-auto space-y-1">
-                    <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+                  <div className="max-w-xs mx-auto space-y-1.5">
+                    <div className="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
                       <div
-                        className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                         style={{ width: `${scanProgress}%` }}
                       />
                     </div>
-                    <div className="flex justify-between text-[10px] font-bold text-slate-400">
-                      <span>Capturing Minutiae...</span>
-                      <span>{scanProgress}%</span>
+                    <div className="flex justify-between text-[11px] font-bold text-slate-500">
+                      <span>Verifying with Central Vault</span>
+                      <span className="text-blue-600">{scanProgress}%</span>
                     </div>
                   </div>
                 )}
 
-                {/* Verification Summary */}
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-2.5 text-left text-xs text-slate-600 grid grid-cols-2 gap-2">
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold block">Service:</span>
-                    <span className="font-bold text-slate-900 truncate block">{selectedService.title}</span>
+                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 text-xs text-left max-w-sm mx-auto space-y-1.5">
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 font-medium">Service:</span>
+                    <span className="font-bold text-slate-900">{selectedService.title}</span>
                   </div>
-                  <div>
-                    <span className="text-[10px] text-slate-400 font-bold block">Resident:</span>
-                    <span className="font-bold text-slate-900 truncate block">{formData.residentName} ({formData.aadhaarNumber})</span>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 font-medium">Applicant:</span>
+                    <span className="font-bold text-slate-900">{formData.residentName}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-slate-500 font-medium">Govt Fee:</span>
+                    <span className="font-bold text-blue-600 font-mono">{selectedService.fee}</span>
                   </div>
                 </div>
 
-                {/* Action Buttons */}
                 <div className="pt-2 flex items-center justify-center gap-3">
                   <button
                     type="button"
@@ -1320,7 +1433,7 @@ export default function Aadhaar() {
                 <MdVerifiedUser />
               </div>
               <h3 className="text-base font-extrabold text-slate-900">
-                UIDAI Verification Status
+                Verification Status
               </h3>
               <p className="text-xs text-emerald-600 font-bold mt-0.5">
                 ● {statusResult.validity}
@@ -1402,7 +1515,6 @@ export default function Aadhaar() {
               </button>
             </div>
 
-            {/* Select Device Dropdown */}
             <div className="mb-4">
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Select Connected Biometric Scanner:
@@ -1420,7 +1532,6 @@ export default function Aadhaar() {
               </select>
             </div>
 
-            {/* Device Diagnostic Box */}
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-center mb-4 space-y-3">
               <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 text-blue-600 flex items-center justify-center mx-auto text-2xl shadow-xs">
                 <FaFingerprint className={deviceTestState === "scanning" ? "animate-pulse scale-110 text-cyan-500" : ""} />
@@ -1441,8 +1552,9 @@ export default function Aadhaar() {
                 <div className="max-w-xs mx-auto space-y-1">
                   <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                     <div
-                      className={`h-2 rounded-full transition-all duration-200 ${deviceQuality > 80 ? "bg-emerald-500" : "bg-blue-600"
-                        }`}
+                      className={`h-2 rounded-full transition-all duration-200 ${
+                        deviceQuality > 80 ? "bg-emerald-500" : "bg-blue-600"
+                      }`}
                       style={{ width: `${deviceQuality}%` }}
                     />
                   </div>
