@@ -27,8 +27,15 @@ import {
   FaHeadset,
   FaAward,
   FaSun,
+  FaFileInvoiceDollar,
+  FaIndustry,
+  FaFileAlt,
+  FaCar,
+  FaTrain,
+  FaHeartbeat,
 } from "react-icons/fa";
 import RandomNoticeBoard from "./RandomNoticeBoard";
+import CustomerNotFoundModal from "./CustomerNotFoundModal";
 
 export default function ServicePacks() {
   const router = useRouter();
@@ -37,6 +44,8 @@ export default function ServicePacks() {
   const [greeting, setGreeting] = useState("Good Evening");
   const [isTickerPaused, setIsTickerPaused] = useState(false);
   const [activeTickerIndex, setActiveTickerIndex] = useState(0);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [selectedService, setSelectedService] = useState(null);
 
   // Fetch user profile if logged in
   useEffect(() => {
@@ -134,7 +143,7 @@ export default function ServicePacks() {
     "Other",
   ];
 
-  // 12 All Services cards matching reference screenshot
+  // Services matching portal services + requested popup-only services
   const allServices = [
     {
       id: "money-transfer",
@@ -209,6 +218,90 @@ export default function ServicePacks() {
       category: "Government",
     },
     {
+      id: "aeps",
+      title: "AEPS",
+      desc: "AePS Cash & Balance",
+      icon: FaFingerprint,
+      iconBg: "bg-emerald-600",
+      isModal: true,
+      category: "Financial",
+      modalTitle: "AEPS Service Not Activated",
+      modalDesc: "Your merchant ID is not yet activated for AePS (Aadhaar Enabled Payment System) cash withdrawal and balance inquiry services.\nPlease check your agent activation status or contact support.",
+      modalHelp: "To activate AePS biometric services on your account, please contact our Customer Team.",
+    },
+    {
+      id: "gst-registration",
+      title: "GST Registration",
+      desc: "New GST registration & filing",
+      icon: FaFileInvoiceDollar,
+      iconBg: "bg-blue-600",
+      isModal: true,
+      category: "Government",
+      modalTitle: "GST Service Not Found",
+      modalDesc: "GST Registration & Tax Filing module is currently not available for your registered profile.\nPlease verify your retailer credentials and try again.",
+      modalHelp: "For GST portal onboarding and agent authorization, please contact our Customer Team.",
+    },
+    {
+      id: "msme-registration",
+      title: "MSME / Udyam",
+      desc: "Udyam registration",
+      icon: FaIndustry,
+      iconBg: "bg-indigo-600",
+      isModal: true,
+      category: "Government",
+      modalTitle: "MSME / Udyam Not Available",
+      modalDesc: "MSME / Udyam Registration portal is currently undergoing maintenance or awaiting agent authorization.",
+      modalHelp: "If you need immediate assistance with MSME/Udyam registration, please contact our Customer Team.",
+    },
+    {
+      id: "income-tax-itr",
+      title: "Income Tax ITR",
+      desc: "File ITR & Tax returns",
+      icon: FaFileAlt,
+      iconBg: "bg-amber-600",
+      isModal: true,
+      category: "Financial",
+      modalTitle: "ITR Service Not Found",
+      modalDesc: "Income Tax (ITR) e-filing portal access is not linked to your current merchant ID.\nPlease check your details and try again.",
+      modalHelp: "To enable Income Tax & ITR filing services on your account, please contact our Customer Team.",
+    },
+    {
+      id: "driving-license",
+      title: "Driving License",
+      desc: "Apply DL & Sarathi services",
+      icon: FaCar,
+      iconBg: "bg-teal-600",
+      isModal: true,
+      category: "Government",
+      modalTitle: "Sarathi DL Service Not Found",
+      modalDesc: "Driving License (Sarathi Parivahan) application service is not enabled for your region or account.\nPlease try again later.",
+      modalHelp: "For Sarathi portal activation and RTO license queries, please contact our Customer Team.",
+    },
+    {
+      id: "rail-bus-flight",
+      title: "Rails Bus Flights",
+      desc: "Tickets & Travel booking",
+      icon: FaTrain,
+      iconBg: "bg-orange-500",
+      isModal: true,
+      category: "Utility",
+      modalTitle: "Travel Booking Not Available",
+      modalDesc: "Rail, Bus, and Flight ticket booking services are temporarily unavailable or not registered on this account.",
+      modalHelp: "For IRCTC and travel ticket agency activation, please contact our Customer Team.",
+    },
+    {
+      id: "ayushman-card",
+      title: "Ayushman Card",
+      desc: "PMJAY Golden health card",
+      icon: FaHeartbeat,
+      iconBg: "bg-rose-600",
+      isModal: true,
+      category: "Government",
+      modalTitle: "Ayushman Card Not Available",
+      modalDesc: "Ayushman Bharat (PMJAY) Golden Card portal is not mapped with your retailer login credentials.",
+      modalHelp: "If you need access to the PMJAY beneficiary portal, please contact our Customer Team.",
+    },
+    {
       id: "egift-card",
       title: "E-Gift Card",
       desc: "Gift happiness",
@@ -255,8 +348,13 @@ export default function ServicePacks() {
     ? user.first_name || user.name || "Rohit Kumar"
     : "Rohit Kumar";
 
-  const handleCardClick = (route) => {
-    router.push(route);
+  const handleCardClick = (service) => {
+    if (service.isModal) {
+      setSelectedService(service);
+      setShowErrorModal(true);
+    } else if (service.route) {
+      router.push(service.route);
+    }
   };
 
   return (
@@ -344,7 +442,7 @@ export default function ServicePacks() {
                 Total Services
               </span>
               <span className="text-xl sm:text-2xl font-black text-[#0a1e4d] block">
-                18
+                {allServices.length}
               </span>
             </div>
           </div>
@@ -427,14 +525,14 @@ export default function ServicePacks() {
           ))}
         </div>
 
-        {/* 12 Services Grid (3 Rows x 4 Columns) */}
+        {/* 19 Services Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {filteredServices.map((service) => {
             const Icon = service.icon;
             return (
               <div
                 key={service.id}
-                onClick={() => handleCardClick(service.route)}
+                onClick={() => handleCardClick(service)}
                 className="bg-white rounded-2xl p-4 border border-slate-100 shadow-xs hover:shadow-md hover:border-blue-200 transition-all flex items-center justify-between group cursor-pointer"
               >
                 <div className="flex items-center gap-3.5 min-w-0">
@@ -532,6 +630,30 @@ export default function ServicePacks() {
           </div>
         </div>
       </div>
+
+      {/* Service-Specific Popup Modal */}
+      <CustomerNotFoundModal
+        isOpen={showErrorModal}
+        onClose={() => {
+          setShowErrorModal(false);
+          setSelectedService(null);
+        }}
+        title={selectedService?.modalTitle || "Customer Not Found"}
+        description={
+          selectedService?.modalDesc ||
+          "The details you entered do not match with our records.\nPlease check the Consumer Number / Account Number and try again."
+        }
+        helpText={
+          selectedService?.modalHelp ? (
+            <>
+              {selectedService.modalHelp.split("Customer Team")[0]}
+              <span className="font-bold text-slate-900">Customer Team</span>
+              {selectedService.modalHelp.split("Customer Team")[1] || " for further assistance."}
+            </>
+          ) : undefined
+        }
+        buttonText="Contact Customer Team"
+      />
     </div>
   );
 }
