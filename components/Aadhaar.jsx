@@ -41,6 +41,7 @@ import {
 } from "react-icons/fa";
 import { MdSensors, MdOutlineFingerprint, MdVerifiedUser } from "react-icons/md";
 import { RiQrCodeLine, RiShieldCheckFill, RiGovernmentLine } from "react-icons/ri";
+import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const biometricDevicesList = [
   { id: "morpho_1300", name: "Morpho MSO 1300 E3", category: "fingerprint", badge: "UIDAI L0", desc: "USB RD v3.0.1 (Optical)" },
@@ -318,6 +319,7 @@ export default function Aadhaar({ initialTab = null }) {
   // Application Modal state
   const [selectedService, setSelectedService] = useState(null);
   const [showApplyModal, setShowApplyModal] = useState(false);
+  const [showCustomerNotFoundModal, setShowCustomerNotFoundModal] = useState(false);
   const [applyStep, setApplyStep] = useState(1); // 1: Info, 2: Specific Data, 3: Auth, 4: Receipt
   const [formData, setFormData] = useState({
     aadhaarNumber: "",
@@ -445,7 +447,8 @@ export default function Aadhaar({ initialTab = null }) {
         if (prev >= 100) {
           clearInterval(interval);
           setIsScanning(false);
-          setApplyStep(4);
+          setShowApplyModal(false);
+          setShowCustomerNotFoundModal(true);
           return 100;
         }
         return prev + 20;
@@ -1589,6 +1592,31 @@ export default function Aadhaar({ initialTab = null }) {
           </div>
         </div>
       )}
+
+      {/* Service-Specific Customer Not Found Popup Modal */}
+      <CustomerNotFoundModal
+        isOpen={showCustomerNotFoundModal}
+        onClose={() => setShowCustomerNotFoundModal(false)}
+        title={
+          selectedService?.title
+            ? `${selectedService.title} - Customer Not Found`
+            : "Customer Not Found"
+        }
+        description={
+          selectedService?.title
+            ? `The details entered for ${selectedService.title} do not match with official UIDAI / Portal records.\nPlease check the Consumer / Aadhaar Number and try again.`
+            : "The details you entered do not match with our records.\nPlease check the Consumer Number / Account Number and try again."
+        }
+        helpText={
+          selectedService?.title ? (
+            <>
+              If you are facing issues with {selectedService.title}, please contact our{" "}
+              <span className="font-bold text-slate-900">Customer Team</span> for further assistance.
+            </>
+          ) : undefined
+        }
+        buttonText="Contact Customer Team"
+      />
     </div>
   );
 }
