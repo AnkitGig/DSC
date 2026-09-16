@@ -204,8 +204,16 @@ export default function Header({ onToggleSidebar }) {
             className="flex items-center gap-2.5 p-1 pl-1.5 sm:pr-3 rounded-2xl bg-slate-50 hover:bg-blue-50/70 border border-slate-200/80 hover:border-blue-200 transition-all cursor-pointer shadow-2xs"
           >
             {/* Circular Blue Avatar */}
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#1d68f6] to-blue-500 text-white flex items-center justify-center text-xs shadow-xs font-bold shrink-0">
-              <FaUser size={11} />
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#1d68f6] to-blue-500 text-white flex items-center justify-center text-xs shadow-xs font-bold shrink-0 overflow-hidden">
+              {user?.profile_image ? (
+                <img
+                  src={user.profile_image}
+                  alt={displayName}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <FaUser size={11} />
+              )}
             </div>
 
             {/* User Name + Verified Role Text */}
@@ -227,8 +235,16 @@ export default function Header({ onToggleSidebar }) {
           {showProfile && (
             <div className="absolute right-0 mt-2 w-64 bg-white text-slate-800 rounded-3xl shadow-xl border border-slate-200/90 p-3.5 z-50 animate-in fade-in zoom-in-95 duration-150">
               <div className="flex items-center gap-3 pb-3 mb-2.5 border-b border-slate-100">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#1d68f6] to-blue-500 text-white flex items-center justify-center font-bold text-sm shadow-xs">
-                  <FaUser size={14} />
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#1d68f6] to-blue-500 text-white flex items-center justify-center font-bold text-sm shadow-xs overflow-hidden shrink-0">
+                  {user?.profile_image ? (
+                    <img
+                      src={user.profile_image}
+                      alt={displayName}
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <FaUser size={14} />
+                  )}
                 </div>
                 <div className="overflow-hidden">
                   <div className="font-black text-[#0a1e4d] text-xs truncate">
