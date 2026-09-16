@@ -127,84 +127,9 @@ const categoryBoards = {
 };
 
 const initialDueBills = [
-  {
-    id: "db1",
-    type: "electricity",
-    title: "Electricity Bill",
-    account: "Consumer No: 1234567890",
-    consumerNumber: "1234567890",
-    provider: "UPPCL",
-    dueText: "Due in 3 days",
-    dueDate: "15 Sep 2026",
-    amount: 1250,
-    logoType: "electricity",
-  },
-  {
-    id: "db2",
-    type: "mobile",
-    title: "Airtel Postpaid",
-    account: "Mobile No: 9876543210",
-    consumerNumber: "9876543210",
-    provider: "Airtel Postpaid",
-    dueText: "Due in 5 days",
-    dueDate: "17 Sep 2026",
-    amount: 799,
-    logoType: "airtel",
-  },
-  {
-    id: "db3",
-    type: "dth",
-    title: "Tata Play DTH",
-    account: "Subscriber ID: 1234567890",
-    consumerNumber: "1234567890",
-    provider: "Tata Play",
-    dueText: "Due in 2 days",
-    dueDate: "14 Sep 2026",
-    amount: 450,
-    logoType: "tataplay",
-  },
-  {
-    id: "db4",
-    type: "broadband",
-    title: "Jio Fiber",
-    account: "Account No: JIO123456",
-    consumerNumber: "JIO123456",
-    provider: "JioFiber",
-    dueText: "Due in 4 days",
-    dueDate: "16 Sep 2026",
-    amount: 999,
-    logoType: "jio",
-  },
 ];
 
 const mockBillHistory = [
-  {
-    id: "h1",
-    title: "Electricity Bill (UPPCL)",
-    account: "Consumer No: 1234567890",
-    date: "12 Aug 2026, 04:20 PM",
-    amount: 1180,
-    status: "Paid",
-    logoType: "electricity",
-  },
-  {
-    id: "h2",
-    title: "Airtel Postpaid",
-    account: "Mobile No: 9876543210",
-    date: "10 Aug 2026, 11:15 AM",
-    amount: 799,
-    status: "Paid",
-    logoType: "airtel",
-  },
-  {
-    id: "h3",
-    title: "Tata Play DTH",
-    account: "Subscriber ID: 1234567890",
-    date: "05 Aug 2026, 02:40 PM",
-    amount: 450,
-    status: "Paid",
-    logoType: "tataplay",
-  },
 ];
 
 export default function BillPayment() {
@@ -419,14 +344,14 @@ export default function BillPayment() {
                     type="button"
                     onClick={() => handleCategorySelect(cat.id)}
                     className={`p-3 rounded-2xl border flex flex-col items-center justify-center gap-2 transition-all cursor-pointer group text-center ${isSelected
-                        ? "border-blue-500 bg-white ring-2 ring-blue-500/20 shadow-xs scale-[1.03]"
-                        : "border-slate-200/70 bg-[#fafcff] hover:bg-white hover:border-blue-300 hover:shadow-xs hover:-translate-y-0.5"
+                      ? "border-blue-500 bg-white ring-2 ring-blue-500/20 shadow-xs scale-[1.03]"
+                      : "border-slate-200/70 bg-[#fafcff] hover:bg-white hover:border-blue-300 hover:shadow-xs hover:-translate-y-0.5"
                       }`}
                   >
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center text-lg transition-transform group-hover:scale-110 ${isSelected
-                          ? "bg-blue-50 text-blue-600 shadow-2xs"
-                          : `bg-white ${cat.iconColor} shadow-2xs border border-slate-100`
+                        ? "bg-blue-50 text-blue-600 shadow-2xs"
+                        : `bg-white ${cat.iconColor} shadow-2xs border border-slate-100`
                         }`}
                     >
                       <Icon />
@@ -711,8 +636,8 @@ export default function BillPayment() {
                 type="button"
                 onClick={() => setMyBillsTab("due")}
                 className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${myBillsTab === "due"
-                    ? "border-blue-600 text-blue-600 font-extrabold"
-                    : "border-transparent text-slate-400 hover:text-slate-700"
+                  ? "border-blue-600 text-blue-600 font-extrabold"
+                  : "border-transparent text-slate-400 hover:text-slate-700"
                   }`}
               >
                 Due Bills
@@ -721,8 +646,8 @@ export default function BillPayment() {
                 type="button"
                 onClick={() => setMyBillsTab("history")}
                 className={`flex-1 py-3 text-center transition-all cursor-pointer border-b-2 ${myBillsTab === "history"
-                    ? "border-blue-600 text-blue-600 font-extrabold"
-                    : "border-transparent text-slate-400 hover:text-slate-700"
+                  ? "border-blue-600 text-blue-600 font-extrabold"
+                  : "border-transparent text-slate-400 hover:text-slate-700"
                   }`}
               >
                 Bill History

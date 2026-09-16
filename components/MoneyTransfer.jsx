@@ -21,93 +21,10 @@ import { RiBankFill } from "react-icons/ri";
 import CustomerNotFoundModal from "@/components/CustomerNotFoundModal";
 
 const initialSavedBeneficiaries = [
-  {
-    id: "b1",
-    initials: "RK",
-    name: "Rohit Kumar",
-    bank: "HDFC Bank",
-    accountNumber: "50100492810291",
-    ifsc: "HDFC0000128",
-    avatarBg: "bg-[#e9d8fd] text-[#7c3aed]",
-  },
-  {
-    id: "b2",
-    initials: "SP",
-    name: "Suman Patel",
-    bank: "SBI Bank",
-    accountNumber: "302918827102",
-    ifsc: "SBIN0001244",
-    avatarBg: "bg-[#cbebfe] text-[#1d4ed8]",
-  },
-  {
-    id: "b3",
-    initials: "AK",
-    name: "Ankit Sharma",
-    bank: "Axis Bank",
-    accountNumber: "918020048192019",
-    ifsc: "UTIB0000054",
-    avatarBg: "bg-[#e0e7ff] text-[#4338ca]",
-  },
-  {
-    id: "b4",
-    initials: "MT",
-    name: "Maa Transfer",
-    bank: "PNB Bank",
-    accountNumber: "0192002100829102",
-    ifsc: "PUNB0019200",
-    avatarBg: "bg-[#fed7d7] text-[#c53030]",
-  },
 ];
 
 const initialRecentTransfers = [
-  {
-    id: 1,
-    initials: "SP",
-    name: "Suman Patel",
-    details: "SBI Bank • 9876543210",
-    accountNumber: "302918827102",
-    bank: "SBI Bank",
-    amount: 2500,
-    date: "12 Jan 2025, 10:24 AM",
-    status: "Success",
-    color: "bg-[#dbeafe] text-[#1d4ed8]",
-  },
-  {
-    id: 2,
-    initials: "AK",
-    name: "Ankit Sharma",
-    details: "Axis Bank • 8765432109",
-    accountNumber: "918020048192019",
-    bank: "Axis Bank",
-    amount: 1000,
-    date: "11 Jan 2025, 04:15 PM",
-    status: "Success",
-    color: "bg-[#ede9fe] text-[#7c3aed]",
-  },
-  {
-    id: 3,
-    initials: "RK",
-    name: "Rohit Kumar",
-    details: "HDFC Bank • 7654321098",
-    accountNumber: "50100492810291",
-    bank: "HDFC Bank",
-    amount: 5000,
-    date: "10 Jan 2025, 11:32 AM",
-    status: "Success",
-    color: "bg-[#e0e7ff] text-[#4338ca]",
-  },
-  {
-    id: 4,
-    initials: "MT",
-    name: "Maa Transfer",
-    details: "PNB Bank • 9876123456",
-    accountNumber: "0192002100829102",
-    bank: "PNB Bank",
-    amount: 3000,
-    date: "09 Jan 2025, 09:18 AM",
-    status: "Failed",
-    color: "bg-[#fee2e2] text-[#dc2626]",
-  },
+
 ];
 
 export default function MoneyTransfer() {

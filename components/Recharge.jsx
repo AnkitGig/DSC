@@ -475,38 +475,6 @@ export default function Recharge({ tabType = "mobile" }) {
   };
 
   const recentTransactions = [
-    {
-      operator: "Airtel",
-      logoBg: "bg-[#ed1c24]",
-      number: "+91 98765 43210",
-      date: "12 Jan 2025, 02:30 PM",
-      amount: 199,
-      status: "Success",
-    },
-    {
-      operator: "Tata Play",
-      logoBg: "bg-purple-600",
-      number: "ID: 1029384756",
-      date: "11 Jan 2025, 04:15 PM",
-      amount: 450,
-      status: "Success",
-    },
-    {
-      operator: "Jio",
-      logoBg: "bg-[#0a2885]",
-      number: "+91 88765 43211",
-      date: "10 Jan 2025, 11:20 AM",
-      amount: 349,
-      status: "Success",
-    },
-    {
-      operator: "Dish TV",
-      logoBg: "bg-orange-600",
-      number: "ID: 9988776655",
-      date: "09 Jan 2025, 09:45 AM",
-      amount: 360,
-      status: "Success",
-    },
   ];
 
   const handleMobileNumberChange = (e) => {

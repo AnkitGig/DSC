@@ -214,34 +214,6 @@ const insuranceCategories = [
 ];
 
 const initialPolicies = [
-  {
-    id: "pol-1",
-    type: "Health Insurance",
-    provider: "Star Health & Allied Insurance",
-    policyNo: "XXXXXX210",
-    validTill: "12 Jan 2026",
-    status: "Active",
-    cover: "₹10,00,000",
-    premium: "₹7,680 / yr",
-    icon: FaHeartbeat,
-    iconColor: "text-[#1d68f6]",
-    iconBg: "bg-blue-50 border-blue-100",
-    badgeStyle: "bg-emerald-50 text-emerald-700 border-emerald-200",
-  },
-  {
-    id: "pol-2",
-    type: "Car Insurance",
-    provider: "HDFC ERGO General Insurance",
-    policyNo: "XXXXX610",
-    validTill: "18 Aug 2026",
-    status: "Expiring Soon",
-    cover: "IDV ₹5,80,000 (Comprehensive)",
-    premium: "₹3,450 / yr",
-    icon: FaCar,
-    iconColor: "text-[#1d68f6]",
-    iconBg: "bg-blue-50 border-blue-100",
-    badgeStyle: "bg-amber-50 text-amber-700 border-amber-200",
-  },
 ];
 
 export default function Insurance() {
@@ -402,15 +374,15 @@ export default function Insurance() {
                     key={cat.id}
                     onClick={() => handleCardClick(cat.id)}
                     className={`bg-white rounded-2xl p-4 sm:p-5 border transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[165px] justify-between ${isSelected
-                        ? "border-[#1d68f6] shadow-md ring-2 ring-blue-500/20 bg-blue-50/15"
-                        : "border-slate-200/90 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
+                      ? "border-[#1d68f6] shadow-md ring-2 ring-blue-500/20 bg-blue-50/15"
+                      : "border-slate-200/90 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
                       }`}
                   >
                     {/* Circular Icon Container - Single Blue Color Scheme */}
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2.5 transition-all duration-200 border ${isSelected
-                          ? "bg-[#1d68f6] text-white border-[#1d68f6] scale-110 shadow-md shadow-blue-500/25"
-                          : "bg-blue-50/80 text-[#1d68f6] border-blue-100/90"
+                        ? "bg-[#1d68f6] text-white border-[#1d68f6] scale-110 shadow-md shadow-blue-500/25"
+                        : "bg-blue-50/80 text-[#1d68f6] border-blue-100/90"
                         }`}
                     >
                       <IconComponent />
@@ -433,8 +405,8 @@ export default function Insurance() {
                     {/* Small Blue Arrow Indicator Button at Bottom Right */}
                     <div
                       className={`self-end mt-2 w-5 h-5 rounded-full flex items-center justify-center text-[9px] transition shadow-xs ${isSelected
-                          ? "bg-[#1d68f6] text-white"
-                          : "bg-blue-50 text-[#1d68f6]"
+                        ? "bg-[#1d68f6] text-white"
+                        : "bg-blue-50 text-[#1d68f6]"
                         }`}
                     >
                       <FaArrowRight />
@@ -603,8 +575,8 @@ export default function Insurance() {
                             setIsDropdownOpen(false);
                           }}
                           className={`flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold transition cursor-pointer ${isCatSelected
-                              ? "bg-blue-50 text-blue-700"
-                              : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
+                            ? "bg-blue-50 text-blue-700"
+                            : "text-slate-700 hover:bg-slate-50 hover:text-blue-600"
                             }`}
                         >
                           <div className="flex items-center gap-2.5">
@@ -834,8 +806,8 @@ export default function Insurance() {
                         type="button"
                         onClick={() => setQuoteFilter(f.toLowerCase())}
                         className={`px-2.5 py-1 rounded-lg text-[11px] font-bold transition ${quoteFilter === f.toLowerCase()
-                            ? "bg-blue-600 text-white"
-                            : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                          ? "bg-blue-600 text-white"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                           }`}
                       >
                         {f}

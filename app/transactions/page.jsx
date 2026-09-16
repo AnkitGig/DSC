@@ -23,102 +23,6 @@ import { MdOutlineReceiptLong, MdFileDownload } from "react-icons/md";
 
 // Standard Sample Ledger for new/existing retailers
 const defaultTransactions = [
-  {
-    _id: "TXN-982910",
-    txnId: "DSC-TXN-982910",
-    date: "2026-09-11T16:20:00.000Z",
-    type: "credit",
-    category: "Commission",
-    service: "Mobile Recharge",
-    description: "Retailer Commission for Jio Recharge ₹299 (9876543210)",
-    amount: 8.97,
-    closingBalance: 45280.0,
-    status: "Success",
-  },
-  {
-    _id: "TXN-982909",
-    txnId: "DSC-TXN-982909",
-    date: "2026-09-11T16:19:30.000Z",
-    type: "debit",
-    category: "Recharge",
-    service: "Jio Prepaid",
-    description: "Recharge 9876543210 (28 Days Plan)",
-    amount: 299.0,
-    closingBalance: 45271.03,
-    status: "Pending",
-  },
-  {
-    _id: "TXN-982885",
-    txnId: "DSC-TXN-982885",
-    date: "2026-09-11T14:40:00.000Z",
-    type: "debit",
-    category: "OTT",
-    service: "Disney+ Hotstar",
-    description: "Super Annual Subscription Voucher generated for 9123456780",
-    amount: 899.0,
-    closingBalance: 45570.03,
-    status: "Pending",
-  },
-  {
-    _id: "TXN-982840",
-    txnId: "DSC-TXN-982840",
-    date: "2026-09-11T11:15:00.000Z",
-    type: "credit",
-    category: "Wallet Topup",
-    service: "PG Inward",
-    description: "Online Wallet Load via UPI (Ref: 425519829012)",
-    amount: 10000.0,
-    closingBalance: 46469.03,
-    status: "Success",
-  },
-  {
-    _id: "TXN-982810",
-    txnId: "DSC-TXN-982810",
-    date: "2026-09-10T18:30:00.000Z",
-    type: "debit",
-    category: "Payout",
-    service: "Bank Withdrawal",
-    description: "IMPS Payout to SBI A/C ...8219 (UTR: 425488192019)",
-    amount: 15000.0,
-    closingBalance: 36469.03,
-    status: "Pending",
-  },
-  {
-    _id: "TXN-982750",
-    txnId: "DSC-TXN-982750",
-    date: "2026-09-10T12:10:00.000Z",
-    type: "debit",
-    category: "Aadhaar",
-    service: "Biometric KYC Verification",
-    description: "Aadhaar Address Verification Service charge",
-    amount: 50.0,
-    closingBalance: 51469.03,
-    status: "Pending",
-  },
-  {
-    _id: "TXN-982680",
-    txnId: "DSC-TXN-982680",
-    date: "2026-09-09T17:45:00.000Z",
-    type: "debit",
-    category: "Recharge",
-    service: "Airtel DTH",
-    description: "DTH Smartcard Recharge 3004829102",
-    amount: 450.0,
-    closingBalance: 51519.03,
-    status: "Pending",
-  },
-  {
-    _id: "TXN-982610",
-    txnId: "DSC-TXN-982610",
-    date: "2026-09-08T09:30:00.000Z",
-    type: "credit",
-    category: "Wallet Topup",
-    service: "Admin Credit",
-    description: "Direct Distributor Bank Transfer Approved",
-    amount: 25000.0,
-    closingBalance: 51969.03,
-    status: "Success",
-  },
 ];
 
 const Transactions = () => {
@@ -210,10 +114,8 @@ const Transactions = () => {
     const headers = ["Txn ID,Date,Type,Category,Service,Description,Amount,Status\n"];
     const rows = filteredList.map(
       (t) =>
-        `"${t.txnId || t._id}","${new Date(t.date).toLocaleString()}","${t.type}","${
-          t.category || "General"
-        }","${t.service || "-"}","${(t.description || "").replace(/"/g, '""')}","${t.amount}","${
-          t.status || "Success"
+        `"${t.txnId || t._id}","${new Date(t.date).toLocaleString()}","${t.type}","${t.category || "General"
+        }","${t.service || "-"}","${(t.description || "").replace(/"/g, '""')}","${t.amount}","${t.status || "Success"
         }"\n`
     );
     const blob = new Blob([...headers, ...rows], { type: "text/csv" });
@@ -334,31 +236,28 @@ const Transactions = () => {
           <div className="flex items-center gap-1.5 bg-slate-200/70 p-1 rounded-lg self-start md:self-auto">
             <button
               onClick={() => setTypeFilter("all")}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer ${
-                typeFilter === "all"
-                  ? "bg-white text-slate-900 shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer ${typeFilter === "all"
+                ? "bg-white text-slate-900 shadow-2xs"
+                : "text-slate-600 hover:text-slate-900"
+                }`}
             >
               All ({transactions.length})
             </button>
             <button
               onClick={() => setTypeFilter("credit")}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer ${
-                typeFilter === "credit"
-                  ? "bg-emerald-600 text-white shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer ${typeFilter === "credit"
+                ? "bg-emerald-600 text-white shadow-2xs"
+                : "text-slate-600 hover:text-slate-900"
+                }`}
             >
               Credits (+)
             </button>
             <button
               onClick={() => setTypeFilter("debit")}
-              className={`px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer ${
-                typeFilter === "debit"
-                  ? "bg-rose-600 text-white shadow-2xs"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
+              className={`px-3 py-1.5 rounded-md text-xs font-bold transition cursor-pointer ${typeFilter === "debit"
+                ? "bg-rose-600 text-white shadow-2xs"
+                : "text-slate-600 hover:text-slate-900"
+                }`}
             >
               Debits (-)
             </button>
@@ -461,20 +360,18 @@ const Transactions = () => {
                       </td>
                       <td className="py-3 px-3 text-center">
                         <span
-                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                            isCredit
-                              ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
-                              : "bg-rose-50 text-rose-700 border border-rose-200"
-                          }`}
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${isCredit
+                            ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
+                            : "bg-rose-50 text-rose-700 border border-rose-200"
+                            }`}
                         >
                           {isCredit ? <FaArrowDown size={9} /> : <FaArrowUp size={9} />}
                           <span>{t.type}</span>
                         </span>
                       </td>
                       <td
-                        className={`py-3 px-3 text-right font-black text-sm whitespace-nowrap ${
-                          isCredit ? "text-emerald-700" : "text-rose-600"
-                        }`}
+                        className={`py-3 px-3 text-right font-black text-sm whitespace-nowrap ${isCredit ? "text-emerald-700" : "text-rose-600"
+                          }`}
                       >
                         {isCredit ? "+" : "-"}₹{(t.amount || 0).toLocaleString("en-IN", {
                           minimumFractionDigits: 2,
@@ -535,13 +432,12 @@ const Transactions = () => {
           <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-5 border border-slate-200">
             <div className="text-center pb-3 border-b border-slate-100">
               <div
-                className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${
-                  receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success"
-                    ? "bg-emerald-100 text-emerald-600"
-                    : receiptModal.status?.toLowerCase() === "failed"
+                className={`w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2 ${receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success"
+                  ? "bg-emerald-100 text-emerald-600"
+                  : receiptModal.status?.toLowerCase() === "failed"
                     ? "bg-rose-100 text-rose-600"
                     : "bg-amber-100 text-amber-600"
-                }`}
+                  }`}
               >
                 {receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success" ? (
                   <FaCheckCircle size={20} />
@@ -561,13 +457,12 @@ const Transactions = () => {
               <div className="flex justify-between">
                 <span>Status:</span>
                 <span
-                  className={`font-bold ${
-                    receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success"
-                      ? "text-emerald-600"
-                      : receiptModal.status?.toLowerCase() === "failed"
+                  className={`font-bold ${receiptModal.type === "credit" || receiptModal.status?.toLowerCase() === "success"
+                    ? "text-emerald-600"
+                    : receiptModal.status?.toLowerCase() === "failed"
                       ? "text-rose-600"
                       : "text-amber-600"
-                  }`}
+                    }`}
                 >
                   {receiptModal.type === "credit" ? "Success" : (receiptModal.status || "Pending")}
                 </span>
@@ -587,9 +482,8 @@ const Transactions = () => {
               <div className="flex justify-between">
                 <span>Type:</span>
                 <span
-                  className={`font-bold uppercase ${
-                    receiptModal.type === "credit" ? "text-emerald-700" : "text-rose-600"
-                  }`}
+                  className={`font-bold uppercase ${receiptModal.type === "credit" ? "text-emerald-700" : "text-rose-600"
+                    }`}
                 >
                   {receiptModal.type}
                 </span>

@@ -260,42 +260,6 @@ const financialProducts = [
 ];
 
 const mockRecentLeads = [
-  {
-    id: "LEAD-9082",
-    date: "13 Sep 2026",
-    customer: "Rahul Sharma",
-    phone: "9876543210",
-    product: "YES Prosperity Edge",
-    payout: "₹2,200",
-    status: "Approved",
-  },
-  {
-    id: "LEAD-9081",
-    date: "12 Sep 2026",
-    customer: "Amit Verma",
-    phone: "9123456780",
-    product: "IndusInd Legend Card",
-    payout: "₹1,850",
-    status: "In Review",
-  },
-  {
-    id: "LEAD-9079",
-    date: "11 Sep 2026",
-    customer: "Priya Patel",
-    phone: "9811223344",
-    product: "HDFC Millennia Card",
-    payout: "₹2,500",
-    status: "Approved",
-  },
-  {
-    id: "LEAD-9074",
-    date: "10 Sep 2026",
-    customer: "Suresh Gupta",
-    phone: "9456781230",
-    product: "AU Digital Savings Account",
-    payout: "₹650",
-    status: "Pending KYC",
-  },
 ];
 
 export default function SellAndEarnPage() {
@@ -445,15 +409,15 @@ export default function SellAndEarnPage() {
                     key={prod.id}
                     onClick={() => setSelectedProduct(prod)}
                     className={`bg-white rounded-2xl p-4 sm:p-5 border transition-all duration-200 flex flex-col items-center text-center cursor-pointer relative min-h-[165px] justify-between ${isSelected
-                        ? "border-[#1d68f6] shadow-md ring-2 ring-blue-500/20 bg-blue-50/15"
-                        : "border-slate-200/90 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
+                      ? "border-[#1d68f6] shadow-md ring-2 ring-blue-500/20 bg-blue-50/15"
+                      : "border-slate-200/90 shadow-2xs hover:shadow-md hover:border-blue-300 hover:-translate-y-0.5"
                       }`}
                   >
                     {/* Circular Icon Container - Single Blue Scheme */}
                     <div
                       className={`w-12 h-12 rounded-full flex items-center justify-center text-xl mb-2.5 transition-all duration-200 border ${isSelected
-                          ? "bg-[#1d68f6] text-white border-[#1d68f6] scale-110 shadow-md shadow-blue-500/25"
-                          : "bg-blue-50/80 text-[#1d68f6] border-blue-100/90"
+                        ? "bg-[#1d68f6] text-white border-[#1d68f6] scale-110 shadow-md shadow-blue-500/25"
+                        : "bg-blue-50/80 text-[#1d68f6] border-blue-100/90"
                         }`}
                     >
                       <ProdIcon />
@@ -482,8 +446,8 @@ export default function SellAndEarnPage() {
                       </span>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-[9px] transition shadow-2xs ${isSelected
-                            ? "bg-[#1d68f6] text-white"
-                            : "bg-blue-50 text-[#1d68f6]"
+                          ? "bg-[#1d68f6] text-white"
+                          : "bg-blue-50 text-[#1d68f6]"
                           }`}
                       >
                         <FaArrowRight />
@@ -762,10 +726,10 @@ export default function SellAndEarnPage() {
                   <td className="py-3.5 px-4 text-center">
                     <span
                       className={`inline-block px-2.5 py-1 rounded-full text-[10px] font-bold ${lead.status === "Approved"
-                          ? "bg-emerald-50 text-emerald-700 border border-emerald-300"
-                          : lead.status === "In Review"
-                            ? "bg-blue-50 text-blue-700 border border-blue-300"
-                            : "bg-amber-50 text-amber-700 border border-amber-300"
+                        ? "bg-emerald-50 text-emerald-700 border border-emerald-300"
+                        : lead.status === "In Review"
+                          ? "bg-blue-50 text-blue-700 border border-blue-300"
+                          : "bg-amber-50 text-amber-700 border border-amber-300"
                         }`}
                     >
                       {lead.status}

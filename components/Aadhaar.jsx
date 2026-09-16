@@ -242,46 +242,7 @@ const governmentServicesList = [
 ];
 
 const mockRecentRequests = [
-  {
-    id: "URN-9182749102",
-    service: "Mobile Number Update",
-    resident: "Rajesh Kumar Sharma",
-    aadhaar: "XXXX XXXX 8291",
-    date: "Today, 10:45 AM",
-    status: "Success",
-    urn: "0000/18294/91827",
-    fee: "₹50.00",
-  },
-  {
-    id: "URN-5829104819",
-    service: "New PAN Card (Form 49A)",
-    resident: "Sunita Devi",
-    aadhaar: "XXXX XXXX 1048",
-    date: "Today, 09:30 AM",
-    status: "Processing",
-    urn: "PAN/29401/58291",
-    fee: "₹107.00",
-  },
-  {
-    id: "URN-7192840192",
-    service: "Minor PAN Card",
-    resident: "Aarav Singh (Minor)",
-    aadhaar: "Guardian: V. Singh",
-    date: "Yesterday, 04:15 PM",
-    status: "Generated",
-    urn: "1092/49102/71928",
-    fee: "₹107.00",
-  },
-  {
-    id: "URN-3829104918",
-    service: "PVC PAN Card Online",
-    resident: "Vikram Malhotra",
-    aadhaar: "PAN: ABCPM4918K",
-    date: "11 Sep 2026",
-    status: "Success",
-    urn: "PVC/84920/38291",
-    fee: "₹50.00",
-  },
+
 ];
 
 export default function Aadhaar({ initialTab = null }) {
@@ -535,23 +496,22 @@ export default function Aadhaar({ initialTab = null }) {
 
       {/* 2. MAIN LAYOUT */}
       <div className="max-w-7xl mx-auto space-y-5">
-        
+
         {/* TOP ROW: Service Cards (Left 8 Cols) & Recent Applications (Right 4 Cols) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
           {/* Service Cards Grid (8 Cols) */}
           <div className="lg:col-span-8 space-y-3.5">
-            
+
             {/* CATEGORY TABS SWITCHER: All / Aadhaar / PAN Section */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200/90 shadow-2xs">
               <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
                 <button
                   type="button"
                   onClick={() => setSelectedCategoryTab("all")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
-                    selectedCategoryTab === "all"
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${selectedCategoryTab === "all"
                       ? "bg-[#1d68f6] text-white shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                  }`}
+                    }`}
                 >
                   All Services ({governmentServicesList.length})
                 </button>
@@ -559,11 +519,10 @@ export default function Aadhaar({ initialTab = null }) {
                 <button
                   type="button"
                   onClick={() => setSelectedCategoryTab("aadhaar")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                    selectedCategoryTab === "aadhaar"
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${selectedCategoryTab === "aadhaar"
                       ? "bg-[#1d68f6] text-white shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                  }`}
+                    }`}
                 >
                   <FaFingerprint size={12} />
                   <span>Aadhaar Services (8)</span>
@@ -572,11 +531,10 @@ export default function Aadhaar({ initialTab = null }) {
                 <button
                   type="button"
                   onClick={() => setSelectedCategoryTab("pan")}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${
-                    selectedCategoryTab === "pan"
+                  className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 ${selectedCategoryTab === "pan"
                       ? "bg-[#1d68f6] text-white shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-                  }`}
+                    }`}
                 >
                   <FaCreditCard size={12} />
                   <span>PAN Section (4)</span>
@@ -665,13 +623,12 @@ export default function Aadhaar({ initialTab = null }) {
                           <p className="text-[10px] text-slate-400 font-medium">{item.service}</p>
                         </div>
                         <span
-                          className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${
-                            item.status === "Success"
+                          className={`px-2 py-0.5 rounded-full text-[9px] font-extrabold ${item.status === "Success"
                               ? "bg-emerald-50 text-emerald-700 border border-emerald-200"
                               : item.status === "Processing"
-                              ? "bg-amber-50 text-amber-700 border border-amber-200"
-                              : "bg-blue-50 text-blue-700 border border-blue-200"
-                          }`}
+                                ? "bg-amber-50 text-amber-700 border border-amber-200"
+                                : "bg-blue-50 text-blue-700 border border-blue-200"
+                            }`}
                         >
                           {item.status}
                         </span>
@@ -798,20 +755,18 @@ export default function Aadhaar({ initialTab = null }) {
                 ].map((s) => (
                   <div key={s.step} className="flex items-center gap-2">
                     <div
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${
-                        applyStep === s.step
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black ${applyStep === s.step
                           ? "bg-blue-600 text-white shadow-md shadow-blue-500/30"
                           : applyStep > s.step
-                          ? "bg-emerald-500 text-white"
-                          : "bg-slate-100 text-slate-400"
-                      }`}
+                            ? "bg-emerald-500 text-white"
+                            : "bg-slate-100 text-slate-400"
+                        }`}
                     >
                       {applyStep > s.step ? <FaCheck className="text-[10px]" /> : s.step}
                     </div>
                     <span
-                      className={`text-xs font-bold hidden sm:inline ${
-                        applyStep === s.step ? "text-slate-900" : "text-slate-400"
-                      }`}
+                      className={`text-xs font-bold hidden sm:inline ${applyStep === s.step ? "text-slate-900" : "text-slate-400"
+                        }`}
                     >
                       {s.label}
                     </span>
@@ -1555,9 +1510,8 @@ export default function Aadhaar({ initialTab = null }) {
                 <div className="max-w-xs mx-auto space-y-1">
                   <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
                     <div
-                      className={`h-2 rounded-full transition-all duration-200 ${
-                        deviceQuality > 80 ? "bg-emerald-500" : "bg-blue-600"
-                      }`}
+                      className={`h-2 rounded-full transition-all duration-200 ${deviceQuality > 80 ? "bg-emerald-500" : "bg-blue-600"
+                        }`}
                       style={{ width: `${deviceQuality}%` }}
                     />
                   </div>
