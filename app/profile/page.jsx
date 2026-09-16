@@ -18,10 +18,8 @@ import {
   FaSpinner,
   FaWallet,
   FaShieldAlt,
-  FaGlobe,
-  FaCity,
 } from "react-icons/fa";
-import { RiShieldCheckFill } from "react-icons/ri";
+import { RiShieldCheckFill, RiBankFill } from "react-icons/ri";
 
 const Profile = () => {
   const [user, setUser] = useState(null);
@@ -33,7 +31,6 @@ const Profile = () => {
 
   const fileInputRef = useRef(null);
 
-  // Form state
   const [formData, setFormData] = useState({
     first_name: "",
     last_name: "",
@@ -62,8 +59,14 @@ const Profile = () => {
   const fetchUserProfile = async () => {
     try {
       setLoading(true);
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") || sessionStorage.getItem("token") : null;
-      const userId = typeof window !== "undefined" ? localStorage.getItem("userId") || sessionStorage.getItem("userId") : null;
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || sessionStorage.getItem("token")
+          : null;
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+          : null;
 
       if (!token || !userId) {
         setLoading(false);
@@ -87,7 +90,6 @@ const Profile = () => {
       }
     } catch (err) {
       console.error("Error fetching profile:", err);
-      showNotification("Error loading profile", "error");
     } finally {
       setLoading(false);
     }
@@ -146,20 +148,20 @@ const Profile = () => {
     if (!file) return;
 
     if (!file.type.startsWith("image/")) {
-      showNotification("Please select a valid image file (PNG, JPG, WEBP)", "error");
-      return;
-    }
-
-    // Limit to 5MB
-    if (file.size > 5 * 1024 * 1024) {
-      showNotification("Image size should be less than 5MB", "error");
+      showNotification("Please select a valid image file", "error");
       return;
     }
 
     try {
       setUploadingImage(true);
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") || sessionStorage.getItem("token") : null;
-      const userId = typeof window !== "undefined" ? localStorage.getItem("userId") || sessionStorage.getItem("userId") : null;
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || sessionStorage.getItem("token")
+          : null;
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+          : null;
 
       const uploadData = new FormData();
       uploadData.append("file", file);
@@ -177,7 +179,6 @@ const Profile = () => {
       if (res.ok && data.url) {
         setFormData((prev) => ({ ...prev, profile_image: data.url }));
 
-        // Automatically save new avatar to user profile immediately
         if (userId) {
           const updateRes = await fetch(`/api/users/profile/${userId}`, {
             method: "PUT",
@@ -193,16 +194,14 @@ const Profile = () => {
             setUser(updatedData.user);
             showNotification("Profile picture updated successfully!", "success");
             window.dispatchEvent(new Event("auth-change"));
-          } else {
-            showNotification("Image uploaded, click 'Save Changes' to update profile", "success");
           }
         }
       } else {
-        showNotification(data.error || "Failed to upload image to Cloudinary", "error");
+        showNotification(data.error || "Failed to upload image", "error");
       }
     } catch (err) {
-      console.error("Cloudinary upload failed:", err);
-      showNotification("Error uploading image. Please check your network.", "error");
+      console.error(err);
+      showNotification("Error uploading image", "error");
     } finally {
       setUploadingImage(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
@@ -210,16 +209,19 @@ const Profile = () => {
   };
 
   const handleSaveProfile = async (e) => {
-    e.preventDefault();
+    if (e) e.preventDefault();
     try {
       setSaving(true);
-      const token = typeof window !== "undefined" ? localStorage.getItem("token") || sessionStorage.getItem("token") : null;
-      const userId = typeof window !== "undefined" ? localStorage.getItem("userId") || sessionStorage.getItem("userId") : null;
+      const token =
+        typeof window !== "undefined"
+          ? localStorage.getItem("token") || sessionStorage.getItem("token")
+          : null;
+      const userId =
+        typeof window !== "undefined"
+          ? localStorage.getItem("userId") || sessionStorage.getItem("userId")
+          : null;
 
-      if (!token || !userId) {
-        showNotification("Authentication session expired. Please log in again.", "error");
-        return;
-      }
+      if (!token || !userId) return;
 
       const res = await fetch(`/api/users/profile/${userId}`, {
         method: "PUT",
@@ -239,10 +241,10 @@ const Profile = () => {
         showNotification("Profile updated successfully!", "success");
         window.dispatchEvent(new Event("auth-change"));
       } else {
-        showNotification(data.error || "Failed to save profile changes", "error");
+        showNotification(data.error || "Failed to update profile", "error");
       }
     } catch (err) {
-      console.error("Profile save error:", err);
+      console.error(err);
       showNotification("Failed to update profile", "error");
     } finally {
       setSaving(false);
@@ -259,117 +261,156 @@ const Profile = () => {
   const displayName = user
     ? user.first_name
       ? `${user.first_name} ${user.last_name || ""}`.trim()
-      : user.name || "User"
+      : user.name || "Retailer"
     : "Retailer";
 
   const avatarUrl = formData.profile_image || user?.profile_image || "/assets/boy.png";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-cyan-500 via-blue-600 to-indigo-700 py-8 px-4 md:ml-64 transition-all">
+    <div className="min-h-screen bg-[#f4f8fc] md:ml-64 p-4 sm:p-6 text-slate-800 font-sans">
       {/* Toast Notification */}
       {toast.show && (
         <div
-          className={`fixed top-20 right-6 z-50 flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl backdrop-blur-md border text-sm font-semibold transition-all transform animate-in fade-in slide-in-from-top-4 duration-200 ${
+          className={`fixed top-20 right-6 z-50 flex items-center gap-2.5 px-5 py-3.5 rounded-2xl shadow-xl text-xs font-bold transition-all animate-in fade-in duration-200 border ${
             toast.type === "success"
-              ? "bg-emerald-500/95 text-white border-emerald-400 shadow-emerald-900/30"
-              : "bg-rose-500/95 text-white border-rose-400 shadow-rose-900/30"
+              ? "bg-emerald-50 text-emerald-800 border-emerald-200"
+              : "bg-rose-50 text-rose-800 border-rose-200"
           }`}
         >
-          <FaCheckCircle className="text-lg shrink-0" />
+          <FaCheckCircle className={toast.type === "success" ? "text-emerald-600" : "text-rose-600"} size={16} />
           <span>{toast.message}</span>
         </div>
       )}
 
-      <div className="max-w-4xl mx-auto space-y-6">
-        {/* Profile Card Header */}
-        <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 p-6 sm:p-8 relative overflow-hidden">
-          {/* Top Decorative Banner Accent */}
-          <div className="absolute top-0 left-0 right-0 h-3 bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-600" />
+      {/* 1. Page Header & Stats */}
+      <div className="mb-6">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#0a1e4d] tracking-tight leading-tight">
+              My Profile
+            </h1>
+            <p className="text-xs sm:text-sm font-medium text-slate-400 mt-0.5">
+              View and manage your account details, KYC verification and bank information.
+            </p>
+          </div>
 
-          <div className="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-6 pt-2">
-            {/* Avatar & User Core Details */}
-            <div className="flex flex-col sm:flex-row items-center sm:items-center gap-5 text-center sm:text-left">
-              {/* Avatar with Cloudinary Upload Overlay */}
-              <div className="relative group">
-                <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden ring-4 ring-blue-500/30 shadow-xl bg-gradient-to-tr from-blue-600 to-cyan-400 flex items-center justify-center relative">
-                  <img
-                    src={avatarUrl}
-                    alt={displayName}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      e.target.onerror = null;
-                      e.target.src = "/assets/boy.png";
-                    }}
-                  />
+          {/* Quick Header Stat Cards */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            {/* Wallet Balance */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-2.5 flex items-center gap-3 shadow-2xs min-w-[150px]">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1d68f6] flex items-center justify-center text-sm shrink-0 font-bold">
+                <FaWallet />
+              </div>
+              <div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  Wallet Balance
+                </div>
+                <div className="text-sm font-black text-[#0a1e4d] mt-0.5">
+                  ₹{user ? Number(user.wallet_balance || 0).toLocaleString("en-IN") : "0"}
+                </div>
+              </div>
+            </div>
 
-                  {uploadingImage && (
-                    <div className="absolute inset-0 bg-slate-900/70 flex flex-col items-center justify-center text-white gap-1">
-                      <FaSpinner className="animate-spin text-2xl text-cyan-400" />
-                      <span className="text-[10px] font-bold">Uploading...</span>
-                    </div>
-                  )}
+            {/* KYC Status */}
+            <div className="flex-1 sm:flex-initial bg-white border border-slate-200/90 rounded-2xl px-4 py-2.5 flex items-center gap-3 shadow-2xs min-w-[150px]">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-sm shrink-0 font-bold">
+                <FaShieldAlt />
+              </div>
+              <div>
+                <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                  KYC Status
+                </div>
+                <div className="text-sm font-black text-emerald-600 mt-0.5 flex items-center gap-1">
+                  <span>Verified</span>
+                  <RiShieldCheckFill className="text-xs" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="space-y-6">
+        {/* 2. Top Profile Hero Card */}
+        <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-7 shadow-2xs">
+          <div className="flex flex-col sm:flex-row items-center sm:items-center justify-between gap-6">
+            <div className="flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+              {/* Profile Avatar */}
+              <div className="relative group shrink-0">
+                <div className="w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-tr from-[#1d68f6] to-blue-400 p-0.5 shadow-md">
+                  <div className="w-full h-full rounded-[14px] bg-white overflow-hidden flex items-center justify-center relative">
+                    <img
+                      src={avatarUrl}
+                      alt={displayName}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = "/assets/boy.png";
+                      }}
+                    />
+
+                    {uploadingImage && (
+                      <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center text-white">
+                        <FaSpinner className="animate-spin text-lg" />
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {/* Change Avatar Button */}
+                {/* Change Photo Button */}
                 <button
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploadingImage}
-                  title="Upload profile picture to Cloudinary"
-                  className="absolute -bottom-1.5 -right-1.5 p-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-2xl shadow-lg border-2 border-white transition-all transform hover:scale-110 active:scale-95 cursor-pointer"
+                  title="Update Profile Photo"
+                  className="absolute -bottom-1 -right-1 p-2 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl shadow-md border-2 border-white transition-all transform hover:scale-105 active:scale-95 cursor-pointer"
                 >
-                  <FaCamera size={13} />
+                  <FaCamera size={11} />
                 </button>
 
                 <input
                   type="file"
                   ref={fileInputRef}
                   onChange={handleImageFileChange}
-                  accept="image/png, image/jpeg, image/jpg, image/webp"
+                  accept="image/*"
                   className="hidden"
                 />
               </div>
 
-              {/* Names, Roles, Badges */}
-              <div className="space-y-1.5">
+              {/* Names, Roles */}
+              <div className="space-y-1">
                 <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                  <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+                  <h2 className="text-xl sm:text-2xl font-black text-[#0a1e4d] tracking-tight">
                     {loading ? "Loading..." : displayName}
-                  </h1>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold bg-blue-50 text-blue-700 border border-blue-200">
-                    <RiShieldCheckFill className="text-sm text-blue-600" />
+                  </h2>
+                  <span className="inline-flex items-center gap-1 text-[10px] font-extrabold px-2.5 py-0.5 bg-blue-50 text-blue-700 border border-blue-200 rounded-lg">
+                    <RiShieldCheckFill className="text-xs" />
                     <span>Verified Retailer</span>
                   </span>
                 </div>
 
-                <p className="text-sm font-medium text-slate-600 flex items-center justify-center sm:justify-start gap-2">
-                  <FaEnvelope className="text-slate-400 text-xs" />
-                  <span>{user?.email || "retailer@dscpay.com"}</span>
-                </p>
-
-                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 pt-1">
-                  <div className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-xl">
-                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>KYC {user?.kyc_status ? "Verified" : "Active"}</span>
-                  </div>
-
-                  <div className="flex items-center gap-1.5 text-xs font-semibold px-3 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200/80 rounded-xl">
-                    <FaWallet className="text-indigo-600 text-xs" />
-                    <span>₹{user ? Number(user.wallet_balance || 0).toLocaleString("en-IN") : "0.00"}</span>
-                  </div>
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs font-semibold text-slate-500">
+                  <span className="flex items-center gap-1.5">
+                    <FaEnvelope className="text-slate-400" size={11} />
+                    <span>{user?.email || "retailer@dscpay.com"}</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <FaPhoneAlt className="text-slate-400" size={10} />
+                    <span>{user?.phone || "-"}</span>
+                  </span>
                 </div>
               </div>
             </div>
 
-            {/* Toggle Edit Button */}
+            {/* Action Buttons */}
             <div className="shrink-0 flex items-center gap-2">
               {!isEditing ? (
                 <button
                   type="button"
                   onClick={() => setIsEditing(true)}
-                  className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer transform active:scale-95"
+                  className="flex items-center gap-2 px-5 py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all cursor-pointer transform active:scale-95"
                 >
-                  <FaEdit size={14} />
+                  <FaEdit size={12} />
                   <span>Edit Profile</span>
                 </button>
               ) : (
@@ -378,25 +419,25 @@ const Profile = () => {
                     type="button"
                     onClick={handleCancelEdit}
                     disabled={saving}
-                    className="flex items-center gap-1.5 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-2xl font-bold text-sm transition-all cursor-pointer"
+                    className="flex items-center gap-1.5 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition cursor-pointer"
                   >
-                    <FaTimes size={13} />
+                    <FaTimes size={11} />
                     <span>Cancel</span>
                   </button>
                   <button
                     type="button"
                     onClick={handleSaveProfile}
                     disabled={saving}
-                    className="flex items-center gap-2 px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold text-sm shadow-md hover:shadow-lg transition-all cursor-pointer transform active:scale-95 disabled:opacity-60"
+                    className="flex items-center gap-1.5 px-5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold shadow-md transition cursor-pointer disabled:opacity-60"
                   >
                     {saving ? (
                       <>
-                        <FaSpinner className="animate-spin text-sm" />
+                        <FaSpinner className="animate-spin text-xs" />
                         <span>Saving...</span>
                       </>
                     ) : (
                       <>
-                        <FaSave size={14} />
+                        <FaSave size={12} />
                         <span>Save Changes</span>
                       </>
                     )}
@@ -407,396 +448,401 @@ const Profile = () => {
           </div>
         </div>
 
-        {/* Profile Details Sections */}
+        {/* 3. Form / Details Sections */}
         <form onSubmit={handleSaveProfile} className="space-y-6">
-          {/* 1. Personal Information */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-6 sm:p-7">
-            <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-slate-100">
-              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-                <FaUser />
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Section A: Personal Information */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs">
+              <div className="flex items-center gap-2.5 pb-3 mb-4 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-xl bg-blue-50 text-[#1d68f6] flex items-center justify-center text-xs font-bold">
+                  <FaUser />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">Personal Information</h3>
               </div>
-              <h2 className="text-lg font-bold text-slate-900">Personal Information</h2>
-            </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* First Name */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  First Name
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="first_name"
-                    value={formData.first_name}
-                    onChange={handleInputChange}
-                    placeholder="Enter first name"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.first_name || "-"}
+              <div className="space-y-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      First Name
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="first_name"
+                        value={formData.first_name}
+                        onChange={handleInputChange}
+                        placeholder="Enter first name"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.first_name || "-"}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
 
-              {/* Last Name */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Last Name
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="last_name"
-                    value={formData.last_name}
-                    onChange={handleInputChange}
-                    placeholder="Enter last name"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.last_name || "-"}
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Last Name
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="last_name"
+                        value={formData.last_name}
+                        onChange={handleInputChange}
+                        placeholder="Enter last name"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.last_name || "-"}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
+                </div>
 
-              {/* Email (Read only) */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Email Address
-                </label>
-                <div className="px-4 py-2.5 bg-slate-100/80 border border-slate-200/80 rounded-xl text-slate-600 text-sm font-medium flex items-center justify-between">
-                  <span>{user?.email || "retailer@dscpay.com"}</span>
-                  <span className="text-[10px] font-bold text-slate-400 bg-slate-200/70 px-2 py-0.5 rounded-md">
-                    Verified
-                  </span>
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Email Address
+                  </label>
+                  <div className="text-xs font-semibold text-slate-600 bg-slate-100/80 border border-slate-200/70 px-3.5 py-2.5 rounded-xl flex items-center justify-between">
+                    <span>{user?.email || "retailer@dscpay.com"}</span>
+                    <span className="text-[10px] font-bold text-slate-400 bg-slate-200/70 px-2 py-0.5 rounded">
+                      Verified
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Phone Number
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="tel"
+                        name="phone"
+                        value={formData.phone}
+                        onChange={handleInputChange}
+                        placeholder="Enter phone number"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.phone || "-"}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Date of Birth
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="date"
+                        name="date_of_birth"
+                        value={formData.date_of_birth}
+                        onChange={handleInputChange}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {user?.date_of_birth
+                          ? new Date(user.date_of_birth).toLocaleDateString("en-IN", {
+                              day: "numeric",
+                              month: "short",
+                              year: "numeric",
+                            })
+                          : "-"}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
+            </div>
 
-              {/* Phone */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Phone Number
-                </label>
-                {isEditing ? (
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={formData.phone}
-                    onChange={handleInputChange}
-                    placeholder="Enter phone number"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.phone || "-"}
-                  </div>
-                )}
+            {/* Section B: Identity & KYC Details */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs">
+              <div className="flex items-center gap-2.5 pb-3 mb-4 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold">
+                  <FaIdCard />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">Identity & Verification</h3>
               </div>
 
-              {/* Date of Birth */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Date of Birth
-                </label>
-                {isEditing ? (
-                  <input
-                    type="date"
-                    name="date_of_birth"
-                    value={formData.date_of_birth}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {user?.date_of_birth
-                      ? new Date(user.date_of_birth).toLocaleDateString("en-IN", {
-                          day: "numeric",
-                          month: "short",
-                          year: "numeric",
-                        })
-                      : "-"}
+              <div className="space-y-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Aadhaar Number
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="aadhaar_no"
+                      maxLength={12}
+                      value={formData.aadhaar_no}
+                      onChange={handleInputChange}
+                      placeholder="12 digit Aadhaar number"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50 tracking-wider"
+                    />
+                  ) : (
+                    <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl tracking-wider">
+                      {formData.aadhaar_no || "-"}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    PAN Card Number
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="pan_number"
+                      maxLength={10}
+                      value={formData.pan_number}
+                      onChange={handleInputChange}
+                      placeholder="10 digit PAN (e.g. ABCDE1234F)"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50 uppercase tracking-wider"
+                    />
+                  ) : (
+                    <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl uppercase tracking-wider">
+                      {formData.pan_number || "-"}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    KYC Verification Status
+                  </label>
+                  <div className="text-xs font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-3.5 py-2.5 rounded-xl flex items-center gap-2">
+                    <FaCheckCircle className="text-emerald-600" />
+                    <span>KYC Verified & Portal Access Active</span>
                   </div>
-                )}
+                </div>
+              </div>
+            </div>
+
+            {/* Section C: Address Information */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs">
+              <div className="flex items-center gap-2.5 pb-3 mb-4 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-xs font-bold">
+                  <FaMapMarkerAlt />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">Address Information</h3>
+              </div>
+
+              <div className="space-y-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Street / Detailed Address
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      placeholder="Enter full address"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                    />
+                  ) : (
+                    <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                      {formData.address || "-"}
+                    </div>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      City
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleInputChange}
+                        placeholder="City"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.city || "-"}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      State
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="state"
+                        value={formData.state}
+                        onChange={handleInputChange}
+                        placeholder="State"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.state || "-"}
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3.5">
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Pincode
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="pincode"
+                        maxLength={6}
+                        value={formData.pincode}
+                        onChange={handleInputChange}
+                        placeholder="Pincode"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.pincode || "-"}
+                      </div>
+                    )}
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                      Country
+                    </label>
+                    {isEditing ? (
+                      <input
+                        type="text"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleInputChange}
+                        placeholder="Country"
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                      />
+                    ) : (
+                      <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                        {formData.country || "India"}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Section D: Business & Banking Details */}
+            <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-2xs">
+              <div className="flex items-center gap-2.5 pb-3 mb-4 border-b border-slate-100">
+                <div className="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xs font-bold">
+                  <RiBankFill />
+                </div>
+                <h3 className="text-sm font-black text-[#0a1e4d]">Business & Bank Information</h3>
+              </div>
+
+              <div className="space-y-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Shop / Enterprise Name
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="businessName"
+                      value={formData.businessName}
+                      onChange={handleInputChange}
+                      placeholder="Enter shop or business name"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50"
+                    />
+                  ) : (
+                    <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl">
+                      {formData.businessName || "-"}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Bank Account Number
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="bankAccount"
+                      value={formData.bankAccount}
+                      onChange={handleInputChange}
+                      placeholder="Enter account number"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50 font-mono"
+                    />
+                  ) : (
+                    <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl font-mono">
+                      {formData.bankAccount || "-"}
+                    </div>
+                  )}
+                </div>
+
+                <div>
+                  <label className="block text-[11px] font-bold text-slate-400 uppercase tracking-wider mb-1">
+                    Bank IFSC Code
+                  </label>
+                  {isEditing ? (
+                    <input
+                      type="text"
+                      name="bankIfsc"
+                      value={formData.bankIfsc}
+                      onChange={handleInputChange}
+                      placeholder="Enter IFSC code"
+                      className="w-full px-3.5 py-2 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-xs font-bold text-slate-800 bg-slate-50/50 uppercase font-mono"
+                    />
+                  ) : (
+                    <div className="text-xs font-bold text-[#0a1e4d] bg-slate-50/80 border border-slate-100 px-3.5 py-2.5 rounded-xl uppercase font-mono">
+                      {formData.bankIfsc || "-"}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* 2. Identity & KYC Details */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-6 sm:p-7">
-            <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-slate-100">
-              <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-sm">
-                <FaIdCard />
-              </div>
-              <h2 className="text-lg font-bold text-slate-900">Identity & Verification</h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Aadhaar Number */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Aadhaar Number
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="aadhaar_no"
-                    maxLength={12}
-                    value={formData.aadhaar_no}
-                    onChange={handleInputChange}
-                    placeholder="12 digit Aadhaar number"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition tracking-wider"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold tracking-wider">
-                    {formData.aadhaar_no || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* PAN Number */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  PAN Card Number
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="pan_number"
-                    maxLength={10}
-                    value={formData.pan_number}
-                    onChange={handleInputChange}
-                    placeholder="10 digit PAN (e.g. ABCDE1234F)"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition uppercase tracking-wider"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold uppercase tracking-wider">
-                    {formData.pan_number || "-"}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* 3. Address & Location */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-6 sm:p-7">
-            <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-slate-100">
-              <div className="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center font-bold text-sm">
-                <FaMapMarkerAlt />
-              </div>
-              <h2 className="text-lg font-bold text-slate-900">Address Information</h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Full Address */}
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Street / Detailed Address
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="address"
-                    value={formData.address}
-                    onChange={handleInputChange}
-                    placeholder="Enter full street address"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.address || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* City */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  City
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="city"
-                    value={formData.city}
-                    onChange={handleInputChange}
-                    placeholder="Enter city"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.city || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* State */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  State
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="state"
-                    value={formData.state}
-                    onChange={handleInputChange}
-                    placeholder="Enter state"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.state || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* Pincode */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Pincode
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="pincode"
-                    maxLength={6}
-                    value={formData.pincode}
-                    onChange={handleInputChange}
-                    placeholder="Enter 6-digit pincode"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.pincode || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* Country */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Country
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="country"
-                    value={formData.country}
-                    onChange={handleInputChange}
-                    placeholder="Enter country"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.country || "India"}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* 4. Business & Banking Details */}
-          <div className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl border border-white/40 p-6 sm:p-7">
-            <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-slate-100">
-              <div className="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-sm">
-                <FaUniversity />
-              </div>
-              <h2 className="text-lg font-bold text-slate-900">Business & Bank Information</h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {/* Business Name */}
-              <div className="sm:col-span-2">
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Shop / Business Name
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="businessName"
-                    value={formData.businessName}
-                    onChange={handleInputChange}
-                    placeholder="Enter shop or business enterprise name"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold">
-                    {formData.businessName || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* Bank Account */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Bank Account Number
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="bankAccount"
-                    value={formData.bankAccount}
-                    onChange={handleInputChange}
-                    placeholder="Enter bank account number"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold font-mono">
-                    {formData.bankAccount || "-"}
-                  </div>
-                )}
-              </div>
-
-              {/* Bank IFSC */}
-              <div>
-                <label className="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">
-                  Bank IFSC Code
-                </label>
-                {isEditing ? (
-                  <input
-                    type="text"
-                    name="bankIfsc"
-                    value={formData.bankIfsc}
-                    onChange={handleInputChange}
-                    placeholder="Enter IFSC code (e.g. SBIN0001234)"
-                    className="w-full px-4 py-2.5 rounded-xl border border-slate-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 outline-none text-slate-800 text-sm font-semibold transition uppercase font-mono"
-                  />
-                ) : (
-                  <div className="px-4 py-2.5 bg-slate-50 border border-slate-100 rounded-xl text-slate-800 text-sm font-semibold uppercase font-mono">
-                    {formData.bankIfsc || "-"}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Action Bar when editing */}
+          {/* Floating / Sticky Save Bar when in Edit Mode */}
           {isEditing && (
-            <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-4 shadow-xl border border-white/50 flex items-center justify-end gap-3 sticky bottom-4 z-20">
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xl flex items-center justify-end gap-3 sticky bottom-4 z-20 animate-in fade-in slide-in-from-bottom-2 duration-150">
               <button
                 type="button"
                 onClick={handleCancelEdit}
                 disabled={saving}
-                className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-sm transition cursor-pointer"
+                className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={saving}
-                className="flex items-center gap-2 px-7 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-xl transition-all cursor-pointer transform active:scale-95 disabled:opacity-60"
+                className="flex items-center gap-2 px-6 py-2.5 bg-[#1d68f6] hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-md shadow-blue-500/25 transition-all cursor-pointer transform active:scale-95 disabled:opacity-60"
               >
                 {saving ? (
                   <>
-                    <FaSpinner className="animate-spin text-sm" />
-                    <span>Saving...</span>
+                    <FaSpinner className="animate-spin text-xs" />
+                    <span>Saving Changes...</span>
                   </>
                 ) : (
                   <>
-                    <FaSave size={14} />
-                    <span>Save All Changes</span>
+                    <FaSave size={13} />
+                    <span>Save Changes</span>
                   </>
                 )}
               </button>
